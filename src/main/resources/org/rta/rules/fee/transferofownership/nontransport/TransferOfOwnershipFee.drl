@@ -1,0 +1,118 @@
+package org.rta.rules.fee.transferofownership.nontransport
+ 
+import org.rta.rules.model.FeeRuleModel;
+
+ 
+rule "Card Fee 200 rs  TOW non transport Fee"
+salience 100
+    when
+        t : FeeRuleModel(cardFee == 0 , "CHSN~CHSN~CHSN~TRCN~TRCN~TRCN~TTRN~TTRN~TTRN" not contains vehicleClassCategory) 
+    then
+        System.out.println("Card Fee 200 rs TOW non transport Fee");
+        t.setCardFee(200);
+        update( t );
+end
+
+
+rule "Postal 35 TOW non transport Fee"
+salience 90
+    when
+        t : FeeRuleModel(postalFee == 0 ) 
+    then
+        System.out.println("Postal Fee TOW non transport");
+        t.setPostalFee(35);
+        update( t );
+end
+
+
+rule "PR Service charge TOW non transport Fee MMCN~MCYN"
+salience 82    
+    when
+        t : FeeRuleModel("MMCN~MCYN".contains(vehicleClassCategory) , prService == 0 ) 
+    then
+        System.out.println("Inside PR service charge TOW non transport MMCN~MCYN");
+        t.setPrService(150);
+        update( t );
+end
+
+
+rule "PR 300 rs Service charge TOW non transport"
+salience 80    
+    when
+        t : FeeRuleModel(prService == 0 ) 
+    then
+        System.out.println("Inside PR 300 rs service charge TOW non transport");
+        t.setPrService(300);
+        update( t );
+end
+
+
+rule "IVCN LMV TOW non transport Fee"
+    when
+        t : FeeRuleModel(vehicleClassCategory.equals("IVCN") , prFee == 0 , gvw <= 7500)
+    then
+        System.out.println("Inside LMV TOW non transport IVCN");
+        t.setPrFee(25);
+        update( t );
+end
+
+rule "MCEN~MMCN~MMCN~MCYN~MCWN LMV TOW non transport Fee"
+    when
+        t : FeeRuleModel("MCEN~MMCN~MMCN~MCYN~MCWN".contains(vehicleClassCategory) , prFee == 0 , gvw <= 7500)
+    then
+        System.out.println("Inside LMV TOW non transport MCEN~MMCN~MMCN~MCYN~MCWN");
+        t.setPrFee(150);
+        update( t );
+end
+
+
+
+rule "MMV TOW non transport Fee"
+    when
+        t : FeeRuleModel( prFee == 0 , gvw < 7500 , "CHSN" not contains vehicleClassCategory)
+    then
+        System.out.println("Inside MMV TOW non transport");
+        t.setPrFee(300);
+        update( t );
+end
+
+
+rule "SLCM MMV TOW non transport Fee"
+    when
+        t : FeeRuleModel(vehicleClassCategory.equals("SLCM") , prFee == 0 , gvw <= 12000)
+    then
+        System.out.println("Inside MMV TOW non transport SLCM");
+        t.setPrFee(500);
+        update( t );
+end
+
+rule "SLCM HMV TOW non transport Fee"
+    when
+        t : FeeRuleModel(vehicleClassCategory.equals("SLCM") , prFee == 0 , gvw > 12000)
+    then
+        System.out.println("Inside HMV TOW non transport SLCM");
+        t.setPrFee(750);
+        update( t );
+end
+
+
+
+rule "HMV TOW non transport Fee"
+    when
+        t : FeeRuleModel( prFee == 0 , gvw > 7500 , "CHSN" not contains vehicleClassCategory)
+    then
+        System.out.println("Inside MMV TOW non transport");
+        t.setPrFee(1500);
+        update( t );
+end
+
+
+
+rule "Total PR Fee TOW non transport Fee"
+    when
+        t : FeeRuleModel(totalPrFee == 0 )
+    then
+        System.out.println("Inside Total PR Fee TOW non transport "+ t.getVehicleClassCategory());
+        t.setTotalPrFee(t.getPrFee() + t.getPrService() + t.getPostalFee() + t.getCardFee());
+        update( t );
+end

@@ -1,0 +1,385 @@
+package org.rta.rules.fee.permit.renewal
+ 
+import org.rta.rules.model.FeeRuleModel;
+ 
+rule "Permit Renewal Fee Service chage 100 rs"
+salience 90
+    when
+        t : FeeRuleModel("ARKT".contains(vehicleClassCategory) , permitService == 0) 
+    then
+        System.out.println("Permit Service charge 100 rs Fresh Registration NonTransport Fee");
+        t.setPermitService(100);
+        update( t );
+end
+
+rule "Permit Renewal Fee Service chage 150 rs"
+salience 89
+    when
+        t : FeeRuleModel(permitService == 0) 
+    then
+        System.out.println("Permit Service charge 150 rs Fresh Registration NonTransport Fee");
+        t.setPermitService(150);
+        update( t );
+end
+
+
+rule "Permit Renewal Fee MAXT 2000 rs "
+    when
+        t : FeeRuleModel("MAXT".contains(vehicleClassCategory) , "AITC".contains(permitType)  , permitFee == 0) 
+    then
+        System.out.println("Inside Renewal AITC Permit Fee ");
+        t.setPermitFee(2000);
+        update( t );
+end
+
+rule "Permit Renewal Fee AITC 1000 rs "
+    when
+        t : FeeRuleModel("AITC".contains(permitType) , permitFee == 0) 
+    then
+        System.out.println("Inside Renewal 1000 rs Fresh Registration NonTransport Fee ");
+        t.setPermitFee(1000);
+        update( t );
+end
+
+rule "Permit Renewal Fee AITP application fee 1000 rs "
+    when
+        t : FeeRuleModel("AITP".contains(permitType) , permitFee == 0 , "LTCT~TOVT~STCT" contains  vehicleClassCategory ) 
+    then
+        System.out.println("Inside Renewal 1000 rs application  Fee AITP");
+        t.setPermitFee(1000);
+        update( t );
+end
+
+rule "Permit Renewal Fee AITP application fee 2000 rs "
+    when
+        t : FeeRuleModel("AITP".contains(permitType) , permitFee == 0 , "MAXT~TOVT" contains  vehicleClassCategory ) 
+    then
+        System.out.println("Inside Renewal 2000 rs application  Fee AITP");
+        t.setPermitFee(2000);
+        update( t );
+end
+
+rule "Permit Renewal Fee AITP application fee 5000 rs "
+    when
+        t : FeeRuleModel("AITP".contains(permitType) , permitFee == 0 , "COCT~TOVT" contains  vehicleClassCategory ) 
+    then
+        System.out.println("Inside Renewal 5000 rs application  Fee AITP");
+        t.setPermitFee(2000);
+        update( t );
+end
+
+rule "Permit Renewal Fee CCP application fee 500 rs "
+    when
+        t : FeeRuleModel("CCP".contains(permitType) , permitFee == 0 , "ARKT" contains  vehicleClassCategory ) 
+    then
+        System.out.println("Inside Renewal 500 rs application  Fee CCP");
+        t.setPermitFee(500);
+        update( t );
+end
+
+rule "Permit Renewal Fee CCP application fee 450 rs OBT~SCT "
+    when
+        t : FeeRuleModel("CCP".contains(permitType) , permitFee == 0 , "OBT~SCRT" contains  vehicleClassCategory ) 
+    then
+        System.out.println("Inside Renewal 450 rs application  Fee CCP");
+        t.setPermitFee(450);
+        update( t );
+end
+
+
+rule "Permit Renewal Fee CCP application fee 450 rs "
+    when
+        t : FeeRuleModel("CCP".contains(permitType) , permitFee == 0 , "ARKT" contains  vehicleClassCategory ) 
+    then
+        System.out.println("Inside Renewal 500 rs application  Fee CCP");
+        t.setPermitFee(450);
+        update( t );
+end
+
+
+rule "Permit Renewal Fee CCP application fee 1000 rs "
+    when
+        t : FeeRuleModel("CCP".contains(permitType) , permitFee == 0 , "LTCT~MTLT~TOVT~STCT" contains  vehicleClassCategory ) 
+    then
+        System.out.println("Inside Renewal 1000 rs application  Fee CCP");
+        t.setPermitFee(1000);
+        update( t );
+end
+
+rule "Permit Renewal Fee CCP application fee 2000 rs "
+    when
+        t : FeeRuleModel("CCP".contains(permitType) , permitFee == 0 , "MAXT~TOVT" contains  vehicleClassCategory ) 
+    then
+        System.out.println("Inside Renewal 2000 rs application  Fee CCP");
+        t.setPermitFee(2000);
+        update( t );
+end
+
+
+rule "Permit Renewal Fee CCP application fee 5000 rs "
+    when
+        t : FeeRuleModel("CCP".contains(permitType) , permitFee == 0 , "COCT~OBT~SCRT~TOVT" contains  vehicleClassCategory ) 
+    then
+        System.out.println("Inside Renewal 5000 rs application  Fee CCP");
+        t.setPermitFee(5000);
+        update( t );
+end
+
+rule "Permit Renewal Fee CSP application fee 450 rs "
+    when
+        t : FeeRuleModel("CSP".contains(permitType) , permitFee == 0 , "OBT" contains  vehicleClassCategory ) 
+    then
+        System.out.println("Inside Renewal 450 rs application  Fee CSP");
+        t.setPermitFee(450);
+        update( t );
+end
+
+
+rule "Permit Renewal Fee CSP application fee 2000 rs "
+    when
+        t : FeeRuleModel("CSP".contains(permitType) , permitFee == 0 , "OBT~SCRT" contains  vehicleClassCategory ) 
+    then
+        System.out.println("Inside Renewal 2000 rs application  Fee CSP");
+        t.setPermitFee(2000);
+        update( t );
+end
+
+rule "Permit Renewal Fee CSP application fee 600 rs "
+    when
+        t : FeeRuleModel("CSP".contains(permitType) , permitFee == 0) 
+    then
+        System.out.println("Inside Renewal 600 rs application  Fee CSP");
+        t.setPermitFee(600);
+        update( t );
+end
+
+
+rule "Permit Renewal Fee CSPP application fee 5000 rs "
+    when
+        t : FeeRuleModel("CSPP".contains(permitType) , permitFee == 0) 
+    then
+        System.out.println("Inside 5000 rs application  Fee CSPP");
+        t.setPermitFee(5000);
+        update( t );
+end
+
+rule "Permit Renewal Fee EIB application fee 450 rs "
+    when
+        t : FeeRuleModel("EIB".contains(permitType) , permitFee == 0 ,"OBT" contains  vehicleClassCategory) 
+    then
+        System.out.println("Inside Renewal 450 rs application  Fee EIB");
+        t.setPermitFee(450);
+        update( t );
+end
+
+
+rule "Permit Renewal Fee EIB application fee 3000 rs "
+    when
+        t : FeeRuleModel("EIB".contains(permitType) , permitFee == 0 ) 
+    then
+        System.out.println("Inside Renewal 3000 rs application  Fee EIB");
+        t.setPermitFee(3000);
+        update( t );
+end
+
+rule "Permit Renewal Fee GCP application fee 1000 rs "
+    when
+        t : FeeRuleModel("GCP".contains(permitType) , permitFee == 0 ) 
+    then
+        System.out.println("Inside Renewal 1000 rs application  Fee GCP");
+        t.setPermitFee(1000);
+        update( t );
+end
+
+rule "Permit Renewal Fee NP application fee 1000 rs "
+    when
+        t : FeeRuleModel("NP".contains(permitType) , permitFee == 0 ) 
+    then
+        System.out.println("Inside Renewal 1000 rs application  Fee NP");
+        t.setPermitFee(1000);
+        update( t );
+end
+
+rule "Permit Renewal Fee PSVP application fee 600 rs "
+    when
+        t : FeeRuleModel("PSVP".contains(permitType) , permitFee == 0 , "SCRT~TOVT" contains  vehicleClassCategory) 
+    then
+        System.out.println("Inside Renewal 600 rs application  Fee PSVP");
+        t.setPermitFee(600);
+        update( t );
+end
+
+
+rule "Permit Renewal Fee PSVP application fee 900 rs "
+    when
+        t : FeeRuleModel("PSVP".contains(permitType) , permitFee == 0 , "COCT~SCRT~TOVT" contains  vehicleClassCategory) 
+    then
+        System.out.println("Inside Renewal 900 rs application  Fee PSVP");
+        t.setPermitFee(900);
+        update( t );
+end
+
+rule "Permit Renewal Fee PSVP application fee 2000 rs "
+    when
+        t : FeeRuleModel("PSVP".contains(permitType) , permitFee == 0 , "MAXT~OBT~PSVT" contains  vehicleClassCategory) 
+    then
+        System.out.println("Inside Renewal 2000 rs application  Fee PSVP");
+        t.setPermitFee(2000);
+        update( t );
+end
+rule "Permit Renewal Fee SBP application fee 450 rs "
+    when
+        t : FeeRuleModel("SBP".contains(permitType) , permitFee == 0 , "OBT" contains  vehicleClassCategory) 
+    then
+        System.out.println("Inside Renewal 450 rs application  Fee SBP");
+        t.setPermitFee(450);
+        update( t );
+end
+
+rule "Permit Renewal Fee SBP application fee 2000 rs "
+    when
+        t : FeeRuleModel("SBP".contains(permitType) , permitFee == 0 , "MAXT" contains  vehicleClassCategory) 
+    then
+        System.out.println("Inside Renewal 2000 rs application  Fee SBP");
+        t.setPermitFee(2000);
+        update( t );
+end
+
+
+rule "Permit Renewal Fee SBP application fee 5000 rs "
+    when
+        t : FeeRuleModel("SBP".contains(permitType) , permitFee == 0 , "COCT~SCRT~TOVT" contains  vehicleClassCategory) 
+    then
+        System.out.println("Inside Renewal 5000 rs application  Fee SBP");
+        t.setPermitFee(5000);
+        update( t );
+end
+
+
+rule "Permit Renewal Fee SCP application fee 5000 rs "
+    when
+        t : FeeRuleModel("SCP".contains(permitType) , permitFee == 0 ) 
+    then
+        System.out.println("Inside Renewal 5000 rs application  Fee SCP");
+        t.setPermitFee(5000);
+        update( t );
+end
+
+rule "Permit Renewal Fee SP application fee 100 rs "
+    when
+        t : FeeRuleModel("SP".contains(permitType) , permitFee == 0 , "COCT~SCRT" contains  vehicleClassCategory) 
+    then
+        System.out.println("Inside Renewal  100 rs application  Fee SP");
+        t.setPermitFee(100);
+        update( t );
+end
+
+rule "Permit Renewal Fee SP application fee 1000 rs "
+    when
+        t : FeeRuleModel("SP".contains(permitType) , permitFee == 0 , "OBT~TOVT" contains  vehicleClassCategory) 
+    then
+        System.out.println("Inside Renewal 1000 rs application  Fee SP");
+        t.setPermitFee(1000);
+        update( t );
+end
+
+rule "Permit Renewal Fee SP application fee 2000 rs "
+    when
+        t : FeeRuleModel("SP".contains(permitType) , permitFee == 0 , "MAXT" contains  vehicleClassCategory) 
+    then
+        System.out.println("Inside Renewal 2000 rs application  Fee SP");
+        t.setPermitFee(2000);
+        update( t );
+end
+
+rule "Permit Renewal Fee SSP application fee 200 rs "
+    when
+        t : FeeRuleModel("SSP".contains(permitType) , permitFee == 0 ) 
+    then
+        System.out.println("Inside Renewal 200 rs application  Fee SSP");
+        t.setPermitFee(200);
+        update( t );
+end
+
+
+rule "Permit Renewal Fee SSPSO application fee 200 rs "
+    when
+        t : FeeRuleModel("SSPSO".contains(permitType) , permitFee == 0 ) 
+    then
+        System.out.println("Inside Renewal 200 rs application  Fee SSPSO");
+        t.setPermitFee(200);
+        update( t );
+end
+
+
+rule "Permit Renewal Fee STL application fee 100 rs "
+    when
+        t : FeeRuleModel("STL".contains(permitType) , permitFee == 0 ) 
+    then
+        System.out.println("Inside Renewal 100 rs application  Fee STL");
+        t.setPermitFee(100);
+        update( t );
+end
+
+
+rule "Permit Renewal Fee TCCP application fee 200 rs "
+    when
+        t : FeeRuleModel("TCCP".contains(permitType) , permitFee == 0 ) 
+    then
+        System.out.println("Inside Renewal 200 rs application  Fee TCCP");
+        t.setPermitFee(200);
+        update( t );
+end
+
+
+rule "Permit Renewal Fee TCP application fee 375 rs "
+    when
+        t : FeeRuleModel("TCP".contains(permitType) , permitFee == 0 ) 
+    then
+        System.out.println("Inside Renewal 375 rs application  Fee TCP");
+        t.setPermitFee(375);
+        update( t );
+end
+
+
+rule "Permit Renewal Fee TGCP application fee 200 rs "
+    when
+        t : FeeRuleModel("TGCP".contains(permitType) , permitFee == 0 ) 
+    then
+        System.out.println("Inside Renewal 200 rs application  Fee TGCP");
+        t.setPermitFee(200);
+        update( t );
+end
+
+
+rule "Permit Renewal Fee TSCP application fee 200 rs "
+    when
+        t : FeeRuleModel("TSCP".contains(permitType) , permitFee == 0 ) 
+    then
+        System.out.println("Inside Renewal 200 rs application  Fee TSCP");
+        t.setPermitFee(200);
+        update( t );
+end
+
+rule "Penalty Renewal Permit "
+    when
+        t : FeeRuleModel(penalty == 0 ,  monthCount > 0, permitFee > 0 )
+    then
+        System.out.println("Penalty Renewal Permit Fee two wheller old vehicle 0 to 3 ");
+        double newAmt = (t.getPermitFee()/10)*t.getMonthCount();
+        if(newAmt > t.getPermitFee())
+        t.setPenalty(t.getPermitFee());
+        else
+        t.setPenalty(newAmt);
+        update( t );
+end
+
+
+rule "Total Renewal New Permit Fee "
+    when
+        t : FeeRuleModel(totalPermitFee == 0)
+    then
+        System.out.println("Inside Renewal Total Permit Fee "+ t.getVehicleClassCategory() +"  "+ t.getPermitType());
+        t.setTotalPermitFee(t.getPermitFee() + t.getPermitService() + t.getOtherPermitFee() + t.getPenalty());
+        update( t );
+end

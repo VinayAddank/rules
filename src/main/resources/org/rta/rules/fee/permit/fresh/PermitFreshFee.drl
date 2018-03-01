@@ -1,0 +1,494 @@
+package org.rta.rules.fee.permit.fresh
+ 
+import org.rta.rules.model.FeeRuleModel;
+ 
+
+rule "Permit Service Fee Temporary "    
+    when
+        t : FeeRuleModel( permitService == 0 , "TEMPORARY" contains  permitClass)    
+    then   
+        System.out.println("Inside Permit Service Fee Temporary ");   
+        t.setPermitService(100);
+        update( t );   
+end
+
+
+rule "Permit Fee Motor Cab for temporary"    
+    when
+        t : FeeRuleModel( permitFee == 0 , "MTLT".contains(vehicleClassCategory) , "TEMPORARY" contains  permitClass)    
+    then   
+        System.out.println("Inside Permit Fee Motor Cab");   
+        t.setPermitFee(200);
+        update( t );   
+end
+
+
+rule "Permit Fee other vehcile temporary"    
+    when
+        t : FeeRuleModel( permitFee == 0 , "TEMPORARY" contains  permitClass)    
+    then   
+        System.out.println("Inside Permit Fee other vehcile temporary");   
+        t.setPermitFee(200);
+        update( t );   
+end
+
+
+rule "Permit Fee PSVP - PSVT application fee 3000 rs "    
+    when
+        t : FeeRuleModel("PSVP".contains(permitType) , permitFee == 0 , "PSVT" contains  vehicleClassCategory , gvw > 12000)    
+    then   
+        System.out.println("Inside 3000 rs application Fee PSVP-PSVT-GVW");   
+        t.setPermitFee(3000);
+        update( t );   
+end
+
+rule "Permit Fee Service chage 100 rs for MTLT"
+salience 95
+    when
+        t : FeeRuleModel("MTLT".contains(vehicleClassCategory) , permitService == 0) 
+    then
+        System.out.println("Permit Service charge 100 rs Fresh Registration NonTransport Fee");
+        t.setPermitService(150);
+        update( t );
+end
+
+rule "Permit Fee Service chage 100 rs for MCPT"
+salience 93
+    when
+        t : FeeRuleModel("MCPT".contains(vehicleClassCategory) , "CCP".contains(permitType) , permitService == 0) 
+    then
+        System.out.println("Permit Service charge 100 rs Fresh Registration Transport Fee");
+        t.setPermitService(100);
+        update( t );
+end
+
+rule "Permit Fee Service chage 100 rs"
+salience 90
+    when
+        t : FeeRuleModel("ARKT".contains(vehicleClassCategory) , permitService == 0) 
+    then
+        System.out.println("Permit Service charge 100 rs Fresh Registration NonTransport Fee");
+        t.setPermitService(100);
+        update( t );
+end
+
+rule "Permit Fee Service chage 150 rs"
+salience 89
+    when
+        t : FeeRuleModel(permitService == 0) 
+    then
+        System.out.println("Permit Service charge 150 rs Fresh Registration NonTransport Fee");
+        t.setPermitService(150);
+        update( t );
+end
+
+
+rule "Permit Fee MAXT 2000 rs "
+    when
+        t : FeeRuleModel("MAXT".contains(vehicleClassCategory) , "AITC".contains(permitType)  , permitFee == 0) 
+    then
+        System.out.println("Inside AITC Permit Fee ");
+        t.setPermitFee(2000);
+        update( t );
+end
+
+
+rule "Permit Fee MCPT 200 rs "
+    when
+        t : FeeRuleModel("MCPT".contains(vehicleClassCategory) , "CCP".contains(permitType)  , permitFee == 0) 
+    then
+        System.out.println("Inside MCPT Permit Fee ");
+        t.setPermitFee(200);
+        update( t );
+end
+
+rule "Permit Fee AITC 1000 rs "
+    when
+        t : FeeRuleModel("AITC".contains(permitType) , permitFee == 0) 
+    then
+        System.out.println("Inside 1000 rs Fresh Registration NonTransport Fee ");
+        t.setPermitFee(1000);
+        update( t );
+end
+
+rule "Permit Fee AITC Authorization fee 1000 rs "
+    when
+        t : FeeRuleModel("AITC~AITP" contains permitType  , otherPermitFee == 0, "LTCT~MTLT~STCT~MAXT~TOVT" contains  vehicleClassCategory) 
+    then
+        System.out.println("Inside 500 rs Authorization  Fee AITC");
+        t.setOtherPermitFee(500);
+        update( t );
+end
+
+
+rule "Permit Fee AITP application fee 1000 rs "
+    when
+        t : FeeRuleModel("AITP".contains(permitType) , permitFee == 0 , "LTCT~TOVT~STCT" contains  vehicleClassCategory ) 
+    then
+        System.out.println("Inside 1000 rs application  Fee AITP");
+        t.setPermitFee(1000);
+        update( t );
+end
+
+rule "Permit Fee AITP application fee 2000 rs "
+    when
+        t : FeeRuleModel("AITP".contains(permitType) , permitFee == 0 , "MAXT~TOVT" contains  vehicleClassCategory ) 
+    then
+        System.out.println("Inside 2000 rs application  Fee AITP");
+        t.setPermitFee(2000);
+        update( t );
+end
+
+rule "Permit Fee AITP application fee 5000 rs "
+    when
+        t : FeeRuleModel("AITP".contains(permitType) , permitFee == 0 , "COCT~TOVT" contains  vehicleClassCategory ) 
+    then
+        System.out.println("Inside 5000 rs application  Fee AITP");
+        t.setPermitFee(2000);
+        update( t );
+end
+
+
+rule "Permit Fee CCP for OBT seating capacity 0 to 13 "
+    when
+        t : FeeRuleModel("CCP".contains(permitType) , permitFee == 0 , "OBT" contains  vehicleClassCategory , seatingCapacity < 14) 
+    then
+        System.out.println("Inside Permit Fee CCP for OBT seating capacity 0 to 13 ");
+        t.setPermitFee(450);
+        update( t );
+end
+
+
+rule "Permit Fee CCP for OBT seating capacity greate than 14 "
+    when
+        t : FeeRuleModel("CCP".contains(permitType) , permitFee == 0 , "OBT" contains  vehicleClassCategory , seatingCapacity > 14) 
+    then
+        System.out.println("Inside Permit Fee CCP for OBT seating capacity greater than 14 ");
+        t.setPermitFee(5000);
+        update( t );
+end
+
+
+
+
+rule "Permit Fee CCP application fee 450 rs "
+    when
+        t : FeeRuleModel("CCP".contains(permitType) , permitFee == 0 , "SCRT" contains  vehicleClassCategory ) 
+    then
+        System.out.println("Inside 450 rs application  Fee CCP");
+        t.setPermitFee(450);
+        update( t );
+end
+
+
+rule "Permit Fee CCP application fee 500 rs "
+    when
+        t : FeeRuleModel("CCP".contains(permitType) , permitFee == 0 , "ARKT" contains  vehicleClassCategory ) 
+    then
+        System.out.println("Inside 500 rs application  Fee CCP");
+        t.setPermitFee(500);
+        update( t );
+end
+
+
+rule "Permit Fee CCP application fee 1000 rs "
+    when
+        t : FeeRuleModel("CCP".contains(permitType) , permitFee == 0 , "LTCT~MTLT~TOVT~STCT" contains  vehicleClassCategory ) 
+    then
+        System.out.println("Inside 1000 rs application  Fee CCP");
+        t.setPermitFee(1000);
+        update( t );
+end
+
+rule "Permit Fee CCP application fee 2000 rs "
+    when
+        t : FeeRuleModel("CCP".contains(permitType) , permitFee == 0 , "MAXT~TOVT" contains  vehicleClassCategory ) 
+    then
+        System.out.println("Inside 2000 rs application  Fee CCP");
+        t.setPermitFee(2000);
+        update( t );
+end
+
+
+rule "Permit Fee CCP application fee 5000 rs "
+    when
+        t : FeeRuleModel("CCP".contains(permitType) , permitFee == 0 , "COCT~SCRT~TOVT" contains  vehicleClassCategory ) 
+    then
+        System.out.println("Inside 5000 rs application  Fee CCP");
+        t.setPermitFee(5000);
+        update( t );
+end
+
+
+rule "Permit Fee CSP application fee 450 rs "
+    when
+        t : FeeRuleModel("CSP".contains(permitType) , permitFee == 0 , "OBT" contains  vehicleClassCategory ) 
+    then
+        System.out.println("Inside 450 rs application  Fee CSP");
+        t.setPermitFee(450);
+        update( t );
+end
+
+
+rule "Permit Fee CSP application fee 2000 rs "
+    when
+        t : FeeRuleModel("CSP".contains(permitType) , permitFee == 0 , "OBT~SCRT" contains  vehicleClassCategory ) 
+    then
+        System.out.println("Inside 2000 rs application  Fee CSP");
+        t.setPermitFee(2000);
+        update( t );
+end
+
+rule "Permit Fee CSP application fee 600 rs "
+    when
+        t : FeeRuleModel("CSP".contains(permitType) , permitFee == 0) 
+    then
+        System.out.println("Inside 600 rs application  Fee CSP");
+        t.setPermitFee(600);
+        update( t );
+end
+
+
+
+rule "Permit Fee CSPP application fee 5000 rs "
+    when
+        t : FeeRuleModel("CSPP".contains(permitType) , permitFee == 0) 
+    then
+        System.out.println("Inside 5000 rs application  Fee CSPP");
+        t.setPermitFee(5000);
+        update( t );
+end
+
+
+rule "Permit Fee EIB application fee 450 rs "
+    when
+        t : FeeRuleModel("EIB".contains(permitType) , permitFee == 0 ,"OBT" contains  vehicleClassCategory) 
+    then
+        System.out.println("Inside 450 rs application  Fee EIB");
+        t.setPermitFee(450);
+        update( t );
+end
+
+
+rule "Permit Fee EIB application fee 3000 rs "
+    when
+        t : FeeRuleModel("EIB".contains(permitType) , permitFee == 0 ) 
+    then
+        System.out.println("Inside 3000 rs application  Fee EIB");
+        t.setPermitFee(3000);
+        update( t );
+end
+
+
+rule "Permit Fee GCP application fee 1000 rs "
+    when
+        t : FeeRuleModel("GCP".contains(permitType) , permitFee == 0 ) 
+    then
+        System.out.println("Inside 1000 rs application  Fee GCP");
+        t.setPermitFee(1000);
+        update( t );
+end
+
+rule "Permit Fee GCP Authorization fee 1000 rs "
+    when
+        t : FeeRuleModel("GCP" contains permitType  , otherPermitFee == 0 , "TRTT" contains vehicleClassCategory) 
+    then
+        System.out.println("Inside 1000 rs Authorization  Fee GCP");
+        t.setOtherPermitFee(1000);
+        update( t );
+end
+
+
+rule "Permit Fee NP application fee 1000 rs "
+    when
+        t : FeeRuleModel("NP".contains(permitType) , permitFee == 0 ) 
+    then
+        System.out.println("Inside 1000 rs application  Fee NP");
+        t.setPermitFee(1000);
+        update( t );
+end
+
+rule "Permit Fee NP Authorization fee 1000 rs "
+    when
+        t : FeeRuleModel("NP" contains permitType  , otherPermitFee == 0) 
+    then
+        System.out.println("Inside 1000 rs Authorization  Fee NP");
+        t.setOtherPermitFee(1000);
+        update( t );
+end
+
+rule "Permit Fee PSVP application fee 600 rs "
+    when
+        t : FeeRuleModel("PSVP".contains(permitType) , permitFee == 0 , "SCRT~TOVT" contains  vehicleClassCategory) 
+    then
+        System.out.println("Inside 600 rs application  Fee PSVP");
+        t.setPermitFee(600);
+        update( t );
+end
+
+
+rule "Permit Fee PSVP application fee 900 rs "
+    when
+        t : FeeRuleModel("PSVP".contains(permitType) , permitFee == 0 , "COCT~SCRT~TOVT" contains  vehicleClassCategory) 
+    then
+        System.out.println("Inside 900 rs application  Fee PSVP");
+        t.setPermitFee(900);
+        update( t );
+end
+
+rule "Permit Fee PSVP application fee 2000 rs "
+    when
+        t : FeeRuleModel("PSVP".contains(permitType) , permitFee == 0 , "MAXT~OBT~PSVT" contains  vehicleClassCategory) 
+    then
+        System.out.println("Inside 2000 rs application  Fee PSVP");
+        t.setPermitFee(2000);
+        update( t );
+end
+
+rule "Permit Fee SBP application fee 450 rs "
+    when
+        t : FeeRuleModel("SBP".contains(permitType) , permitFee == 0 , "OBT" contains  vehicleClassCategory) 
+    then
+        System.out.println("Inside 450 rs application  Fee SBP");
+        t.setPermitFee(450);
+        update( t );
+end
+
+rule "Permit Fee SBP application fee 2000 rs "
+    when
+        t : FeeRuleModel("SBP".contains(permitType) , permitFee == 0 , "MAXT" contains  vehicleClassCategory) 
+    then
+        System.out.println("Inside 2000 rs application  Fee SBP");
+        t.setPermitFee(2000);
+        update( t );
+end
+
+
+rule "Permit Fee SBP application fee 5000 rs "
+    when
+        t : FeeRuleModel("SBP".contains(permitType) , permitFee == 0 , "COCT~SCRT~TOVT" contains  vehicleClassCategory) 
+    then
+        System.out.println("Inside 5000 rs application  Fee SBP");
+        t.setPermitFee(5000);
+        update( t );
+end
+
+
+
+
+rule "Permit Fee SCP application fee 5000 rs "
+    when
+        t : FeeRuleModel("SCP".contains(permitType) , permitFee == 0 ) 
+    then
+        System.out.println("Inside 5000 rs application  Fee SCP");
+        t.setPermitFee(5000);
+        update( t );
+end
+
+
+rule "Permit Fee SP application fee 100 rs "
+    when
+        t : FeeRuleModel("SP".contains(permitType) , permitFee == 0 , "COCT~SCRT" contains  vehicleClassCategory) 
+    then
+        System.out.println("Inside 100 rs application  Fee SP");
+        t.setPermitFee(100);
+        update( t );
+end
+
+rule "Permit Fee SP application fee 1000 rs "
+    when
+        t : FeeRuleModel("SP".contains(permitType) , permitFee == 0 , "OBT~TOVT" contains  vehicleClassCategory) 
+    then
+        System.out.println("Inside 1000 rs application  Fee SP");
+        t.setPermitFee(1000);
+        update( t );
+end
+
+rule "Permit Fee SP application fee 2000 rs "
+    when
+        t : FeeRuleModel("SP".contains(permitType) , permitFee == 0 , "MAXT" contains  vehicleClassCategory) 
+    then
+        System.out.println("Inside 2000 rs application  Fee SP");
+        t.setPermitFee(2000);
+        update( t );
+end
+
+rule "Permit Fee SSP application fee 200 rs "
+    when
+        t : FeeRuleModel("SSP".contains(permitType) , permitFee == 0 ) 
+    then
+        System.out.println("Inside 200 rs application  Fee SSP");
+        t.setPermitFee(200);
+        update( t );
+end
+
+
+rule "Permit Fee SSPSO application fee 200 rs "
+    when
+        t : FeeRuleModel("SSPSO".contains(permitType) , permitFee == 0 ) 
+    then
+        System.out.println("Inside 200 rs application  Fee SSPSO");
+        t.setPermitFee(200);
+        update( t );
+end
+
+
+rule "Permit Fee STL application fee 100 rs "
+    when
+        t : FeeRuleModel("STL".contains(permitType) , permitFee == 0 ) 
+    then
+        System.out.println("Inside 100 rs application  Fee STL");
+        t.setPermitFee(100);
+        update( t );
+end
+
+
+rule "Permit Fee TCCP application fee 200 rs "
+    when
+        t : FeeRuleModel("TCCP".contains(permitType) , permitFee == 0 ) 
+    then
+        System.out.println("Inside 200 rs application  Fee TCCP");
+        t.setPermitFee(200);
+        update( t );
+end
+
+
+rule "Permit Fee TCP application fee 375 rs "
+    when
+        t : FeeRuleModel("TCP".contains(permitType) , permitFee == 0 ) 
+    then
+        System.out.println("Inside 375 rs application  Fee TCP");
+        t.setPermitFee(375);
+        update( t );
+end
+
+
+rule "Permit Fee TGCP application fee 200 rs "
+    when
+        t : FeeRuleModel("TGCP".contains(permitType) , permitFee == 0 ) 
+    then
+        System.out.println("Inside 200 rs application  Fee TGCP");
+        t.setPermitFee(200);
+        update( t );
+end
+
+
+rule "Permit Fee TSCP application fee 200 rs "
+    when
+        t : FeeRuleModel("TSCP".contains(permitType) , permitFee == 0 ) 
+    then
+        System.out.println("Inside 200 rs application  Fee TSCP");
+        t.setPermitFee(200);
+        update( t );
+end
+
+
+
+rule "Total New Permit Fee "
+    when
+        t : FeeRuleModel(totalPermitFee == 0)
+    then
+        System.out.println("Inside Total Permit Fee "+ t.getVehicleClassCategory() +"  "+ t.getPermitType());
+        t.setTotalPermitFee(t.getPermitFee() + t.getPermitService() + t.getOtherPermitFee());
+        update( t );
+end

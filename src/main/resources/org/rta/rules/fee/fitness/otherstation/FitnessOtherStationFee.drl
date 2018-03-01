@@ -1,0 +1,109 @@
+package org.rta.rules.fee.fitness.otherstation
+ 
+import org.rta.rules.model.FeeRuleModel;
+ 
+rule "Fitness  otherstation Service charge Fee 60 rs"
+    when
+        t : FeeRuleModel("ARKT".contains(vehicleClassCategory) , fitnessService == 0 )
+    then
+        System.out.println("Inside Fitness otherstation Service charge Fee 60 rs");
+        t.setFitnessService(60);
+        update( t );
+end
+
+
+rule "Fitness otherstation Service charge  Fee 120 rs"
+    when
+        t : FeeRuleModel("CHST" not contains vehicleClassCategory , fitnessService == 0 )
+    then
+        System.out.println("Inside Fitness otherstation Service charge Fee 120 rs");
+        t.setFitnessService(120);
+        update( t );
+end
+
+
+rule "Fitness otherstation Fee  Fee 400 rs"
+    when
+        t : FeeRuleModel("MCPT~MCGT~MCTT" contains vehicleClassCategory , fitnessFee == 0 )
+    then
+        System.out.println("Inside Fitness otherstation Fee  Fee 400 rs");
+        t.setFitnessFee(400);
+        update( t );
+end
+
+
+rule "Fitness otherstation Fee  Fee 600 rs"
+    when
+        t : FeeRuleModel( fitnessFee == 0  , "CHST" not contains vehicleClassCategory , gvw < 7500)
+    then
+        System.out.println("Inside Fitness otherstation Fee  Fee 600 rs");
+        t.setFitnessFee(600);
+        update( t );
+end
+
+rule "Fitness otherstation Fee  Fee 800 rs"
+    when
+        t : FeeRuleModel( fitnessFee == 0  , "CHST" not contains vehicleClassCategory , gvw > 7500)
+    then
+        System.out.println("Inside Fitness otherstation Fee  Fee 600 rs");
+        t.setFitnessFee(800);
+        update( t );
+end
+
+
+rule "Penalty otherstation Fitness  old vehicle 0 to 3"
+    when
+        t : FeeRuleModel( oldVehicle , penalty == 0 , monthCount > 0 , monthCount < 4 )
+    then
+        System.out.println("Penalty otherstation Fitness Fee  old vehicle 0 to 3 ");
+        t.setPenalty(25);
+        update( t );
+end
+
+rule "Penalty otherstation Fitness old vehicle 4 to 6"
+    when
+        t : FeeRuleModel( oldVehicle , penalty == 0 , monthCount > 3 , monthCount < 7)
+    then
+        System.out.println("Penalty otherstation Fitness Fee  old vehicle 4 to 6");
+        t.setPenalty(50);
+        update( t );
+end
+
+rule "Penalty otherstation Fitness old vehicle 7 to 9"
+    when
+        t : FeeRuleModel( oldVehicle , penalty == 0 , monthCount > 6 , monthCount < 10 )
+    then
+        System.out.println("Penalty otherstation Fitness Fee old vehicle 7 to 9");
+        t.setPenalty(75);
+        update( t );
+end
+
+rule "Penalty otherstation Fitness old vehicle greater than 10"
+    when
+        t : FeeRuleModel( oldVehicle , penalty == 0 , monthCount > 9 )
+    then
+        System.out.println("Penalty otherstation Fitness old vehicle greater than 10");
+        t.setPenalty(100);
+        update( t );
+end
+
+rule "Penalty otherstation Fitness new vehicle "
+    when
+        t : FeeRuleModel( !oldVehicle , penalty == 0 , daysCount >0 )
+    then
+        System.out.println("Penalty otherstation Fitness Fee  new vehicle ");
+        t.setPenalty(50*t.getDaysCount());
+        update( t );
+end
+
+
+
+
+rule "Total TR and PR Fee otherstation Fitness  Fee"
+    when
+        t : FeeRuleModel(totalFitnessFee == 0)
+    then
+        System.out.println("Inside Total TR and PR Fee otherstation Fitness  Fee "+ t.getVehicleClassCategory());
+        t.setTotalFitnessFee(t.getFitnessFee() + t.getFitnessService() +  t.getPenalty());
+        update( t );
+end

@@ -1,0 +1,108 @@
+package org.rta.rules.fee.changeaddress.transport
+ 
+import org.rta.rules.model.FeeRuleModel;
+ 
+
+rule "PR Service charge Change of address  transport Fee MMCN~MCYN"
+salience 82    
+    when
+        t : FeeRuleModel("ARKT".contains(vehicleClassCategory) , prService == 0 ) 
+    then
+        System.out.println("Inside PR service charge Change of address  transport MMCN~MCYN");
+        t.setPrService(150);
+        update( t );
+end
+
+
+rule "PR 300 rs Service charge Change of address  transport"
+salience 80    
+    when
+        t : FeeRuleModel(prService == 0 ) 
+    then
+        System.out.println("Inside PR 300 rs service charge Change of address  transport");
+        t.setPrService(300);
+        update( t );
+end
+
+rule "500 rs LMV Change of address  transport Fee"
+    when
+        t : FeeRuleModel(prFee == 0 ,gvw <= 12000 , "CHST" not contains vehicleClassCategory) 
+    then
+        System.out.println("Inside 500 rs LMV Change of address  transport Fee ");
+        t.setPrFee(500);
+        update( t );
+end
+
+rule "750 rs HMV Change of address  transport Fee"
+    when
+        t : FeeRuleModel(prFee == 0 ,gvw > 12000 , "CHST" not contains vehicleClassCategory) 
+    then
+        System.out.println("Inside 750 rs HMV Change of address  transport Fee ");
+        t.setPrFee(750);
+        update( t );
+end
+
+
+rule "Penalty Change of address transport two wheller old vehicle 0 to 3"
+    when
+        t : FeeRuleModel( oldVehicle , penalty == 0 , monthCount > 0 , monthCount < 4 )
+    then
+        System.out.println("Penalty Change of address  transport Fee  old vehicle 0 to 3 ");
+        t.setPenalty(25);
+        update( t );
+end
+
+rule "Penalty Change of address  transport two wheller old vehicle 4 to 6"
+    when
+        t : FeeRuleModel( oldVehicle , penalty == 0 , monthCount > 3 , monthCount < 7)
+    then
+        System.out.println("Penalty Change of address  transport Fee  old vehicle 4 to 6");
+        t.setPenalty(50);
+        update( t );
+end
+
+rule "Penalty Change of address  transport two wheller old vehicle 7 to 9"
+    when
+        t : FeeRuleModel( oldVehicle , penalty == 0 , monthCount > 6 , monthCount < 10 )
+    then
+        System.out.println("Penalty Change of address  transport Fee old vehicle 7 to 9");
+        t.setPenalty(75);
+        update( t );
+end
+
+rule "Penalty Change of address  transport two wheller old vehicle greater than 10"
+    when
+        t : FeeRuleModel( oldVehicle , penalty == 0 , monthCount > 9  )
+    then
+        System.out.println("Penalty Change of address  transport Fee  old vehicle greater than 10");
+        t.setPenalty(100);
+        update( t );
+end
+
+rule "Penalty Change of address  transport two wheller new vehicle "
+    when
+        t : FeeRuleModel( !oldVehicle , penalty == 0 , monthCount >0 ,"MCPT~MCGT~MCTT" contains vehicleClassCategory)
+    then
+        System.out.println("Penalty Change of address non transport Fee two wheller  vehicle ");
+        t.setPenalty(300*t.getMonthCount());
+        update( t );
+end
+
+
+rule "Penalty Change of address transport other wheller new vehicle "
+    when
+        t : FeeRuleModel( !oldVehicle , penalty == 0 , monthCount >0 ,"MCPT~MCGT~MCTT" not contains vehicleClassCategory)
+    then
+        System.out.println("Penalty Change of address transport Fee other wheller  vehicle ");
+        t.setPenalty(500*t.getMonthCount());
+        update( t );
+end
+
+rule "Total PR Fee Change of address  transport Fee"
+    when
+        t : FeeRuleModel(totalPrFee == 0 )
+    then
+        System.out.println("Inside Total PR Fee Change of address  transport "+ t.getVehicleClassCategory());
+        t.setTotalPrFee(t.getPrFee() + t.getPrService() + t.getPenalty());
+        update( t );
+end

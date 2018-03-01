@@ -1,0 +1,32 @@
+package org.rta.rules.fee.permit.surrender
+ 
+import org.rta.rules.model.FeeRuleModel;
+ 
+rule "Permit surrender Fee Service chage 100 rs"
+salience 90
+    when
+        t : FeeRuleModel("ARKT".contains(vehicleClassCategory) , permitFee == 0) 
+    then
+        System.out.println("Permit surrender Service charge 100 rs Fresh Registration NonTransport Fee");
+        t.setPermitFee(100);
+        update( t );
+end
+
+rule "Permit surrender Fee Service chage 150 rs"
+salience 89
+    when
+        t : FeeRuleModel(permitFee == 0) 
+    then
+        System.out.println("Permit surrender Service charge 150 rs Fresh Registration NonTransport Fee");
+        t.setPermitFee(150);
+        update( t );
+end
+
+rule "Total surrender New Permit Fee "
+    when
+        t : FeeRuleModel(totalPermitFee == 0)
+    then
+        System.out.println("Inside surrender Total Permit Fee "+ t.getVehicleClassCategory() +"  "+ t.getPermitType());
+        t.setTotalPermitFee(t.getPermitFee());
+        update( t );
+end

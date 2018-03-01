@@ -1,0 +1,228 @@
+package org.rta.rules.fee.permit.transfer
+ 
+import org.rta.rules.model.FeeRuleModel;
+ 
+
+rule "Permit transfer Fee Service chage 100 rs"
+salience 95
+    when
+        t : FeeRuleModel("ARKT".contains(vehicleClassCategory) , permitService == 0) 
+    then
+        System.out.println("Permit surrender Service charge 100 rs Fresh Registration NonTransport Fee");
+        t.setPermitService(100);
+        update( t );
+end
+
+rule "Permit transfer Fee Service chage 150 rs"
+salience 92
+    when
+        t : FeeRuleModel(permitService == 0) 
+    then
+        System.out.println("Permit surrender Service charge 150 rs Fresh Registration NonTransport Fee");
+        t.setPermitService(150);
+        update( t );
+end
+ 
+rule "ARKT Permit transfer Fee Service chage 500 rs"
+salience 90
+    when
+        t : FeeRuleModel("ARKT".contains(vehicleClassCategory) , permitType.equals("CCP") , permitFee == 0) 
+    then
+        System.out.println("ARKT Permit transfer Service charge 500 rs");
+        t.setPermitFee(500);
+        update( t );
+end
+
+rule "MTLT Permit transfer Fee Service chage 500 rs"
+salience 89
+    when
+        t : FeeRuleModel("MTLT".contains(vehicleClassCategory) , permitType.equals("CSPP"), seatingCapacity >=0 , seatingCapacity <= 7 , permitFee == 0) 
+    then
+        System.out.println("MTLT Permit transfer Service charge 500 rs");
+        t.setPermitFee(500);
+        update( t );
+end
+
+rule "AABT~ARVT~AUTT~CAVT~CMVT~CTHT~CVHT~DEXT~DMPT~FFVT~FTRT~GCRT~HERT~LIBT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~TFTT~TGVT~TRLT~XRYT Permit transfer Fee Service chage 450 rs"
+salience 88
+    when
+        t : FeeRuleModel("AABT~ARVT~AUTT~CAVT~CMVT~CTHT~CVHT~DEXT~DMPT~FFVT~FTRT~GCRT~HERT~LIBT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~TFTT~TGVT~TRLT~XRYT".contains(vehicleClassCategory) , permitType.equals("GCP") , permitFee == 0) 
+    then
+        System.out.println("AABT~ARVT~AUTT~CAVT~CMVT~CTHT~CVHT~DEXT~DMPT~FFVT~FTRT~GCRT~HERT~LIBT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~TFTT~TGVT~TRLT~XRYT  Permit transfer Service charge 450 rs");
+        t.setPermitFee(450);
+        update( t );
+end
+
+rule "AABT~ARVT~AUTT~CAVT~CMVT~CTHT~CVHT~FFVT~FTRT~GCRT~HERT~LIBT~LTCT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~TFTT~XRYT~STCT Permit transfer Fee Service chage 750 rs"
+salience 87
+    when
+        t : FeeRuleModel("AABT~ARVT~AUTT~CAVT~CMVT~CTHT~CVHT~FFVT~FTRT~GCRT~HERT~LIBT~LTCT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~TFTT~XRYT~STCT".contains(vehicleClassCategory) , permitType.equals("NP") , permitFee == 0) 
+    then
+        System.out.println("AABT~ARVT~AUTT~CAVT~CMVT~CTHT~CVHT~FFVT~FTRT~GCRT~HERT~LIBT~LTCT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~TFTT~XRYT~STCT Permit transfer Service charge 750 rs");
+        t.setPermitFee(750);
+        update( t );
+end
+
+rule "EIBT Permit transfer Fee Service chage 1000 rs"
+salience 86
+    when
+        t : FeeRuleModel("EIBT".contains(vehicleClassCategory) , permitType.equals("EIB") ,  seatingCapacity >=0 , seatingCapacity <= 999, permitFee == 0) 
+    then
+        System.out.println("EIBT Permit transfer Service charge 1000 rs");
+        t.setPermitFee(1000);
+        update( t );
+end
+
+rule "LTCT Permit transfer Fee Service chage 1000 rs"
+salience 85
+    when
+        t : FeeRuleModel("LTCT".contains(vehicleClassCategory) , "AITP~CCP~AITC".contains(permitType) ,  seatingCapacity >=0 , seatingCapacity <= 999, permitFee == 0) 
+    then
+        System.out.println("LTCT Permit transfer Service charge 1000 rs");
+        t.setPermitFee(1000);
+        update( t );
+end
+
+
+rule "MAXT Permit transfer Fee Service chage 1000 rs"
+salience 84
+    when
+        t : FeeRuleModel("MAXT".contains(vehicleClassCategory) , "AITP~CCP~AITC".contains(permitType) ,  seatingCapacity >=4 , seatingCapacity <= 999, permitFee == 0) 
+    then
+        System.out.println("MAXT Permit transfer Service charge 1000 rs");
+        t.setPermitFee(1000);
+        update( t );
+end
+
+rule "MTLT Permit transfer Fee Service chage 1000 rs"
+salience 83
+    when
+        t : FeeRuleModel("MTLT".contains(vehicleClassCategory) , "CCP~AITC".contains(permitType) ,  seatingCapacity >=0 , seatingCapacity <= 7, permitFee == 0) 
+    then
+        System.out.println("MTLT Permit transfer Service charge 1000 rs");
+        t.setPermitFee(1000);
+        update( t );
+end
+
+
+rule "PSVT Permit transfer Fee Service chage 1000 rs"
+salience 82
+    when
+        t : FeeRuleModel("PSVT".contains(vehicleClassCategory) , "PSVP".contains(permitType) ,  seatingCapacity >=0 , seatingCapacity <= 999, permitFee == 0) 
+    then
+        System.out.println("PSVT Permit transfer Service charge 1000 rs");
+        t.setPermitFee(1000);
+        update( t );
+end
+
+rule "TOVT Permit transfer Fee Service chage 1000 rs"
+salience 81
+    when
+        t : FeeRuleModel("TOVT".contains(vehicleClassCategory) , "CCP".contains(permitType) ,  seatingCapacity >=0 , seatingCapacity <= 13, permitFee == 0) 
+    then
+        System.out.println("TOVT Permit transfer Service charge 1000 rs");
+        t.setPermitFee(1000);
+        update( t );
+end
+
+rule "TTTT Permit transfer Fee Service chage 1000 rs"
+salience 80
+    when
+        t : FeeRuleModel("TTTT".contains(vehicleClassCategory) , "GCP".contains(permitType) , permitFee == 0) 
+    then
+        System.out.println("TTTT Permit transfer Service charge 1000 rs");
+        t.setPermitFee(1000);
+        update( t );
+end
+
+
+rule "STCT Permit transfer Fee Service chage 2500 rs"
+salience 79
+    when
+        t : FeeRuleModel("STCT".contains(vehicleClassCategory) , "CCP~AITP~AITC".contains(permitType) ,  seatingCapacity >=0 , seatingCapacity <= 999, permitFee == 0) 
+    then
+        System.out.println("STCT Permit transfer Service charge 1000 rs");
+        t.setPermitFee(1000);
+        update( t );
+end
+
+
+rule "COCT Permit transfer Fee Service chage 2000 rs"
+salience 78
+    when
+        t : FeeRuleModel("COCT".contains(vehicleClassCategory) , "SBP~AITP".contains(permitType) , seatingCapacity >=14 , seatingCapacity <= 999 , permitFee == 0) 
+    then
+        System.out.println("COCT Permit transfer Service charge 2000 rs");
+        t.setPermitFee(2000);
+        update( t );
+end
+
+rule "SCRT Permit transfer Fee Service chage 2000 rs"
+salience 77
+    when
+        t : FeeRuleModel("SCRT".contains(vehicleClassCategory) , "SBP~SCP".contains(permitType) , seatingCapacity >=0 , seatingCapacity <= 999 , permitFee == 0) 
+    then
+        System.out.println("SCRT Permit transfer Service charge 2000 rs");
+        t.setPermitFee(2000);
+        update( t );
+end
+
+
+rule "TOVT Permit transfer Fee Service chage 2000 rs"
+salience 76
+    when
+        t : FeeRuleModel("TOVT".contains(vehicleClassCategory) , "SBP~AITP".contains(permitType) , seatingCapacity >=7 , seatingCapacity <= 999 , permitFee == 0) 
+    then
+        System.out.println("TOVT Permit transfer Service charge 2000 rs");
+        t.setPermitFee(2000);
+        update( t );
+end
+
+rule "GCRT Permit transfer Fee Service chage 2000 rs"
+salience 75
+    when
+        t : FeeRuleModel("GCRT".contains(vehicleClassCategory) , "NP".contains(permitType) , permitFee == 0) 
+    then
+        System.out.println("GCRT Permit transfer Service charge 2000 rs");
+        t.setPermitFee(2000);
+        update( t );
+end
+
+rule "COCT Permit transfer Fee Service chage 2500 rs"
+salience 74
+    when
+        t : FeeRuleModel("COCT".contains(vehicleClassCategory) , "CCP".contains(permitType), seatingCapacity >=14 , seatingCapacity <= 999 , permitFee == 0) 
+    then
+        System.out.println("COCT Permit transfer Service charge 2500 rs");
+        t.setPermitFee(2500);
+        update( t );
+end
+
+rule "TOVT Permit transfer Fee Service chage 2500 rs"
+salience 73
+    when
+        t : FeeRuleModel("TOVT".contains(vehicleClassCategory) , "CCP".contains(permitType), seatingCapacity >=14 , seatingCapacity <= 999 ,  permitFee == 0) 
+    then
+        System.out.println("TOVT Permit transfer Service charge 2500 rs");
+        t.setPermitFee(2500);
+        update( t );
+end
+
+rule "OBT Permit transfer Fee Service chage 2500 rs"
+salience 72
+    when
+        t : FeeRuleModel("OBT".contains(vehicleClassCategory) , "CCP".contains(permitType), seatingCapacity >=14 , seatingCapacity <= 999 ,  permitFee == 0) 
+    then
+        System.out.println("OBT Permit transfer Service charge 2500 rs");
+        t.setPermitFee(2500);
+        update( t );
+end
+
+rule "Total transfer New Permit Fee"
+    when
+        t : FeeRuleModel(totalPermitFee == 0)
+    then
+        System.out.println("Inside transfer Total Permit Fee "+ t.getVehicleClassCategory() +"  "+ t.getPermitType());
+        t.setTotalPermitFee(t.getPermitFee()+t.getPermitService());
+        update( t );
+end

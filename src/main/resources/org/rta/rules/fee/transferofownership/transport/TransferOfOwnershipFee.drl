@@ -1,0 +1,59 @@
+package org.rta.rules.fee.transferofownership.transport
+ 
+import org.rta.rules.model.FeeRuleModel;
+ 
+
+rule "PR Service charge TOW non transport Fee ARKT"
+salience 82    
+    when
+        t : FeeRuleModel("ARKT".contains(vehicleClassCategory) , prService == 0 ) 
+    then
+        System.out.println("Inside PR service charge TOW non transport ARKT");
+        t.setPrService(150);
+        update( t );
+end
+
+
+rule "PR 300 rs Service charge TOW non transport"
+salience 80    
+    when
+        t : FeeRuleModel(prService == 0 ) 
+    then
+        System.out.println("Inside PR 300 rs service charge TOW non transport");
+        t.setPrService(300);
+        update( t );
+end
+
+
+
+rule "MMV TOW non transport Fee"
+    when
+        t : FeeRuleModel( prFee == 0 , gvw < 12000 , "CHST" not contains vehicleClassCategory)
+    then
+        System.out.println("Inside MMV TOW non transport");
+        t.setPrFee(500);
+        update( t );
+end
+
+
+
+
+rule "HMV TOW non transport Fee"
+    when
+        t : FeeRuleModel( prFee == 0 , gvw > 12000 , "CHST" not contains vehicleClassCategory)
+    then
+        System.out.println("Inside MMV TOW non transport");
+        t.setPrFee(750);
+        update( t );
+end
+
+
+
+rule "Total PR Fee TOW non transport Fee"
+    when
+        t : FeeRuleModel(totalPrFee == 0 )
+    then
+        System.out.println("Inside Total PR Fee TOW non transport "+ t.getVehicleClassCategory());
+        t.setTotalPrFee(t.getPrFee() + t.getPrService() + t.getPostalFee() + t.getCardFee());
+        update( t );
+end

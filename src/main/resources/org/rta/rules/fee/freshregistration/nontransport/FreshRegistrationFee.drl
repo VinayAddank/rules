@@ -1,0 +1,250 @@
+package org.rta.rules.fee.freshregistration.nontransport
+ 
+import org.rta.rules.model.FeeRuleModel;
+
+
+rule "Card Fee 200 rs Fresh Registration NonTransport Fee"
+salience 100
+    when
+        t : FeeRuleModel(cardFee == 0 , "TRCN~TTRN" not contains vehicleClassCategory) 
+    then
+        System.out.println("Card Fee 200 rs Fresh Registration NonTransport Fee");
+        t.setCardFee(200);
+        update( t );
+end
+
+
+rule "Postal 35 Fee Fresh Registration NonTransport Fee"
+salience 90
+    when
+        t : FeeRuleModel(postalFee == 0 , "CHSN~GEMN~IVCN~BRVN" not contains vehicleClassCategory) 
+    then
+        System.out.println("Postal Fee Fresh Registration NonTransport Fee");
+        t.setPostalFee(35);
+        update( t );
+end
+
+
+
+rule "TR Service charge Fresh Registration NonTransport Fee"
+salience 85    
+    when
+        t : FeeRuleModel(trService == 0 ) 
+    then
+        System.out.println("Inside TR service charge Fresh Registration NonTransport Fee");
+        t.setTrService(100);
+        update( t );
+end
+
+
+rule "PR Service charge Fresh Registration NonTransport Fee MMCN~MCYN"
+salience 82    
+    when
+        t : FeeRuleModel("MMCN~MCYN".contains(vehicleClassCategory) , prService == 0 ) 
+    then
+        System.out.println("Inside PR service charge Fresh Registration NonTransport Fee MMCN~MCYN");
+        t.setPrService(150);
+        update( t );
+end
+
+
+rule "PR Service charge Fresh Registration NonTransport Fee MCPT"
+salience 81    
+    when
+        t : FeeRuleModel(vehicleClassCategory.equals("MCPT") , prService == 0 ) 
+    then
+        System.out.println("Inside PR service charge Fresh Registration NonTransport Fee MCPT");
+        t.setPrService(100);
+        update( t );
+end
+
+rule "PR Service charge Fresh Registration NonTransport Fee"
+salience 80    
+    when
+        t : FeeRuleModel(prService == 0 ) 
+    then
+        System.out.println("Inside PR service charge Fresh Registration NonTransport Fee");
+        t.setPrService(300);
+        update( t );
+end
+
+
+rule "IVCN Fresh Registration NonTransport Fee"
+    when
+        t : FeeRuleModel(vehicleClassCategory.equals("IVCN") , prFee == 0)
+    then
+        System.out.println("Inside Fresh Registration NonTransport IVCN");
+        t.setPrFee(50);
+        update( t );
+end
+
+
+
+rule "SLCM LMV Fresh Registration NonTransport Fee"
+    when
+        t : FeeRuleModel(vehicleClassCategory.equals("SLCM") , prFee == 0 , gvw <= 7500)
+    then
+        System.out.println("Inside LMV Fresh Registration NonTransport SLCM");
+        t.setPrFee(200);
+        update( t );
+end
+
+
+rule "MMCN~MCYN~MCWN LMV Fresh Registration NonTransport Fee"
+    when
+        t : FeeRuleModel("MMCN~MCYN~MCWN".contains(vehicleClassCategory) , prFee == 0 , gvw <= 7500)
+    then
+        System.out.println("Inside LMV Fresh Registration NonTransport MMCN~MCYN~MCWN");
+        t.setPrFee(300);
+        update( t );
+end
+
+
+rule "600 rs Fresh Registration NonTransport Fee"
+    when
+        t : FeeRuleModel("CVPN~ARPN~BRVN~CTPN~CTPN~CHSN~CMPN~CRNN~CRMN~DMPN~DEXN~EXCN~FRLN~GEMN~JEPN~LODN~MSVN~MCRN~MGRN~OBPN~OTPN~REVN~RIGN~RRLN~SPHN~SWPN~TWVN~TOTN~TOWN~ATCHN~TRCN~TATN~TTRN~TCPN~TTVN~TMVN~CEHHN~PWTN".contains(vehicleClassCategory) , prFee == 0 ,gvw <= 7500) 
+    then
+        System.out.println("Inside 600 rs Fresh Registration NonTransport Fee ");
+        t.setPrFee(600);
+        update( t );
+end
+
+
+
+rule "SLCM MMV Fresh Registration NonTransport Fee"
+    when
+        t : FeeRuleModel(vehicleClassCategory.equals("SLCM") , prFee == 0 , gvw > 7500 , gvw < 12000)
+    then
+        System.out.println("Inside MMV Fresh Registration NonTransport SLCM");
+        t.setPrFee(400);
+        update( t );
+end
+
+
+rule "CHSN MMV Fresh Registration NonTransport Fee"
+    when
+        t : FeeRuleModel(vehicleClassCategory.equals("CHSN") , prFee == 0 , gvw > 7500 , gvw < 12000)
+    then
+        System.out.println("Inside MMV Fresh Registration NonTransport CHSN");
+        t.setPrFee(1000);
+        update( t );
+end
+
+
+
+rule "3000 rs HMV Fresh Registration NonTransport Fee"
+    when
+        t : FeeRuleModel("BRVN~CTPN~CTPN~CMPN~CRNN~CRMN~DMPN~DEXN~EXCN~FRLN~GEMN~LODN~MSVN~MGRN~OBPN~OTPN~REVN~RIGN~RRLN~SPHN~SWPN~TWVN~TOTN~TOWN~ATCHN~TRCN~TATN~TTRN~TCPN~TTVN~TMVN~CEHHN~PWTN".contains(vehicleClassCategory) , prFee == 0 , gvw > 7500 ) 
+    then
+        System.out.println("Inside 3000 rs HMV Fresh Registration NonTransport Fee ");
+        t.setPrFee(3000);
+        update( t );
+end
+
+
+rule "SLCM HMV Fresh Registration NonTransport Fee"
+    when
+        t : FeeRuleModel(vehicleClassCategory.equals("SLCM") , prFee == 0 ,  gvw > 12000)
+    then
+        System.out.println("Inside HMV Fresh Registration NonTransport SLCM");
+        t.setPrFee(600);
+        update( t );
+end
+
+
+
+rule "CHSN HMV Fresh Registration NonTransport Fee"
+    when
+        t : FeeRuleModel(vehicleClassCategory.equals("CHSN") , prFee == 0 , gvw > 12000)
+    then
+        System.out.println("Inside HMV Fresh Registration NonTransport CHSN");
+        t.setPrFee(1500);
+        update( t );
+end
+
+rule "Special number Fresh Registration NonTransport Fee"
+    when
+        t : FeeRuleModel(specialNoFlag == 2 , specialNumberFee == 0 )
+    then
+        System.out.println("Inside Special number Fresh Registration NonTransport Fee");
+        t.setSpecialNumberFee(100);
+        update( t );
+end
+
+rule "Late fee if expiryMonthCount >= 1 && expiryMonthCount <= 3"
+    when
+        t : FeeRuleModel(expiryMonthCount >= 1, expiryMonthCount <= 3, lateFee==0)
+    then
+        System.out.println("Late fee if expiryMonthCount >= 1 && expiryMonthCount <= 3 Fresh Registration Non Transport Fee");
+        t.setLateFee(25);
+        update( t );
+end
+
+rule "Late fee if expiryMonthCount >= 4 && expiryMonthCount <= 6"
+    when
+        t : FeeRuleModel(expiryMonthCount >= 4, expiryMonthCount <= 6, lateFee==0)
+    then
+        System.out.println("Late fee if expiryMonthCount >= 4 && expiryMonthCount <= 6 Fresh Registration Non Transport Fee");
+        t.setLateFee(50);
+        update( t );
+end
+
+rule "Late fee if expiryMonthCount >= 7 && expiryMonthCount <= 9"
+    when
+        t : FeeRuleModel(expiryMonthCount >= 7, expiryMonthCount <= 9, lateFee==0)
+    then
+        System.out.println("Late fee if expiryMonthCount >= 7 && expiryMonthCount <= 9 Fresh Registration Non Transport Fee");
+        t.setLateFee(75);
+        update( t );
+end
+
+rule "Late fee if expiryMonthCount >9"
+    when
+        t : FeeRuleModel(expiryMonthCount > 9, lateFee==0 )
+    then
+        System.out.println("Late fee if expiryMonthCount > 9 Fresh Registration Non Transport Fee");
+        t.setLateFee(100);
+        update( t );
+end
+
+rule "Four Wheeler for MMV and HMV"
+salience 75  
+    when
+        t : FeeRuleModel(gvw > 7501 , vehicleClass != null && "L5N~L5M~M1~M2~M3~N1~N2~N3~A".contains(vehicleClass) , hpaFee == 0)
+    then
+    	System.out.println("HPA Fee Inside Four Wheeler for MMV and HMV");
+        t.setHpaFee(3000);
+        update( t );
+end
+
+
+rule "Four Wheeler For LMV."
+salience 74 
+    when
+        t : FeeRuleModel( vehicleClass != null && "L5N~L5M~M1~M2~M3~N1~N2~N3~A".contains(vehicleClass) , hpaFee == 0)
+    then
+    	System.out.println("HPA Fee Inside FOUR Wheeler For LMV");
+        t.setHpaFee(1500);
+        update( t );
+end
+
+rule "Two Wheeler"
+salience 73  
+    when
+        t : FeeRuleModel(vehicleClass != null && vehicleClass.contains("L") , hpaFee == 0)
+    then
+    	System.out.println("HPA Fee Inside TWO Wheeler");
+        t.setHpaFee(500);
+        update( t );
+end
+
+rule "Total TR and PR Fee Fresh Registration NonTransport Fee"
+    when
+        t : FeeRuleModel(totalPrFee == 0 , totalTrFee == 0)
+    then
+        System.out.println("Inside Total TR and PR Fee Fresh Registration NonTransport Fee "+ t.getVehicleClassCategory());
+        t.setTrFee(t.getPrFee()/2);
+        t.setTotalPrFee(t.getPrFee() + t.getPrService() + t.getPostalFee() + t.getCardFee() + t.getTrFee() + t.getTrService() + t.getHpaFee());
+        t.setTotalTrFee(t.getTrFee() + t.getTrService());
+        update( t );
+end

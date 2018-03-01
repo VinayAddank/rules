@@ -1,0 +1,443 @@
+package org.rta.rules.fee.license
+ 
+import org.rta.rules.model.FeeRuleModel;
+
+ 
+rule "Fresh License Fee"
+    when
+        t : FeeRuleModel(licenseCategory.equals("LLF") , !isCalculate) 
+    then
+        System.out.println("Inside Fresh License Fee");
+        t.setLicenseAppFee(150*t.getLicenseCOV());
+        t.setLicenseTestFee(50);
+        t.setLicenseServiceCharge(60);
+        t.setCardFee(0);
+        t.setPostalFee(0);
+        t.setIsCalculate(true);
+        update( t );
+end
+
+rule "Duplicate License Fee"
+    when
+        t : FeeRuleModel(licenseCategory.equals("LLD") ,!isCalculate) 
+    then
+        System.out.println("Inside Duplicate License Fee");
+        t.setLicenseAppFee(75*t.getLicenseCOV());
+        t.setLicenseTestFee(0);
+        t.setLicenseServiceCharge(60);
+        t.setCardFee(0);
+        t.setPostalFee(0);
+        t.setIsCalculate(true);
+        update( t );
+end
+
+rule "Restest License Fee"
+    when
+        t : FeeRuleModel(licenseCategory.equals("LLR") , !isCalculate) 
+    then
+        System.out.println("Inside RETEST License Fee");
+        t.setLicenseAppFee(0);
+        t.setLicenseTestFee(50);
+        t.setLicenseServiceCharge(0);
+        t.setCardFee(0);
+        t.setPostalFee(0);
+        t.setIsCalculate(true);
+        update( t );
+end
+
+rule "Endorse License Fee"
+    when
+        t : FeeRuleModel(licenseCategory.equals("LLE") , !isCalculate) 
+    then
+        System.out.println("Inside Endorse License Fee");
+        t.setLicenseAppFee(150*t.getLicenseCOV());
+        t.setLicenseTestFee(50);
+        t.setLicenseServiceCharge(60);
+        t.setCardFee(0);
+        t.setPostalFee(0);
+        t.setIsCalculate(true);
+        update( t );
+end
+
+
+rule "Driving License Fresh Fee and isBadge"
+    when
+        t : FeeRuleModel(licenseCategory.equals("DLF") , isBadge(), !isCalculate) 
+    then
+        System.out.println("Driving License Fresh Fee and isBadge");
+        t.setLicenseAppFee(200 + 75);
+        t.setLicenseTestFee(300*t.getLicenseCOV());
+        t.setLicenseServiceCharge(225);
+        t.setCardFee(200);
+        t.setPostalFee(35);
+        t.setIsCalculate(true);
+        update( t );
+end
+
+rule "Driving License Fresh Fee"
+    when
+        t : FeeRuleModel(licenseCategory.equals("DLF") , !isCalculate) 
+    then
+        System.out.println("Inside Driving License Fresh Fee");
+        t.setLicenseAppFee(200);
+        t.setLicenseTestFee(300*t.getLicenseCOV());
+        t.setLicenseServiceCharge(225);
+        t.setCardFee(200);
+        t.setPostalFee(35);
+        t.setIsCalculate(true);
+        update( t );
+end
+
+rule "Driving License Militry Fee Non transport"
+    when
+        t : FeeRuleModel(licenseCategory.equals("DLM") , !isCalculate, regCategory == 2) 
+    then
+        System.out.println("Inside Driving License Militry Fee non transport");
+        t.setLicenseAppFee(200);
+        t.setLicenseTestFee(0);
+        t.setLicenseServiceCharge(225);
+        t.setCardFee(200);
+        t.setPostalFee(35);
+        t.setIsCalculate(true);
+        update( t );
+end
+
+rule "Driving License Militry Fee Transport"
+    when
+        t : FeeRuleModel(licenseCategory.equals("DLM") , !isCalculate, regCategory == 1) 
+    then
+        System.out.println("Inside Driving License Militry Fee transport");
+        t.setLicenseAppFee(200);
+        t.setLicenseTestFee(0);
+        t.setLicenseServiceCharge(150);
+        t.setCardFee(200);
+        t.setPostalFee(35);
+        t.setIsCalculate(true);
+        update( t );
+end
+
+
+rule "Driving License Renewal Fee Non Transport with grace period"
+    when
+        t : FeeRuleModel(licenseCategory.equals("DLR") , !isCalculate , gracePeriod , regCategory == 2) 
+    then
+        System.out.println("Inside Driving License Renewal Fee non Transport with grace period");
+        t.setLicenseAppFee(200);	
+        t.setLicenseTestFee(0);
+        t.setLicenseServiceCharge(225);
+        t.setCardFee(200);
+        t.setPostalFee(35);
+        t.setIsCalculate(true);
+        update( t );
+end
+
+rule "Driving License Renewal Fee Non Transport"
+    when
+        t : FeeRuleModel(licenseCategory.equals("DLR") , !isCalculate , !gracePeriod , regCategory == 2) 
+    then
+        System.out.println("Inside Driving License Renewal Fee non Transport");
+        t.setLicenseAppFee(300);	
+        t.setLicenseTestFee(0);
+        t.setLicenseServiceCharge(225);
+        t.setCardFee(200);
+        t.setPostalFee(35);
+        t.setPenalty(t.getPenaltyYear()*1000);
+        t.setIsCalculate(true);
+        update( t );
+end
+
+
+rule "Driving License Renewal Fee Transport with grace period"
+    when
+        t : FeeRuleModel(licenseCategory.equals("DLR") , !isCalculate , gracePeriod , regCategory == 1) 
+    then
+        System.out.println("Inside Driving License Renewal Fee Transport ");
+        t.setLicenseAppFee(200);	
+        t.setLicenseTestFee(0);
+        t.setLicenseServiceCharge(150);
+        t.setCardFee(200);
+        t.setPostalFee(35);
+        t.setIsCalculate(true);
+        update( t );
+end
+
+rule "Driving License Renewal Fee Transport"
+    when
+        t : FeeRuleModel(licenseCategory.equals("DLR") , !isCalculate , !gracePeriod , regCategory == 1) 
+    then
+        System.out.println("Inside Driving License Renewal Fee Transport");
+        t.setLicenseAppFee(300);	
+        t.setLicenseTestFee(0);
+        t.setLicenseServiceCharge(150);
+        t.setCardFee(200);
+        t.setPostalFee(35);
+        t.setPenalty(t.getPenaltyYear()*1000);
+        t.setIsCalculate(true);
+        update( t );
+end
+
+
+rule "Driving License Endorsement Fee Non Transport Normal"
+    when
+        t : FeeRuleModel(licenseCategory.equals("DLE") , endorseType.equals("NORMAL") , !isCalculate , regCategory == 2 ) 
+    then
+        System.out.println("Inside Driving License Endorsement Fee non Transport Normal");
+        t.setLicenseAppFee(500);	
+        t.setLicenseTestFee(300*t.getLicenseCOV());
+        t.setLicenseServiceCharge(225);
+        t.setCardFee(200);
+        t.setPostalFee(35);
+        t.setIsCalculate(true);
+        update( t );
+end
+
+rule "Driving License Endorsement Fee Non Transport HZARDOUS"
+    when
+        t : FeeRuleModel(licenseCategory.equals("DLE") , endorseType.equals("HZARDOUS") , !isCalculate , regCategory == 2 ) 
+    then
+        System.out.println("Inside Driving License Endorsement Fee non Transport HZARDOUS");
+        t.setLicenseAppFee(100);	
+        t.setLicenseTestFee(300*t.getLicenseCOV());
+        t.setLicenseServiceCharge(225);
+        t.setCardFee(200);
+        t.setPostalFee(35);
+        t.setIsCalculate(true);
+        update( t );
+end
+
+
+rule "Driving License Endorsement Fee  Transport Normal"
+    when
+        t : FeeRuleModel(licenseCategory.equals("DLE") , endorseType.equals("NORMAL") , !isCalculate , regCategory == 1 ) 
+    then
+        System.out.println("Inside Driving License Endorsement Fee Transport Normal");
+        t.setLicenseAppFee(500);	
+        t.setLicenseTestFee(300*t.getLicenseCOV());
+        t.setLicenseServiceCharge(150);
+        t.setCardFee(200);
+        t.setPostalFee(35);
+        t.setIsCalculate(true);
+        update( t );
+end
+
+rule "Driving License Endorsement Fee Transport HZARDOUS"
+    when
+        t : FeeRuleModel(licenseCategory.equals("DLE") , endorseType.equals("HZARDOUS") , !isCalculate , regCategory == 1 ) 
+    then
+        System.out.println("Inside Driving License Endorsement Fee Transport HZARDOUS");
+        t.setLicenseAppFee(100);	
+        t.setLicenseTestFee(300*t.getLicenseCOV());
+        t.setLicenseServiceCharge(150);
+        t.setCardFee(200);
+        t.setPostalFee(35);
+        t.setIsCalculate(true);
+        update( t );
+end
+
+
+rule "Driving License Retest Fee"
+    when
+        t : FeeRuleModel(licenseCategory.equals("DLRE") , !isCalculate ) 
+    then
+        System.out.println("Inside Driving License Retest Fee");
+        t.setLicenseAppFee(0);
+        t.setLicenseTestFee(300*t.getLicenseCOV());
+        t.setLicenseServiceCharge(0);
+        t.setCardFee(0);
+        t.setPostalFee(0);
+        t.setIsCalculate(true);
+        update( t );
+end
+
+
+rule "Driving License Duplicate Fee non Transport "
+    when
+        t : FeeRuleModel(licenseCategory.equals("DLD") , !isCalculate , regCategory == 2 ) 
+    then
+        System.out.println("Inside Driving License Duplicate Fee Transport");
+        t.setLicenseAppFee(100);	
+        t.setLicenseTestFee(0);
+        t.setLicenseServiceCharge(225);
+        t.setCardFee(200);
+        t.setPostalFee(35);
+        t.setIsCalculate(true);
+        update( t );
+end
+
+rule "Driving License Duplicate Fee Transport "
+    when
+        t : FeeRuleModel(licenseCategory.equals("DLD") , !isCalculate , regCategory == 1 ) 
+    then
+        System.out.println("Inside Driving License Duplicate Fee Transport");
+        t.setLicenseAppFee(100);	
+        t.setLicenseTestFee(0);
+        t.setLicenseServiceCharge(150);
+        t.setCardFee(200);
+        t.setPostalFee(35);
+        t.setIsCalculate(true);
+        update( t );
+end
+
+
+rule "Driving License International Fee "
+    when
+        t : FeeRuleModel(licenseCategory.equals("DLIN") , !isCalculate ) 
+    then
+        System.out.println("Inside Driving License International Fee");
+        t.setLicenseAppFee(1000);	
+        t.setLicenseTestFee(0);
+        t.setLicenseServiceCharge(225);
+        t.setCardFee(200);
+        t.setPostalFee(0);
+        t.setIsCalculate(true);
+        update( t );
+end
+
+rule "Driving License badge Fee "
+    when
+        t : FeeRuleModel(licenseCategory.equals("DLB") , !isCalculate ) 
+    then
+        System.out.println("Inside Driving License BADGE Fee");
+        t.setLicenseAppFee(75);	
+        t.setLicenseTestFee(0);
+        t.setLicenseServiceCharge(225);
+        t.setCardFee(200);
+        t.setPostalFee(35);
+        t.setIsCalculate(true);
+        update( t );
+end
+
+
+rule "Driving License change address Fee "
+    when
+        t : FeeRuleModel(licenseCategory.equals("DLCA") , !isCalculate ) 
+    then
+        System.out.println("Inside Driving License change address Fee");
+        t.setLicenseAppFee(200);	
+        t.setLicenseTestFee(0);
+        t.setLicenseServiceCharge(225);
+        t.setCardFee(200);
+        t.setPostalFee(35);
+        t.setIsCalculate(true);
+        update( t );
+end
+
+
+
+rule "Driving License Foreign Fee non Transport "
+    when
+        t : FeeRuleModel(licenseCategory.equals("DLFC") , !isCalculate , regCategory == 2 ) 
+    then
+        System.out.println("Inside Driving License Foreign Fee Transport");
+        t.setLicenseAppFee(200);	
+        t.setLicenseTestFee(0);
+        t.setLicenseServiceCharge(225);
+        t.setCardFee(200);
+        t.setPostalFee(35);
+        t.setIsCalculate(true);
+        update( t );
+end
+
+rule "Driving License Foreign Fee Transport "
+    when
+        t : FeeRuleModel(licenseCategory.equals("DLFC") , !isCalculate , regCategory == 1 ) 
+    then
+        System.out.println("Inside Driving License Foreign Fee Transport");
+        t.setLicenseAppFee(200);	
+        t.setLicenseTestFee(0);
+        t.setLicenseServiceCharge(150);
+        t.setCardFee(200);
+        t.setPostalFee(35);
+        t.setIsCalculate(true);
+        update( t );
+end
+
+
+rule "Driving License Surrender Fee non Transport "
+    when
+        t : FeeRuleModel(licenseCategory.equals("DLS") ,!isCalculate , regCategory == 2 ) 
+    then
+        System.out.println("Inside Driving License SURRENDER Fee Transport");
+        t.setLicenseAppFee(100);	
+        t.setLicenseTestFee(0);
+        t.setLicenseServiceCharge(225);
+        t.setCardFee(200);
+        t.setPostalFee(35);
+        t.setIsCalculate(true);
+        update( t );
+end
+
+rule "Driving License Surrender Fee Transport "
+    when
+        t : FeeRuleModel(licenseCategory.equals("DLS") , !isCalculate , regCategory == 1 ) 
+    then
+        System.out.println("Inside Driving License Surrender Fee Transport");
+        t.setLicenseAppFee(100);	
+        t.setLicenseTestFee(0);
+        t.setLicenseServiceCharge(150);
+        t.setCardFee(200);
+        t.setPostalFee(35);
+        t.setIsCalculate(true);
+        update( t );
+end
+
+
+rule "Driving License DLINFO Fee "
+    when
+        t : FeeRuleModel(licenseCategory.equals("DLI") , !isCalculate ) 
+    then
+        System.out.println("Inside Driving License DLINFO Fee");
+        t.setLicenseAppFee(5);	
+        t.setLicenseTestFee(0);
+        t.setLicenseServiceCharge(100);
+        t.setCardFee(0);
+        t.setPostalFee(0);
+        t.setIsCalculate(true);
+        update( t );
+end
+
+
+rule "Driving License expired Fee non Transport "
+    when
+        t : FeeRuleModel(licenseCategory.equals("DLEX") , !isCalculate , regCategory == 2 ) 
+    then
+        System.out.println("Inside Driving License Expired Fee non Transport");
+        t.setLicenseAppFee(150*t.getLicenseCOV() + 500);	
+        t.setLicenseTestFee(300*t.getLicenseCOV());
+        t.setLicenseServiceCharge(225);
+        t.setCardFee(200);
+        t.setPostalFee(35);
+        t.setPenalty(t.getPenaltyYear()*500);
+        t.setIsCalculate(true);
+        update( t );
+end
+
+rule "Driving License Expired Fee Transport "
+    when
+        t : FeeRuleModel(licenseCategory.equals("DLEX") , !isCalculate , regCategory == 1 ) 
+    then
+        System.out.println("Inside Driving License Expired Fee Transport");
+        t.setLicenseAppFee(150*t.getLicenseCOV() + 500);	
+        t.setLicenseTestFee(300*t.getLicenseCOV());
+        t.setLicenseServiceCharge(150);
+        t.setCardFee(200);
+        t.setPostalFee(35);
+        t.setPenalty(t.getPenaltyYear()*500);
+        t.setIsCalculate(true);
+        update( t );
+end
+
+
+
+rule "Total License Fee"
+    when
+        t : FeeRuleModel(isCalculate , totalFee == 0 ) 
+    then
+        System.out.println("Inside Total License Fee");
+        t.setTotalFee(t.getLicenseAppFee() + t.getLicenseServiceCharge() + t.getLicenseTestFee() + t.getCardFee() + t.getPostalFee() + t.getPenalty());
+        if(t.getTotalFee() == 0)
+        t.setTotalFee(100);
+        update( t );
+end
+
+

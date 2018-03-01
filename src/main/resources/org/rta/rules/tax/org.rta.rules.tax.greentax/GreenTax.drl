@@ -1,0 +1,61 @@
+package org.rta.rules.tax.greentax
+ 
+import org.rta.rules.model.TaxRuleModel;
+ 
+ 
+ 
+rule "Green Tax BATERY Wheeler"
+salience 850
+    when
+        t : TaxRuleModel(fuelType.equals("BATERY") , greenTax , regCategory ==2)
+    then
+    	System.out.println("Inside Green Tax BATERY Wheeler");
+        t.setGreenTaxAmt(0);
+        t.setGreenTax(false);
+        update( t );
+end
+
+rule "Green Tax ELECTRIC Wheeler"
+salience 800
+    when
+        t : TaxRuleModel(fuelType.equals("ELECTRIC") , greenTax  , regCategory ==2)
+    then
+    	System.out.println("Inside Green Tax ELECTRIC Wheeler");
+        t.setGreenTaxAmt(0);
+        t.setGreenTax(false);
+        update( t );
+end
+
+
+rule "Green Tax Two Wheeler"
+salience 700
+    when
+        t : TaxRuleModel(vehicleClass.contains("L") , greenTax , greenTaxAmt == 0 , regCategory ==2)
+    then
+    	System.out.println("Inside Green Tax Two Wheeler");
+        t.setGreenTaxAmt(250);
+        update( t );
+end
+
+
+rule "Green Tax Other Wheeler"
+salience 600
+    when
+        t : TaxRuleModel(greenTax , greenTaxAmt == 0 , regCategory ==2)
+    then
+    	System.out.println("Inside Green Tax Two Wheeler");
+        t.setGreenTaxAmt(500);
+        update( t );
+end
+
+
+
+rule "Green Tax Transport"
+salience 700
+    when
+        t : TaxRuleModel(greenTax , greenTaxAmt == 0 , regCategory ==1)
+    then
+    	System.out.println("Inside Green Tax Transport");
+        t.setGreenTaxAmt(200);
+        update( t );
+end

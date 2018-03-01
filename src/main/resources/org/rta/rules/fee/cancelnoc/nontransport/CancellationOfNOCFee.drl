@@ -1,0 +1,44 @@
+package org.rta.rules.fee.cancelnoc.nontransport
+ 
+import org.rta.rules.model.FeeRuleModel;
+
+ 
+rule "Postal 35 Cancelltaion of NOC non transport Fee"
+salience 90
+    when
+        t : FeeRuleModel(postalFee == 0 , "MCYN" contains vehicleClassCategory) 
+    then
+        System.out.println("Postal Fee Cancelltaion of NOC non transport");
+        t.setPostalFee(35);
+        update( t );
+end
+
+rule "PR Service charge Cancelltaion of NOC non transport Fee MMCN~MCYN"
+salience 82    
+    when
+        t : FeeRuleModel("MMCN~MCYN".contains(vehicleClassCategory) , prService == 0 ) 
+    then
+        System.out.println("Inside PR service charge Cancelltaion of NOC non transport MMCN~MCYN");
+        t.setPrService(150);
+        update( t );
+end
+
+
+rule "PR 300 rs Service charge Cancelltaion of NOC non transport"
+salience 80    
+    when
+        t : FeeRuleModel(prService == 0 ) 
+    then
+        System.out.println("Inside PR 300 rs service charge Cancelltaion of NOC non transport");
+        t.setPrService(100);
+        update( t );
+end
+
+rule "Total PR Fee Cancelltaion of NOC non transport Fee"
+    when
+        t : FeeRuleModel(totalPrFee == 0 )
+    then
+        System.out.println("Inside Total Cancelltaion of NOC non transport "+ t.getVehicleClassCategory());
+        t.setTotalPrFee(t.getPrService() + t.getPostalFee());
+        update( t );
+end

@@ -1,0 +1,43 @@
+package org.rta.rules.fee.hsrp
+ 
+import org.rta.rules.model.FeeRuleModel;
+
+
+rule "MCYN~MMCN~MCEN~MCWN~MCPT HSRP Amount"
+    when
+        t : FeeRuleModel("MCYN~MMCN~MCEN~MCWN~MCPT".contains(vehicleClassCategory) , hsrpAmount == 0 , gvw < 7500)
+    then
+    	System.out.println("Inside MCYN~MMCN~MCEN~MCWN~MCPT");
+        t.setHsrpAmount(245);
+        update( t );
+end
+
+rule "isDisabled and isInvalidCarriage HSRP Amount"
+    when
+        t : FeeRuleModel("IVCN~ARPN~ARKT~TGVT".contains(vehicleClassCategory) , hsrpAmount == 0 , gvw < 7500)
+    then
+    	System.out.println("isDisabled and isInvalidCarriage HSRP Amount");
+        t.setHsrpAmount(282);
+        update( t );
+end
+
+
+rule "HSRP Amount for LMV Vehicle less than 7500"
+    when
+        t : FeeRuleModel(hsrpAmount == 0 , gvw < 7500)
+    then
+        System.out.println("Inside HSRP Amount for LMV Vehicle less than 7500");
+        t.setHsrpAmount(619);
+        update( t );
+end
+
+ 
+rule "HSRP Amount for HMV and MMV Vehicle greater than 7500"
+    when
+        t : FeeRuleModel(hsrpAmount == 0 , gvw > 7500)
+    then
+        System.out.println("Inside HSRP Amount for HMV and MMV Vehicle greater than 7500");
+        t.setHsrpAmount(649);
+        update( t );
+end
+

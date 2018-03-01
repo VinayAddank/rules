@@ -1,0 +1,116 @@
+package org.rta.rules.fee.reassignvehicle.nontransport
+ 
+import org.rta.rules.model.FeeRuleModel;
+
+
+rule "Card Fee 200 rs  Reassignment of vehicle non transport Fee"
+salience 100
+    when
+        t : FeeRuleModel(cardFee == 0 , "TRCN~TRCN~TRCN~TTRN~TTRN~TTRN" not contains vehicleClassCategory) 
+    then
+        System.out.println("Card Fee 200 rs Reassignment of vehicle non transport Fee");
+        t.setCardFee(200);
+        update( t );
+end
+ 
+ 
+rule "Postal 35 Reassignment of vehicle non transport Fee"
+salience 90
+    when
+        t : FeeRuleModel(postalFee == 0 ) 
+    then
+        System.out.println("Postal Fee Reassignment of vehicle non transport");
+        t.setPostalFee(35);
+        update( t );
+end
+
+ 
+rule "PR 150 Service charge Reassignment of vehicle non  transport Fee MMCN~MCYN"
+salience 82    
+    when
+        t : FeeRuleModel("MMCN~MCYN".contains(vehicleClassCategory) , prService == 0 ) 
+    then
+        System.out.println("Inside PR service charge Reassignment of vehicle non transport MMCN~MCYN");
+        t.setPrService(150);
+        update( t );
+end
+
+
+
+rule "PR 300 rs Service charge Reassignment of vehicle non transport"
+salience 80    
+    when
+        t : FeeRuleModel(prService == 0 ) 
+    then
+        System.out.println("Inside PR 300 rs service charge Reassignment of vehicle non  transport");
+        t.setPrService(300);
+        update( t );
+end
+ 
+
+rule "SLCM LMV Reassignment of vehicle non transport Fee"
+    when
+        t : FeeRuleModel(vehicleClassCategory.equals("SLCM") , prFee == 0 , gvw <= 7500)
+    then
+        System.out.println("Inside LMV Reassignment of vehicle non transport SLCM");
+        t.setPrFee(200);
+        update( t );
+end
+
+
+rule "MCYN LMV Reassignment of vehicle non transport Fee"
+    when
+        t : FeeRuleModel(vehicleClassCategory.equals("MCYN") , prFee == 0 )
+    then
+        System.out.println("Inside  Reassignment of vehicle non transport MCYN");
+        t.setPrFee(300);
+        update( t );
+end
+
+rule "LMV Reassignment of vehicle non transport Fee"
+    when
+        t : FeeRuleModel( prFee == 0 , gvw < 7500 ,"CHSN" not contains vehicleClassCategory )
+    then
+        System.out.println("Inside LMV Reassignment of vehicle non transport");
+        t.setPrFee(600);
+        update( t );
+end
+
+
+
+rule "1000 rs Reassignment of vehicle non transport Fee"
+    when
+        t : FeeRuleModel("JEPN~SLCM".contains(vehicleClassCategory) , prFee == 0 ,gvw > 7500 , gvw < 12000) 
+    then
+        System.out.println("Inside 1000 rs Reassignment of vehicle non transport Fee ");
+        t.setPrFee(1000);
+        update( t );
+end
+
+
+rule "MMV Reassignment of vehicle non transport Fee"
+    when
+        t : FeeRuleModel( prFee == 0 , gvw > 7500  , "CHSN" not contains vehicleClassCategory)
+    then
+        System.out.println("Inside MMV Reassignment of vehicle non transport");
+        t.setPrFee(3000);
+        update( t );
+end
+
+rule "SLCM HMV Reassignment of vehicle non transport Fee"
+    when
+        t : FeeRuleModel(vehicleClassCategory.equals("SLCM") , prFee == 0 , gvw > 12000)
+    then
+        System.out.println("Inside HMV Reassignment of vehicle non transport SLCM");
+        t.setPrFee(1500);
+        update( t );
+end
+
+rule "Total PR Fee Reassignment of vehicle non transport Fee"
+    when
+        t : FeeRuleModel(totalPrFee == 0 )
+    then
+        System.out.println("Inside Total PR Fee Reassignment of vehicle non  transport "+ t.getVehicleClassCategory());
+        t.setTotalPrFee(t.getPrFee() + t.getPrService() + t.getPostalFee() + t.getCardFee());
+        update( t );
+end

@@ -1,0 +1,64 @@
+package org.rta.rules.fee.alterationvehicle.transport
+ 
+import org.rta.rules.model.FeeRuleModel;
+ 
+
+rule "PR Service charge alteration of vehicle  transport Fee MMCN~MCYN"
+salience 82    
+    when
+        t : FeeRuleModel("ARKT".contains(vehicleClassCategory) , prService == 0 ) 
+    then
+        System.out.println("Inside PR service charge alteration of vehicle  transport MMCN~MCYN");
+        t.setPrService(150);
+        update( t );
+end
+
+
+rule "PR 300 rs Service charge alteration of vehicle  transport"
+salience 80    
+    when
+        t : FeeRuleModel(prService == 0 ) 
+    then
+        System.out.println("Inside PR 300 rs service charge alteration of vehicle  transport");
+        t.setPrService(300);
+        update( t );
+end
+
+
+rule "LMV and MMV alteration of vehicle  transport Fee"
+    when
+        t : FeeRuleModel( prFee == 0 , gvw < 12000)
+    then
+        System.out.println("Inside LMV and  MMV alteration of vehicle  transport");
+        t.setPrFee(500);
+        update( t );
+end
+
+
+rule "HMV alteration of vehicle  transport Fee"
+    when
+        t : FeeRuleModel( prFee == 0 , gvw > 12000)
+    then
+        System.out.println("Inside HMV alteration of vehicle  transport ");
+        t.setPrFee(750);
+        update( t );
+end
+
+rule "Special number alteration Transport Fee"
+    when
+        t : FeeRuleModel(specialNoFlag == 2 , specialNumberFee == 0 )
+    then
+        System.out.println("Inside Special number alteration Transport Fee");
+        t.setSpecialNumberFee(100);
+        update( t );
+end
+
+
+rule "Total PR Fee alteration of vehicle  transport Fee"
+    when
+        t : FeeRuleModel(totalPrFee == 0 )
+    then
+        System.out.println("Inside Total PR Fee alteration of vehicle  transport "+ t.getVehicleClassCategory());
+        t.setTotalPrFee(t.getPrFee() + t.getPrService() + t.getPostalFee() + t.getCardFee() + t.getSpecialNumberFee());
+        update( t );
+end

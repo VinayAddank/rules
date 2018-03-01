@@ -1,0 +1,55 @@
+package org.rta.rules.fee.hpa.transport
+ 
+import org.rta.rules.model.FeeRuleModel;
+ 
+ 
+rule "PR Service charge HPA   transport Fee ARKT"
+salience 82    
+    when
+        t : FeeRuleModel("ARKT".contains(vehicleClassCategory) , prService == 0 ) 
+    then
+        System.out.println("Inside PR service charge HPA  transport ARKT");
+        t.setPrService(150);
+        update( t );
+end
+
+
+rule "PR 300 rs Service charge HPA  transport"
+salience 80    
+    when
+        t : FeeRuleModel(prService == 0 ) 
+    then
+        System.out.println("Inside PR 300 rs service charge HPA   transport");
+        t.setPrService(300);
+        update( t );
+end
+ 
+
+rule "LMV HPA  transport Fee"
+    when
+        t : FeeRuleModel( prFee == 0 , gvw < 7500 )
+    then
+        System.out.println("Inside LMV HPA  transport");
+        t.setPrFee(1500);
+        update( t );
+end
+
+rule "MMV and MMV HPA  transport Fee"
+    when
+        t : FeeRuleModel( prFee == 0 , gvw > 7500 )
+    then
+        System.out.println("Inside MMV and HMV HPA  transport");
+        t.setPrFee(3000);
+        update( t );
+end
+
+
+
+rule "Total PR Fee HPA  transport Fee"
+    when
+        t : FeeRuleModel(totalPrFee == 0 )
+    then
+        System.out.println("Inside Total PR Fee HPA   transport "+ t.getVehicleClassCategory());
+        t.setTotalPrFee(t.getPrFee() + t.getPrService() + t.getPostalFee() + t.getCardFee());
+        update( t );
+end

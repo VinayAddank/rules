@@ -1,0 +1,255 @@
+package org.rta.rules.fee.permit.replacevehicle
+ 
+import org.rta.rules.model.FeeRuleModel;
+ 
+rule "Permit replacevehicle Fee Service chage 100 rs"
+salience 90
+    when
+        t : FeeRuleModel("ARKT".contains(vehicleClassCategory) , permitService == 0) 
+    then
+        System.out.println("Permit Service charge replacevehicle Fee 100 rs Fresh Registration NonTransport Fee");
+        t.setPermitService(100);
+        update( t );
+end
+
+rule "Permit replacevehicle Fee Service chage 150 rs"
+salience 89
+    when
+        t : FeeRuleModel(permitService == 0) 
+    then
+        System.out.println("Permit Service charge replacevehicle Fee 150 rs Fresh Registration NonTransport Fee");
+        t.setPermitService(150);
+        update( t );
+end
+
+
+rule "Permit replacevehicle Fee MAXT 2000 rs "
+    when
+        t : FeeRuleModel("MTLT".contains(vehicleClassCategory) , "AITC".contains(permitType)  , permitFee == 0) 
+    then
+        System.out.println("Inside replacevehicle AITC Permit Fee ");
+        t.setPermitFee(50	);
+        update( t );
+end
+
+
+rule "Permit replacevehicle Fee AITP application fee 1000 rs "
+    when
+        t : FeeRuleModel("AITP".contains(permitType) , permitFee == 0 , "COCT~SCRT~MTLT~MAXT~OBT~TOVT" contains  vehicleClassCategory ) 
+    then
+        System.out.println("Inside replacevehicle 1000 rs application  Fee AITP");
+        t.setPermitFee(50);
+        update( t );
+end
+
+rule "Permit replacevehicle Fee CCP application fee 50 rs "
+    when
+        t : FeeRuleModel("CCP".contains(permitType) , permitFee == 0 , "OBT" contains  vehicleClassCategory ) 
+    then
+        System.out.println("Inside replacevehicle 50 rs application  Fee CCP");
+        t.setPermitFee(50);
+        update( t );
+end
+
+
+rule "Permit replacevehicle Fee CCP application fee 2500 rs "
+    when
+        t : FeeRuleModel("CCP".contains(permitType) , permitFee == 0 , "ARKT" contains  vehicleClassCategory ) 
+    then
+        System.out.println("Inside replacevehicle 2500 rs application  Fee CCP");
+        t.setPermitFee(2550);
+        update( t );
+end
+
+
+rule "Permit replacevehicle Fee CCP application fee 1000 rs "
+    when
+        t : FeeRuleModel("CCP".contains(permitType) , permitFee == 0 , "LTCT" contains  vehicleClassCategory ) 
+    then
+        System.out.println("Inside replacevehicle 1000 rs application  Fee CCP");
+        t.setPermitFee(1000);
+        update( t );
+end
+rule "Permit replacevehicle Fee CSP application fee 50 rs "
+    when
+        t : FeeRuleModel("CSP".contains(permitType) , permitFee == 0 ) 
+    then
+        System.out.println("Inside replacevehicle 50 rs application  Fee CSP");
+        t.setPermitFee(50);
+        update( t );
+end
+
+
+
+rule "Permit replacevehicle Fee GCP application fee 300 rs "
+    when
+        t : FeeRuleModel("GCP".contains(permitType) , permitFee == 0 , "GCRT" contains vehicleClassCategory ) 
+    then
+        System.out.println("Inside replacevehicle 300 rs application  Fee GCP");
+        t.setPermitFee(300);
+        update( t );
+end
+
+rule "Permit replacevehicle Fee GCP application fee 50 rs "
+    when
+        t : FeeRuleModel("GCP".contains(permitType) , permitFee == 0 ) 
+    then
+        System.out.println("Inside replacevehicle 50 rs application  Fee GCP");
+        t.setPermitFee(50);
+        update( t );
+end
+
+
+rule "Permit replacevehicle Fee NP application fee 100 rs "
+    when
+        t : FeeRuleModel("NP".contains(permitType) , permitFee == 0 ,"GCRT" contains vehicleClassCategory , gvw > 12000 ) 
+    then
+        System.out.println("Inside replacevehicle 100 rs application  Fee NP");
+        t.setPermitFee(100);
+        update( t );
+end
+
+
+rule "Permit replacevehicle Fee NP application fee 50 rs "
+    when
+        t : FeeRuleModel("NP".contains(permitType) , permitFee == 0 ) 
+    then
+        System.out.println("Inside replacevehicle 50 rs application  Fee NP");
+        t.setPermitFee(50);
+        update( t );
+end
+
+rule "Permit replacevehicle Fee PSVP application fee 2000 rs "
+    when
+        t : FeeRuleModel("PSVP".contains(permitType) , permitFee == 0 , "PSVT" contains  vehicleClassCategory) 
+    then
+        System.out.println("Inside replacevehicle 2000 rs application  Fee PSVP");
+        t.setPermitFee(2000);
+        update( t );
+end
+
+
+rule "Permit replacevehicle Fee PSVP application fee 50 rs "
+    when
+        t : FeeRuleModel("PSVP".contains(permitType) , permitFee == 0) 
+    then
+        System.out.println("Inside replacevehicle 50 rs application  Fee PSVP");
+        t.setPermitFee(50);
+        update( t );
+end
+
+rule "Permit replacevehicle Fee SBP application fee 50 rs "
+    when
+        t : FeeRuleModel("SBP".contains(permitType) , permitFee == 0 ) 
+    then
+        System.out.println("Inside replacevehicle 50 rs application  Fee SBP");
+        t.setPermitFee(50);
+        update( t );
+end
+
+
+rule "Permit replacevehicle Fee SCP application fee 50 rs "
+    when
+        t : FeeRuleModel("SCP".contains(permitType) , permitFee == 0 ) 
+    then
+        System.out.println("Inside replacevehicle 50 rs application  Fee SCP");
+        t.setPermitFee(50);
+        update( t );
+end
+
+
+rule "Permit replacevehicle Fee SCP application fee 2500 rs "
+    when
+        t : FeeRuleModel("SCP".contains(permitType) , permitFee == 0 ,"SCRT" contains  vehicleClassCategory) 
+    then
+        System.out.println("Inside replacevehicle 2500 rs application  Fee SCP");
+        t.setPermitFee(2500);
+        update( t );
+end
+
+
+rule "Permit replacevehicle Fee SP application fee 50 rs "
+    when
+        t : FeeRuleModel("SP".contains(permitType) , permitFee == 0 ) 
+    then
+        System.out.println("Inside replacevehicle 50 rs application  Fee SP");
+        t.setPermitFee(50);
+        update( t );
+end
+
+rule "Permit replacevehicle Fee SSP application fee 50 rs "
+    when
+        t : FeeRuleModel("SSP".contains(permitType) , permitFee == 0 ) 
+    then
+        System.out.println("Inside replacevehicle 50 rs application  Fee SSP");
+        t.setPermitFee(50);
+        update( t );
+end
+
+
+rule "Permit replacevehicle Fee SSPSO application fee 50 rs "
+    when
+        t : FeeRuleModel("SSPSO".contains(permitType) , permitFee == 0 ) 
+    then
+        System.out.println("Inside replacevehicle 50 rs application  Fee SSPSO");
+        t.setPermitFee(50);
+        update( t );
+end
+
+
+rule "Permit replacevehicle Fee STL application fee 50 rs "
+    when
+        t : FeeRuleModel("STL".contains(permitType) , permitFee == 0 ) 
+    then
+        System.out.println("Inside replacevehicle 50 rs application  Fee STL");
+        t.setPermitFee(50);
+        update( t );
+end
+
+rule "Permit replacevehicle Fee TCCP application fee 50 rs "
+    when
+        t : FeeRuleModel("TCCP".contains(permitType) , permitFee == 0 ) 
+    then
+        System.out.println("Inside replacevehicle 50 rs application  Fee TCCP");
+        t.setPermitFee(200);
+        update( t );
+end
+
+rule "Permit replacevehicle Fee TCP application fee 100 rs "
+    when
+        t : FeeRuleModel("TCP".contains(permitType) , permitFee == 0 ) 
+    then
+        System.out.println("Inside replacevehicle 100 rs application  Fee TCP");
+        t.setPermitFee(100);
+        update( t );
+end
+
+
+rule "Permit replacevehicle Fee TGCP application fee 50 rs "
+    when
+        t : FeeRuleModel("TGCP".contains(permitType) , permitFee == 0 ) 
+    then
+        System.out.println("Inside replacevehicle 50 rs application  Fee TGCP");
+        t.setPermitFee(50);
+        update( t );
+end
+
+
+rule "Permit replacevehicle Fee TSCP application fee 50 rs "
+    when
+        t : FeeRuleModel("TSCP".contains(permitType) , permitFee == 0 ) 
+    then
+        System.out.println("Inside replacevehicle 50 rs application  Fee TSCP");
+        t.setPermitFee(50);
+        update( t );
+end
+
+
+rule "Total replacevehicle New Permit Fee "
+    when
+        t : FeeRuleModel(totalPermitFee == 0)
+    then
+        System.out.println("Inside replacevehicle Total Permit Fee "+ t.getVehicleClassCategory() +"  "+ t.getPermitType());
+        t.setTotalPermitFee(t.getPermitFee() + t.getPermitService() + t.getOtherPermitFee());
+        update( t );
+end

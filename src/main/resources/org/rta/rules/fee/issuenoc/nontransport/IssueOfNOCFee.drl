@@ -1,0 +1,58 @@
+package org.rta.rules.fee.issuenoc.nontransport
+ 
+import org.rta.rules.model.FeeRuleModel;
+
+
+rule "Postal 35 issue of noc non transport Fee"
+salience 90
+    when
+        t : FeeRuleModel(postalFee == 0 ) 
+    then
+        System.out.println("Postal Fee issue of noc non transport");
+        t.setPostalFee(35);
+        update( t );
+end
+
+ 
+rule "PR 150 Service charge issue of noc non  transport Fee MMCN~MCYN~MCRN"
+salience 82    
+    when
+        t : FeeRuleModel("MMCN~MCYN~MCRN".contains(vehicleClassCategory) , prService == 0 ) 
+    then
+        System.out.println("Inside PR service charge issue of noc non transport MMCN~MCYN~MCRN");
+        t.setPrService(150);
+        update( t );
+end
+
+
+rule "PR Service charge 300 issue of noc non  transport Fee MMCN~MCYN~MCRN"
+salience 82    
+    when
+        t : FeeRuleModel("CMPN~MSVN~MSVN~MSVN~SPHN~TWVN~TWVN~TWVN~TRCN~TTRN~TTRN~TTRN~TTVN~TTVN~TTVN".contains(vehicleClassCategory) , prService == 0 ) 
+    then
+        System.out.println("Inside PR service charge issue of noc non transport MMCN~MCYN~MCRN");
+        t.setPrService(300);
+        update( t );
+end
+
+
+rule "PR 100 rs Service charge issue of noc non transport"
+salience 80    
+    when
+        t : FeeRuleModel(prService == 0 ) 
+    then
+        System.out.println("Inside PR 300 rs service charge issue of noc non  transport");
+        t.setPrService(100);
+        update( t );
+end
+ 
+
+
+rule "Total PR Fee issue of noc non transport Fee"
+    when
+        t : FeeRuleModel(totalPrFee == 0 )
+    then
+        System.out.println("Inside Total PR Fee issue of noc non  transport "+ t.getVehicleClassCategory());
+        t.setTotalPrFee(t.getPrFee() + t.getPrService() + t.getPostalFee() + t.getCardFee());
+        update( t );
+end

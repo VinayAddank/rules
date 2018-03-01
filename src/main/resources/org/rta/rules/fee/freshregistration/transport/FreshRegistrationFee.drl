@@ -1,0 +1,274 @@
+package org.rta.rules.fee.freshregistration.transport
+ 
+import org.rta.rules.model.FeeRuleModel;
+
+
+
+rule "TR Service charge Fresh Registration Transport Fee"
+salience 85    
+    when
+        t : FeeRuleModel(trService == 0 ) 
+    then
+        System.out.println("Inside TR service charge Fresh Registration Transport Fee");
+        t.setTrService(100);
+        update( t );
+end
+
+rule "PR Service charge Fresh Registration Transport Fee ARKT"
+salience 84    
+    when
+        t : FeeRuleModel("ARKT".contains(vehicleClassCategory) , prService == 0 ) 
+    then
+        System.out.println("Inside PR service charge Fresh Registration Transport Fee ARKT");
+        t.setPrService(150);
+        update( t );
+end
+
+rule "PR Service charge Fresh Registration Transport Fee MCPT"
+salience 83   
+    when
+        t : FeeRuleModel("MCPT".contains(vehicleClassCategory) , prService == 0 ) 
+    then
+        System.out.println("Inside PR service charge Fresh Registration Transport Fee MCPT");
+        t.setPrService(100);
+        update( t );
+end
+
+rule "PR Service charge Fresh Registration Transport Fee"
+salience 80    
+    when
+        t : FeeRuleModel(prService == 0 , "CHST" not contains vehicleClassCategory) 
+    then
+        System.out.println("Inside PR service charge Fresh Registration Transport Fee");
+        t.setPrService(300);
+        update( t );
+end
+
+
+rule "500 rs Fresh Registration Transport Fee CHST"
+    when
+        t : FeeRuleModel("CHST".contains(vehicleClassCategory) , trFee == 0 ,gvw <= 12000) 
+    then
+        System.out.println("Inside 500 rs Fresh Registration Transport Fee CHST");
+        t.setTrFee(500);
+        update( t );
+end
+
+rule "750 rs Fresh Registration Transport Fee CHST"
+    when
+        t : FeeRuleModel("CHST".contains(vehicleClassCategory) , trFee == 0 ,gvw > 12000) 
+    then
+        System.out.println("Inside 750 rs Fresh Registration Transport Fee CHST");
+        t.setTrFee(750);
+        update( t );
+end
+
+
+
+rule "300 rs Fresh Registration Transport Fee MCPT"
+    when
+        t : FeeRuleModel("MCPT".contains(vehicleClassCategory) , prFee == 0 ,gvw <= 7500) 
+    then
+        System.out.println("Inside 300 rs Fresh Registration Transport Fee MCPT");
+        t.setPrFee(300);
+        update( t );
+end
+
+
+rule "1000 rs Fresh Registration Transport Fee"
+    when
+        t : FeeRuleModel("AMBT~AABT~ARVT~ARKT~AUTT~BULT~CTHT~CVHT~CMVT~CAVT~CAVT~COCT~CRNT~DMPT~DEXT~EIBT~EXCT~FFVT~FTRT~FWGT~GCRT~HERT~LIBT~LTCT~MACT~MAXT~MVCT~MOCT~MBWT~MTLT~OBT~PWTT~PSVT~STCT~SNLT~SCRT~STWT~TGVT~TOVT~TRTT~TRLT~TTTT~TFTT~XRYT".contains(vehicleClassCategory) , prFee == 0 ,gvw <= 7500) 
+    then
+        System.out.println("Inside 1000 rs Fresh Registration Transport Fee ");
+        t.setPrFee(1000);
+        update( t );
+end
+
+
+rule "1000 rs MMV Fresh Registration Transport Fee"
+    when
+        t : FeeRuleModel("AMBT~AABT~ARVT~ARKT~AUTT~BULT~CTHT~CVHT~CMVT~CAVT~COCT~CRNT~DMPT~DEXT~EIBT~EXCT~FFVT~FTRT~FWGT~GCRT~HERT~LIBT~MACT~MVCT~MOCT~MBWT~OBT~PWTT~PSVT~SNLT~SCRT~STWT~TGVT~TOVT~TRTT~TRLT~TTTT~TFTT~XRYT".contains(vehicleClassCategory) , prFee == 0 , gvw > 7500 , gvw < 12000)
+    then
+        System.out.println("Inside 1000 rs MMV Fresh Registration Transport ");
+        t.setPrFee(1000);
+        update( t );
+end
+
+
+rule "1000 HMV Fresh Registration Transport Fee CAVT"
+    when
+        t : FeeRuleModel("CVHT".contains(vehicleClassCategory) , prFee == 0 , gvw > 12000)
+    then
+        System.out.println("Inside 1000 HMV Fresh Registration Transport Fee CAVT");
+        t.setPrFee(1000);
+        update( t );
+end
+
+rule "1500 HMV Fresh Registration Transport PR Fee"
+    when
+        t : FeeRuleModel("AMBT~AABT~ARVT~ARKT~AUTT~BULT~CTHT~CMVT~COCT~CRNT~DMPT~DEXT~EIBT~EXCT~FFVT~FTRT~FWGT~GCRT~HERT~LIBT~MACT~MVCT~MOCT~MBWT~OBT~PWTT~PSVT~SNLT~SCRT~STWT~TGVT~TOVT~TRTT~TRLT~TTTT~TFTT~XRYT".contains(vehicleClassCategory) , prFee == 0 , gvw > 12000)
+    then
+        System.out.println("Inside 1500 HMV Fresh Registration Transport Fee");
+        t.setPrFee(1500);
+        update( t );
+end
+
+
+
+
+rule "Fitness Service charge Transport Fee 60 rs"
+    when
+        t : FeeRuleModel("ARKT".contains(vehicleClassCategory) , fitnessService == 0 )
+    then
+        System.out.println("Inside Fitness Service charge Transport Fee 60 rs");
+        t.setFitnessService(60);
+        update( t );
+end
+
+
+rule "Fitness Service charge Transport Fee 120 rs"
+    when
+        t : FeeRuleModel("CHST~TRTT" not contains vehicleClassCategory , fitnessService == 0 )
+    then
+        System.out.println("Inside Fitness Service charge Transport Fee 120 rs");
+        t.setFitnessService(120);
+        update( t );
+end
+
+
+rule "Fitness Fresh Fee  Fee 400 rs"
+    when
+        t : FeeRuleModel("MCPT~MCGT~MCTT" contains vehicleClassCategory , fitnessFee == 0 )
+    then
+        System.out.println("Inside Fitness Fresh Fee  Fee 400 rs");
+        t.setFitnessFee(400);
+        update( t );
+end
+
+rule "Fitness Fee EIBT Transport Fee 800 rs"
+    when
+        t : FeeRuleModel( fitnessFee == 0 ,  gvw < 7500 , "EIBT" contains vehicleClassCategory)
+    then
+        System.out.println("Inside Fitness Fee EIBT Transport Fee 600 rs");
+        t.setFitnessFee(800);
+        update( t );
+end
+
+rule "Fitness Fee  Transport Fee 600 rs"
+    when
+        t : FeeRuleModel( fitnessFee == 0 ,  gvw < 7500 , "CHST~TRTT" not contains vehicleClassCategory)
+    then
+        System.out.println("Inside Fitness Fee Transport Fee 600 rs");
+        t.setFitnessFee(600);
+        update( t );
+end
+
+
+rule "Fitness Fresh Fee MTLT  Fee 600 rs"
+    when
+        t : FeeRuleModel( fitnessFee == 0 ,  gvw > 7500 , gvw < 12000 , "MTLT" contains vehicleClassCategory)
+    then
+        System.out.println("Inside Fitness Fresh Fee  MTLT 600 rs");
+        t.setFitnessFee(600);
+        update( t );
+end
+
+rule "Fitness Fee  Transport Fee 800 rs"
+    when
+        t : FeeRuleModel( fitnessFee == 0 ,  gvw > 7500 , "CHST~TRTT" not contains vehicleClassCategory)
+    then
+        System.out.println("Inside Fitness Fee Transport Fee 800 rs");
+        t.setFitnessFee(800);
+        update( t );
+end
+
+rule "Special number Fresh Registration NonTransport Fee"
+    when
+        t : FeeRuleModel(specialNoFlag == 2 , specialNumberFee == 0 )
+    then
+        System.out.println("Inside Special number Fresh Registration NonTransport Fee");
+        t.setSpecialNumberFee(100);
+        update( t );
+end
+
+rule "Late fee if expiryMonthCount >= 1 && expiryMonthCount <= 3"
+    when
+        t : FeeRuleModel(expiryMonthCount >= 1 , expiryMonthCount <= 3, lateFee==0)
+    then
+        System.out.println("Late fee if expiryMonthCount >= 1 && expiryMonthCount <= 3 Fresh Registration Transport Fee");
+        t.setLateFee(25);
+        update( t );
+end
+
+rule "Late fee if expiryMonthCount >= 4 && expiryMonthCount <= 6"
+    when
+        t : FeeRuleModel(expiryMonthCount >= 4, expiryMonthCount <= 6, lateFee==0)
+    then
+        System.out.println("Late fee if expiryMonthCount >= 4 && expiryMonthCount <= 6 Fresh Registration Transport Fee");
+        t.setLateFee(50);
+        update( t );
+end
+
+rule "Late fee if expiryMonthCount >= 7 && expiryMonthCount <= 9"
+    when
+        t : FeeRuleModel(expiryMonthCount >= 7, expiryMonthCount <= 9, lateFee==0)
+    then
+        System.out.println("Late fee if expiryMonthCount >= 7 && expiryMonthCount <= 9 Fresh Registration Transport Fee");
+        t.setLateFee(75);
+        update( t );
+end
+
+rule "Late fee if expiryMonthCount >9"
+    when
+        t : FeeRuleModel(expiryMonthCount > 9, lateFee==0)
+    then
+        System.out.println("Late fee if expiryMonthCount > 9 Fresh Registration Transport Fee");
+        t.setLateFee(100);
+        update( t );
+end
+
+
+rule "MMV and HMV HPA FEE"
+salience 75
+    when
+        t : FeeRuleModel( gvw>7501, vehicleClass != null && "L5N~L5M~M1~M2~M3~N1~N2~N3~A".contains(vehicleClass)  , hpaFee == 0)
+    then
+    	System.out.println("Inside Thre Wheeler HPA FEE");
+        t.setHpaFee(3000);
+        update( t );
+end
+
+
+rule "Three Wheeler HPA FEE"
+salience 74
+    when
+        t : FeeRuleModel(vehicleClass != null && "L5N~L5M~M1~M2~M3~N1~N2~N3~A".contains(vehicleClass)  , hpaFee == 0)
+    then
+    	System.out.println("Inside Thre Wheeler HPA FEE");
+        t.setHpaFee(1500);
+        update( t );
+end
+
+rule "Two Wheeler HPA FEE"
+salience 73
+    when
+        t : FeeRuleModel( vehicleClass != null && vehicleClass.contains("L") , hpaFee == 0)
+    then
+    	System.out.println("Inside TWO Wheeler HPA FEE");
+        t.setHpaFee(500);
+        update( t );
+end
+
+rule "Total TR and PR Fee Fresh Registration NonTransport Fee"
+salience -5
+    when
+        t : FeeRuleModel(totalPrFee == 0 , totalTrFee == 0)
+    then
+        System.out.println("Inside Total TR and PR Fee Fresh Registration Transport Fee "+ t.getVehicleClassCategory());
+        if(t.getTrFee() == 0)
+        t.setTrFee(t.getPrFee()/2);
+        t.setTotalPrFee(t.getPrFee() + t.getPrService() + t.getPostalFee() + t.getCardFee() + t.getTrFee() + t.getTrService() + t.getHpaFee());
+        t.setTotalTrFee(t.getTrFee() + t.getTrService());
+        t.setTotalFitnessFee(t.getFitnessFee() + t.getFitnessService());
+        update( t );
+end

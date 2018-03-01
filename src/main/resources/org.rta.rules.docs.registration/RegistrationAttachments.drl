@@ -1,0 +1,499 @@
+package org.rta.rules.docs.registration
+ 
+
+import org.rta.rules.enums.DocTypes;
+import org.rta.rules.enums.UserType;
+import org.rta.rules.enums.OwnershipType;
+import org.rta.rules.enums.RegistrationCategoryType;
+import org.rta.rules.enums.AlterationCategory;
+import org.rta.rules.model.DocTypesRuleModel;
+import org.rta.rules.model.DocPermissionModel;
+import java.util.ArrayList;  
+import java.util.List;  
+	 
+	global List<DocTypesRuleModel> regDocTypeList;
+	
+
+	rule "Compulsory documents upload by dealer"
+	    when
+	        $documents : DocPermissionModel(userType == UserType.ROLE_DEALER)
+	    then
+	       DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_OWNER_PHOTO.getValue());
+	       docTypesModel.setName(DocTypes.DOC_OWNER_PHOTO.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	              
+	       docTypesModel = new DocTypesRuleModel();
+	   	   docTypesModel.setId(DocTypes.DOC_USER_SIGNATURE.getValue());
+	       docTypesModel.setName(DocTypes.DOC_USER_SIGNATURE.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel(); 
+	       docTypesModel.setId(DocTypes.DOC_PRESENT_ADDRESS_PROOF.getValue());
+	       docTypesModel.setName(DocTypes.DOC_PRESENT_ADDRESS_PROOF.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel(); 
+	       docTypesModel.setId(DocTypes.DOC_PRESENT_ADDRESS_PROOF_BACKVIEW.getValue());
+	       docTypesModel.setName(DocTypes.DOC_PRESENT_ADDRESS_PROOF_BACKVIEW.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_PHOTO_ID_PROOF.getValue());
+	       docTypesModel.setName(DocTypes.DOC_PHOTO_ID_PROOF.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_VEHICLE_FRONT.getValue());
+	       docTypesModel.setName(DocTypes.DOC_VEHICLE_FRONT.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_INDIVIDUAL_INVOICE.getValue());
+	       docTypesModel.setName(DocTypes.DOC_INDIVIDUAL_INVOICE.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_INSURANCE_POLICY_COPY.getValue());
+	       docTypesModel.setName(DocTypes.DOC_INSURANCE_POLICY_COPY.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_DEALER_SIGNATURE.getValue());
+	       docTypesModel.setName(DocTypes.DOC_DEALER_SIGNATURE.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_FORM22.getValue());
+	       docTypesModel.setName(DocTypes.DOC_FORM22.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	       
+	end
+	
+	rule "Helmet Invoice Copy"
+	    when
+	     $documents : DocPermissionModel("L1~L2".contains(vehicleClass))
+	    then
+	       DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_HELMET_INVOICE_COPY.getValue());
+	       docTypesModel.setName(DocTypes.DOC_HELMET_INVOICE_COPY.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	end
+	
+	
+	rule "PAN Card"
+	    when
+	      $documents : DocPermissionModel((("L1~L2".contains(vehicleClass) && invoiceValue >= 400000) 
+	      || ("L1~L2".contains(vehicleClass) &&  registrationCategoryType == RegistrationCategoryType.TRANSPORT.getValue())
+	      || ("L1~L2".contains(vehicleClass) && ownershipType == OwnershipType.COMPANY ))
+	      && "ARKT~ARPN~IVCN~MCPT~MCTT~MCWN~MCYN~MMCN~TCPN~TGVT~TRCN~TRTT~TTRN~TTTT" not contains (vehicleSubClass))
+	    then
+	       DocTypesRuleModel docTypesModel = new DocTypesRuleModel(); 
+	       docTypesModel.setId(DocTypes.DOC_PAN_CARD.getValue());
+	       docTypesModel.setName(DocTypes.DOC_PAN_CARD.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	end
+	
+	
+	rule "Vehicle Right side view"
+	    when
+	      $documents : DocPermissionModel("L1~L2".contains(vehicleClass))
+	    then
+	       DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_VEHICLE_RIGHT.getValue());
+	       docTypesModel.setName(DocTypes.DOC_VEHICLE_RIGHT.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	end
+	
+	rule "PAN Card for L5M~L5N~M1~M1G~M2~M3~N1~N2~N3"
+	    when
+	      $documents : DocPermissionModel("L5M~L5N~M1~M1G~M2~M3~N1~N2~N3".contains(vehicleClass)
+	                   && "ARKT~ARPN~IVCN~MCPT~MCTT~MCWN~MCYN~MMCN~TCPN~TGVT~TRCN~TRTT~TTRN~TTTT" not contains (vehicleSubClass))
+	    then
+	       DocTypesRuleModel docTypesModel = new DocTypesRuleModel(); 
+	       docTypesModel.setId(DocTypes.DOC_PAN_CARD.getValue());
+	       docTypesModel.setName(DocTypes.DOC_PAN_CARD.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	end
+
+    rule "Vehicle rear view for L5M~L5N~M1~M1G~M2~M3~N1~N2~N3~A"
+        when
+          $documents : DocPermissionModel("L5M~L5N~M1~M1G~M2~M3~N1~N2~N3~A".contains(vehicleClass))
+        then
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_VEHICLE_REAR.getValue());
+           docTypesModel.setName(DocTypes.DOC_VEHICLE_REAR.getLabel());
+           docTypesModel.setIsMandatory(true);
+           regDocTypeList.add(docTypesModel);
+    end
+	
+	rule "Vehicle Right side view and Left side view for transport vehicle"
+	    when
+	      $documents : DocPermissionModel( "L5M~L5N~M1~M1G~M2~M3~N1~N2~N3~A".contains(vehicleClass) 
+	     		 &&  registrationCategoryType == RegistrationCategoryType.TRANSPORT.getValue() )
+	    then
+	       DocTypesRuleModel docTypesModel = new DocTypesRuleModel(); 
+	       docTypesModel.setId(DocTypes.DOC_VEHICLE_RIGHT.getValue());
+	       docTypesModel.setName(DocTypes.DOC_VEHICLE_RIGHT.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_VEHICLE_LEFT.getValue());
+	       docTypesModel.setName(DocTypes.DOC_VEHICLE_LEFT.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	end
+	
+	rule "Differently Abled Certificate and DL"
+	    when
+	     $documents : DocPermissionModel(isCustomerDisabled)
+	    then
+	       DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_DIFFERENTLY_ABLED_CERTIFICATE.getValue());
+	       docTypesModel.setName(DocTypes.DOC_DIFFERENTLY_ABLED_CERTIFICATE.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_DL.getValue());
+	       docTypesModel.setName(DocTypes.DOC_DL.getLabel());
+	       docTypesModel.setIsMandatory(false);
+	       regDocTypeList.add(docTypesModel);
+	end
+	
+	rule "Minor Individual"
+	    when
+	      $documents : DocPermissionModel(customerAge < 18, ownershipType == OwnershipType.INDIVIDUAL )
+	    then
+	       DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_MINOR_INDIVIDUAL.getValue());
+	       docTypesModel.setName(DocTypes.DOC_MINOR_INDIVIDUAL.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	end
+	
+	rule "Letter of Authorization"
+	    when
+	      $documents : DocPermissionModel( ownershipType == OwnershipType.COMPANY 
+	     		 &&  registrationCategoryType == RegistrationCategoryType.TRANSPORT.getValue() )
+	    then
+	       DocTypesRuleModel docTypesModel = new DocTypesRuleModel(); 
+	       docTypesModel.setId(DocTypes.DOC_LETTER_OF_AUTHORIZATION.getValue());
+	       docTypesModel.setName(DocTypes.DOC_LETTER_OF_AUTHORIZATION.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	end
+		
+	rule "Form 20 OR DO (Original Copy)"
+	    when
+	      $documents : DocPermissionModel(isFinance, financeMode == 2)
+	    then
+	       DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_FORM20DO_COPY.getValue());
+	       docTypesModel.setName(DocTypes.DOC_FORM20DO_COPY.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	end
+		
+	rule "ROC"
+	    when
+	      $documents : DocPermissionModel(ownershipType == OwnershipType.COMPANY)
+	    then
+	       DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_ROC.getValue());
+	       docTypesModel.setName(DocTypes.DOC_ROC.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	end
+	
+	rule "Optional documents upload by Dealer"
+	    when
+	        $documents : DocPermissionModel(userType == UserType.ROLE_DEALER, "EIBT".equalsIgnoreCase(vehicleSubClass) )
+	    then
+	       DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_LETTER_FROM_DISTRICT_EDUCATIONAL_OFFICER.getValue());
+	       docTypesModel.setName(DocTypes.DOC_LETTER_FROM_DISTRICT_EDUCATIONAL_OFFICER.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       
+	       docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_REGISTRATION_CERTIFICATE_EDUCATIONAL_INSTITUTE.getValue());
+	       docTypesModel.setName(DocTypes.DOC_REGISTRATION_CERTIFICATE_EDUCATIONAL_INSTITUTE.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_FOOT_BOARD_IMAGE_OF_VEHICLE.getValue());
+	       docTypesModel.setName(DocTypes.DOC_FOOT_BOARD_IMAGE_OF_VEHICLE.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	              
+	       docTypesModel = new DocTypesRuleModel();
+	   	   docTypesModel.setId(DocTypes.DOC_EMERGENCY_EXIT_IMAGE.getValue());
+	       docTypesModel.setName(DocTypes.DOC_EMERGENCY_EXIT_IMAGE.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel(); 
+	       docTypesModel.setId(DocTypes.DOC_STOP_SIGN_BOARD.getValue());
+	       docTypesModel.setName(DocTypes.DOC_STOP_SIGN_BOARD.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel(); 
+	       docTypesModel.setId(DocTypes.DOC_INTERIOR_VEHICLE_IMAGE_1.getValue());
+	       docTypesModel.setName(DocTypes.DOC_INTERIOR_VEHICLE_IMAGE_1.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_INTERIOR_VEHICLE_IMAGE_2.getValue());
+	       docTypesModel.setName(DocTypes.DOC_INTERIOR_VEHICLE_IMAGE_2.getLabel());
+	       docTypesModel.setIsMandatory(false);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_INTERIOR_VEHICLE_IMAGE_2.getValue());
+	       docTypesModel.setName(DocTypes.DOC_INTERIOR_VEHICLE_IMAGE_2.getLabel());
+	       docTypesModel.setIsMandatory(false);
+	       regDocTypeList.add(docTypesModel);
+	       	       
+	end
+	
+	rule "Other Optional documents upload by Dealer"
+	    when
+	        $documents : DocPermissionModel(userType == UserType.ROLE_DEALER)
+	    then
+	       DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_EXTRA_1.getValue());
+	       docTypesModel.setName(DocTypes.DOC_EXTRA_1.getLabel());
+	       docTypesModel.setIsMandatory(false);
+	       regDocTypeList.add(docTypesModel);
+	              
+	       docTypesModel = new DocTypesRuleModel();
+	   	   docTypesModel.setId(DocTypes.DOC_EXTRA_2.getValue());
+	       docTypesModel.setName(DocTypes.DOC_EXTRA_2.getLabel());
+	       docTypesModel.setIsMandatory(false);
+	       regDocTypeList.add(docTypesModel);
+	       
+	end
+	
+	rule "Compulsory documents upload by body builder"
+	    when
+	        $documents : DocPermissionModel(userType == UserType.ROLE_BODY_BUILDER)
+	    then
+	       DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_VEHICLE_SIDE_AFTER_MODIFICATION.getValue());
+	       docTypesModel.setName(DocTypes.DOC_VEHICLE_SIDE_AFTER_MODIFICATION.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	              
+	       docTypesModel = new DocTypesRuleModel();
+	   	   docTypesModel.setId(DocTypes.DOC_VEHICLE_FRONT_AFTER_MODIFICATION.getValue());
+	       docTypesModel.setName(DocTypes.DOC_VEHICLE_FRONT_AFTER_MODIFICATION.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel(); 
+	       docTypesModel.setId(DocTypes.DOC_VEHICLE_FRONT_BEFORE_MODIFICATION.getValue());
+	       docTypesModel.setName(DocTypes.DOC_VEHICLE_FRONT_BEFORE_MODIFICATION.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel(); 
+	       docTypesModel.setId(DocTypes.DOC_VEHICLE_SIDE_BEFORE_MODIFICATION.getValue());
+	       docTypesModel.setName(DocTypes.DOC_VEHICLE_SIDE_BEFORE_MODIFICATION.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_EXTRA1_AFTER_MODIFICATION.getValue());
+	       docTypesModel.setName(DocTypes.DOC_EXTRA1_AFTER_MODIFICATION.getLabel());
+	       docTypesModel.setIsMandatory(false);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_EXTRA2_AFTER_MODIFICATION.getValue());
+	       docTypesModel.setName(DocTypes.DOC_EXTRA2_AFTER_MODIFICATION.getLabel());
+	       docTypesModel.setIsMandatory(false);
+	       regDocTypeList.add(docTypesModel);
+	       
+	end
+	
+	rule "Optional documents upload by body builder"
+	    when
+	        $documents : DocPermissionModel(userType == UserType.ROLE_BODY_BUILDER, "EIBT".equalsIgnoreCase(vehicleSubClass), alterationCategory.contains(AlterationCategory.SEATING_CAPACITY) )
+	    then
+	       DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_FOOT_BOARD_IMAGE_OF_VEHICLE.getValue());
+	       docTypesModel.setName(DocTypes.DOC_FOOT_BOARD_IMAGE_OF_VEHICLE.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	              
+	       docTypesModel = new DocTypesRuleModel();
+	   	   docTypesModel.setId(DocTypes.DOC_EMERGENCY_EXIT_IMAGE.getValue());
+	       docTypesModel.setName(DocTypes.DOC_EMERGENCY_EXIT_IMAGE.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel(); 
+	       docTypesModel.setId(DocTypes.DOC_STOP_SIGN_BOARD.getValue());
+	       docTypesModel.setName(DocTypes.DOC_STOP_SIGN_BOARD.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel(); 
+	       docTypesModel.setId(DocTypes.DOC_INTERIOR_VEHICLE_IMAGE_1.getValue());
+	       docTypesModel.setName(DocTypes.DOC_INTERIOR_VEHICLE_IMAGE_1.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_INTERIOR_VEHICLE_IMAGE_2.getValue());
+	       docTypesModel.setName(DocTypes.DOC_INTERIOR_VEHICLE_IMAGE_2.getLabel());
+	       docTypesModel.setIsMandatory(false);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_INTERIOR_VEHICLE_IMAGE_2.getValue());
+	       docTypesModel.setName(DocTypes.DOC_INTERIOR_VEHICLE_IMAGE_2.getLabel());
+	       docTypesModel.setIsMandatory(false);
+	       regDocTypeList.add(docTypesModel);
+	       	       
+	end
+	
+	rule "Compulsory documents upload by PUC"
+	    when
+	        $documents : DocPermissionModel(userType == UserType.ROLE_PUC)
+	    then
+	       DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_PUC_NUMBER_PLATE_ALONG_VEHICLE.getValue());
+	       docTypesModel.setName(DocTypes.DOC_PUC_NUMBER_PLATE_ALONG_VEHICLE.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	              
+	       docTypesModel = new DocTypesRuleModel();
+	   	   docTypesModel.setId(DocTypes.DOC_PUC_VEHICLE_AFTER_INJECTING_MACHINE_SILENCER_1.getValue());
+	       docTypesModel.setName(DocTypes.DOC_PUC_VEHICLE_AFTER_INJECTING_MACHINE_SILENCER_1.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel(); 
+	       docTypesModel.setId(DocTypes.DOC_PUC_VEHICLE_AFTER_INJECTING_MACHINE_SILENCER_2.getValue());
+	       docTypesModel.setName(DocTypes.DOC_PUC_VEHICLE_AFTER_INJECTING_MACHINE_SILENCER_2.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel(); 
+	       docTypesModel.setId(DocTypes.DOC_PUC_VEHICLE_AFTER_INJECTING_MACHINE_SILENCER_3.getValue());
+	       docTypesModel.setName(DocTypes.DOC_PUC_VEHICLE_AFTER_INJECTING_MACHINE_SILENCER_3.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+
+	       docTypesModel = new DocTypesRuleModel();
+	   	   docTypesModel.setId(DocTypes.DOC_PUC_VEHICLE_AFTER_INJECTING_MACHINE_SILENCER_4.getValue());
+	       docTypesModel.setName(DocTypes.DOC_PUC_VEHICLE_AFTER_INJECTING_MACHINE_SILENCER_4.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel(); 
+	       docTypesModel.setId(DocTypes.DOC_PUC_VEHICLE_AFTER_INJECTING_MACHINE_SILENCER_5.getValue());
+	       docTypesModel.setName(DocTypes.DOC_PUC_VEHICLE_AFTER_INJECTING_MACHINE_SILENCER_5.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel(); 
+	       docTypesModel.setId(DocTypes.DOC_PUC_VEHICLE_AFTER_INJECTING_MACHINE_SILENCER_6.getValue());
+	       docTypesModel.setName(DocTypes.DOC_PUC_VEHICLE_AFTER_INJECTING_MACHINE_SILENCER_6.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel();
+	   	   docTypesModel.setId(DocTypes.DOC_PUC_VEHICLE_AFTER_INJECTING_MACHINE_SILENCER_7.getValue());
+	       docTypesModel.setName(DocTypes.DOC_PUC_VEHICLE_AFTER_INJECTING_MACHINE_SILENCER_7.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel(); 
+	       docTypesModel.setId(DocTypes.DOC_PUC_VEHICLE_AFTER_INJECTING_MACHINE_SILENCER_8.getValue());
+	       docTypesModel.setName(DocTypes.DOC_PUC_VEHICLE_AFTER_INJECTING_MACHINE_SILENCER_8.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel(); 
+	       docTypesModel.setId(DocTypes.DOC_PUC_VEHICLE_AFTER_INJECTING_MACHINE_SILENCER_9.getValue());
+	       docTypesModel.setName(DocTypes.DOC_PUC_VEHICLE_AFTER_INJECTING_MACHINE_SILENCER_9.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel(); 
+	       docTypesModel.setId(DocTypes.DOC_PUC_VEHICLE_AFTER_INJECTING_MACHINE_SILENCER_10.getValue());
+	       docTypesModel.setName(DocTypes.DOC_PUC_VEHICLE_AFTER_INJECTING_MACHINE_SILENCER_10.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel(); 
+	       docTypesModel.setId(DocTypes.DOC_PUC_IMAGE_OF_REPORT.getValue());
+	       docTypesModel.setName(DocTypes.DOC_PUC_IMAGE_OF_REPORT.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	       
+	end
+	
+	rule "Compulsory documents upload by online financer"
+	    when
+	        $documents : DocPermissionModel(userType == UserType.ROLE_ONLINE_FINANCER)
+	    then
+	       DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_CHASSIS_NO_CCO.getValue());
+	       docTypesModel.setName(DocTypes.DOC_CHASSIS_NO_CCO.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	              
+	       docTypesModel = new DocTypesRuleModel();
+	   	   docTypesModel.setId(DocTypes.DOC_VEHICLE_SIDE_CCO.getValue());
+	       docTypesModel.setName(DocTypes.DOC_VEHICLE_SIDE_CCO.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel(); 
+	       docTypesModel.setId(DocTypes.DOC_VEHICLE_FRONT_CCO.getValue());
+	       docTypesModel.setName(DocTypes.DOC_VEHICLE_FRONT_CCO.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel(); 
+	       docTypesModel.setId(DocTypes.DOC_NON_PAYMENT_PROOF_1.getValue());
+	       docTypesModel.setName(DocTypes.DOC_NON_PAYMENT_PROOF_1.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_NON_PAYMENT_PROOF_2.getValue());
+	       docTypesModel.setName(DocTypes.DOC_NON_PAYMENT_PROOF_2.getLabel());
+	       docTypesModel.setIsMandatory(false);
+	       regDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_NON_PAYMENT_PROOF_3.getValue());
+	       docTypesModel.setName(DocTypes.DOC_NON_PAYMENT_PROOF_3.getLabel());
+	       docTypesModel.setIsMandatory(false);
+	       regDocTypeList.add(docTypesModel);
+	       
+	end

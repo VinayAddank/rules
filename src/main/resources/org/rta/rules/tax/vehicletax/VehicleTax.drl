@@ -1,0 +1,143 @@
+package org.rta.rules.tax.vehicletax
+ 
+import org.rta.rules.model.TaxRuleModel;
+ 
+rule "Second Vehicle tax"
+salience 2
+    when
+        t : TaxRuleModel("MCYN~MMCN~MCEN~MCWN~MCRN~OBPN~JEPN".contains(vehicleClassCategory), taxType.equals("LT") , taxAmount == 0 , tax > 0, invoiceAmount > 0,  noOfVehicle > 1 , ownerType.equals("indv"))
+    then
+    	System.out.println("Inside Second Vehicle tax");
+        t.setTax(14.0);
+        t.setTaxAmount((t.getInvoiceAmount()*t.getTax())/100);
+        System.out.println("Tax Amount " + t.getTaxAmount());
+        update( t );
+end
+ 
+ 
+rule "Fuel Type Electric/BATERY/CNG/SOLAR ENRGY"
+salience 3  
+    when
+        t : TaxRuleModel(taxType.equals("LT"), taxAmount == 0 , tax > 0, invoiceAmount > 0, (fuelType.equals("ELECTRIC") || fuelType.equals("BATERY") || fuelType.equals("CNG") || fuelType.equals("SOLAR ENERGY")))
+    then
+    	System.out.println("Inside Fuel Type BATERY/CNG/SOLAR ENRGY");
+        t.setTaxAmount((t.getInvoiceAmount()*t.getTax())/100);
+        System.out.println("Tax Amount " + t.getTaxAmount());
+        update( t );
+end
+
+rule "Life Tax Vehicle Tax Caluclation"
+salience 1  
+    when
+        t : TaxRuleModel(taxType.equals("LT") , taxAmount == 0 , tax > 0, invoiceAmount > 0)
+    then
+    	System.out.println("Inside Life Tax Vehicle Tax Caluclation");
+    	System.out.println("Invoice amount " + t.getInvoiceAmount() +" tax "+ t.getTax());
+        t.setTaxAmount((t.getInvoiceAmount()*t.getTax())/100);
+        System.out.println("Tax Amount " + t.getTaxAmount());
+        update( t );
+end
+
+
+rule "COCT~TOVT~PSVT~MAXT~OBT~SCRT Tax per seat excluding driver seat"
+salience 53
+    when
+        t : TaxRuleModel("COCT~TOVT~PSVT~MAXT~OBT~SCRT".contains(vehicleClassCategory) , taxType.equals("FQ") , taxAmount == 0, monthType > 0, seatingCapacity > 2, quarterAmt > 0)
+    then 
+        System.out.println("COCT~TOVT~PSVT~MAXT~OBT~SCRT Tax per seat excluding driver seat : Tax:="+t.getQuarterAmt()+"::::Seat:= "+t.getSeatingCapacity());
+        int seat = t.getSeatingCapacity() -1 ;
+        if("SCRT".contains(t.getVehicleClassCategory()) || ("TOVT".contains(t.getVehicleClassCategory()) && (t.getPermitType() != null && "AITP".contains(t.getPermitType()))))
+        seat = t.getSeatingCapacity() -2 ;
+        double qt = t.getQuarterAmt()*seat;
+        t.setTaxAmount((((t.getQuarterAmt()*seat) /3)*t.getMonthType())); 
+        t.setQuarterAmt(qt);     
+        update( t );
+end
+
+rule "OBPN Tax per seat excluding driver seat when seat is greater than 10"
+salience 52
+    when
+        t : TaxRuleModel("OBPN".contains(vehicleClassCategory) , taxType.equals("FQ") , taxAmount == 0, seatingCapacity > 10, monthType > 0, quarterAmt > 0)
+    then 
+        System.out.println("OBPN Tax per seat excluding driver seat : Tax:="+t.getQuarterAmt()+"::::Seat:= "+t.getSeatingCapacity());
+        int seat = t.getSeatingCapacity() -1 ;
+        double qt = t.getQuarterAmt()*seat;
+        t.setTaxAmount((((t.getQuarterAmt()*seat) /3)*t.getMonthType())); 
+        t.setQuarterAmt(qt);     
+        update( t );
+end 
+
+rule "Quarterly Tax Calulation for increment ULW"
+salience 51
+    when
+        t : TaxRuleModel(taxType.equals("FQ") ,  taxAmount == 0 , monthType > 0, weightType.equals("ULW"), quarterAmt > 0) 
+    then
+        System.out.println("Inside Quarterly Tax Calulation for increment ULW");
+       double ex = ( t.getUlw() - (t.getFromULW()-1) );
+	   int ex1 =  (int)Math.ceil(ex / t.getIncRLW());
+	   double extraAmount = ex1 * t.getIncAmt() ;
+	   double qt = extraAmount + t.getQuarterAmt();
+	   double taxAmountTotal =(qt /3)*t.getMonthType();
+	   t.setTaxAmount(taxAmountTotal);
+	   t.setQuarterAmt(qt);
+       if("ARVT".contains(t.getVehicleClassCategory())){
+       t.setQuarterAmt(((qt*75)/100));
+       t.setTaxAmount((taxAmountTotal*75)/100); 
+       }
+       System.out.println("Inside Quarterly taxAmountTotal::="+taxAmountTotal+"extraAmount:::::="+extraAmount+"qt::::="+qt +"ex==========="+ex +"t.getUlw()="+ t.getUlw()+ "t.getFromRLW() ==="+t.getFromULW() );      
+       update( t );
+end 
+
+
+rule "Quarterly Tax Calulation for increment RLW"
+salience 50
+    when
+        t : TaxRuleModel(taxType.equals("FQ") ,  taxAmount == 0 , weightType.equals("RLW"), monthType > 0, quarterAmt > 0) 
+    then
+        System.out.println("Inside Quarterly Tax Calulation for increment RLW");
+     double ex = ( t.getGvw() - (t.getFromRLW()-1) );
+     int ex1 =  (int)Math.ceil(ex / t.getIncRLW());
+	 double extraAmount = ex1 * t.getIncAmt() ;
+	 double qt = extraAmount + t.getQuarterAmt();
+	 double taxAmountTotal =(qt /3)*t.getMonthType();
+	 t.setTaxAmount(taxAmountTotal);
+	 t.setQuarterAmt(qt );
+     if("ARVT".contains(t.getVehicleClassCategory())){
+     t.setQuarterAmt(((qt*75)/100));
+     t.setTaxAmount((taxAmountTotal*75)/100); 
+     }
+     System.out.println("Inside Quarterly taxAmountTotal::="+taxAmountTotal+"extraAmount:::::="+extraAmount+"qt::::="+qt +"ex==========="+ex +"t.getGvw()="+ t.getGvw()+ "t.getFromRLW() ==="+t.getFromRLW() );
+     update( t );
+end 
+ 
+rule "Quarterly Tax Calulation --"
+salience 49
+    when
+        t : TaxRuleModel(taxType.equals("FQ") ,  taxAmount == 0, monthType > 0, quarterAmt > 0) 
+    then
+        t.setTaxAmount((t.getQuarterAmt()/3)*t.getMonthType());
+        System.out.println("Inside Quarterly Tax Calulation -- " + t.getTaxAmount());
+        update( t );
+end 
+
+
+
+rule "Cess Fee Quarterly tax"
+salience -5
+    when
+        t : TaxRuleModel(taxType.equals("FQ"),  cessFee == 0 , regCategory == 1 ,  quarterAmt > 0 , isCessFeeValid )
+    then
+        System.out.println("Inside Cess Fee Total Tax " + t.getTaxAmount() + " - " + t.getMonthType());
+        double taxAmt = t.getQuarterAmt();
+        System.out.println("Quarterly Tax Amount " + taxAmt);
+        double taxPerAnum = taxAmt*4;
+        System.out.println("Quarterly Tax Amount per annum " + taxPerAnum);
+        double cessFee = (taxPerAnum*10)/100;
+        if(cessFee >= 1500)
+        t.setCessFee(1500);
+        else
+        t.setCessFee(cessFee);
+        update( t );
+end
+
+ 

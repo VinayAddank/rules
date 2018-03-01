@@ -1,0 +1,44 @@
+package org.rta.rules.tax.exemptedtax
+ 
+import org.rta.rules.model.TaxRuleModel;
+ 
+ 
+rule "Tax Exempetd Caluclation"
+ salience 100
+    when
+        t : TaxRuleModel((iSuzo || ownerType.equals("police") || ownerType.equals("dptof") || ownerType.equals("govt") ) , !taxExempted)
+    then
+    	System.out.println("Inside Tax Exempetd Caluclation");
+    	t.setTaxExempted(true);
+        update( t );
+end
+
+ rule "Tax Exempetd Caluclation for IVCN when PH and DL having"
+ salience 90
+    when
+        t : TaxRuleModel("IVCN".contains(vehicleClassCategory), isPHCertificate, isPHDriverLicense  , !taxExempted)
+    then
+    	System.out.println("Tax Exempetd Caluclation for IVCN when PH and DL having");
+    	t.setTaxExempted(true);
+        update( t );
+end
+
+ rule "Tax Exempetd Caluclation for IVCN when only PH having"
+ salience 80
+    when
+        t : TaxRuleModel("IVCN".contains(vehicleClassCategory), isPHCertificate , !taxExempted, taxAmount == 0)
+    then
+    	System.out.println("Tax Exempetd Caluclation for IVCN when only PH having");
+    	t.setTaxAmount(901);
+        update( t );
+end
+ 
+rule "Tax Exempetd for first 5 year when Tax Type is Quaterly and fuel type is ELECTRIC or BATERY or SOLAR ENERGY or CNG"
+    when
+      t : TaxRuleModel(taxType.equals("FQ"), isQuaterlyTaxExmpted4First5Year , (fuelType.equals("ELECTRIC") || fuelType.equals("BATERY") || fuelType.equals("CNG") || fuelType.equals("SOLAR ENERGY")), !taxExempted)
+    then
+    	System.out.println("Tax Exempetd for first 5 year when Tax Type is Quaterly and fuel type is ELECTRIC or BATERY or SOLAR ENERGY or CNG");
+    	t.setTaxExempted(true);
+        update( t );
+end
+ 

@@ -1,0 +1,385 @@
+package org.rta.rules.tax.freshregistration.nontransport
+ 
+import org.rta.rules.model.TaxRuleModel;
+ 
+ 
+ 
+rule "Second Vehicle tax"
+salience 600
+    when
+        t : TaxRuleModel( isSecondVehicle  , tax == null)
+    then
+    	System.out.println("Inside Second Vehicle tax");
+        t.setTax(14.0);
+        update( t );
+end
+ 
+ 
+rule "Two Wheeler"
+salience 100
+    when
+        t : TaxRuleModel(vehicleClass.contains("L") , !isTwoWheeler , hpaFee == 0)
+    then
+    	System.out.println("Inside TWO Wheeler");
+        t.setIsTwoWheeler(true);
+        t.setHpaFee(500);
+        update( t );
+end
+
+rule "Three wheeler tax percentage"
+    when
+        t : TaxRuleModel("ARPN".contains(vehicleClassCategory)   , tax == null , taxType.equals("Life Tax"))
+    then
+    	System.out.println("Inside Three wheeler tax percentage");
+        t.setTax(12.0);
+        update( t );
+end
+
+
+rule "Two wheeler tax percentage"
+    when
+        t : TaxRuleModel("MCYN~MCWN~MMCN~IVCN".contains(vehicleClassCategory) , ownerType.equals("Individual")  , tax == null , taxType.equals("Life Tax"))
+    then
+    	System.out.println("Inside Two wheeler tax percentage");
+        t.setTax(9.0);
+        update( t );
+end
+
+rule "Four Wheeler"
+salience 200
+    when
+        t : TaxRuleModel( "M1~M2~M3~N1~N2~N3~M1G".contains(vehicleClass)  , !isFourWheeler , hpaFee == 0)
+    then
+    	System.out.println("Inside FOUR Wheeler");
+        t.setIsFourWheeler(true);
+        t.setHpaFee(1500);
+        update( t );
+end
+
+rule "ISUZO Vehicle"
+salience 300
+    when
+        t : TaxRuleModel( iSuzo )
+    then
+    	System.out.println("Inside Isuzo vehicle");
+        t.setTax(0.0);
+        t.setTaxAmount(0.0);
+        t.setISuzo(false);
+        update( t );
+end
+
+rule "Police tax"
+    when
+        t : TaxRuleModel(ownerType.equals("Police")  , tax == null)
+    then
+    	System.out.println("Inside Police tax");
+        t.setTax(0.0);
+        t.setTaxAmount(0.0);
+        update( t );
+end
+
+rule "STU Vehicles tax"
+    when
+        t : TaxRuleModel(ownerType.equals("STU Vehicles")  , tax == null)
+    then
+    	System.out.println("Inside STU Vehicles tax");
+        t.setTax(14.0);
+        update( t );
+end
+
+rule "Corporate tax"
+salience 1000
+    when
+        t : TaxRuleModel(ownerType.equals("Company")  , tax == null)
+    then
+    	System.out.println("Inside Corporate tax");
+        t.setTax(14.0);
+        update( t );
+end
+
+rule "MCRN JEPN OBPN Fuel Type Electric Invoice amt less 1000000"
+salience 1005
+    when
+        t : TaxRuleModel(ownerType.equals("Individual"), invoiceAmount <= 1000000 , seatingCapacity <= 10 ,"MCRN~JEPN~OBPN".contains(vehicleClassCategory) , (fuelType.equals("ELECTRIC") || fuelType.equals("BATERY") || fuelType.equals("CNG") || fuelType.equals("SOLAR ENERGY")) , tax == null)
+    then
+    	System.out.println("Inside MCRN JEPN OBPN Fuel Type Electric Invoice amt less 1000000");
+        t.setTax(9.5);
+        update( t );
+end
+
+
+rule "MCRN JEPN OBPN Fuel Type Electric Invoice amt greater 1000000"
+salience 1004    
+    when
+        t : TaxRuleModel(ownerType.equals("Individual"), invoiceAmount > 1000000, seatingCapacity <= 10 ,"MCRN~JEPN~OBPN".contains(vehicleClassCategory) , (fuelType.equals("ELECTRIC") || fuelType.equals("BATERY") || fuelType.equals("CNG") || fuelType.equals("SOLAR ENERGY")) , tax == null)
+    then
+    	System.out.println("Inside MCRN JEPN OBPN Fuel Type Electric Invoice amt greater 1000000");
+        t.setTax(11.5);
+        update( t );
+end
+
+rule "MCRN JEPN OBPN Fuel Type Electric and owner type Individual"
+salience 1003
+    when
+        t : TaxRuleModel(ownerType.equals("Individual"), "MCRN~JEPN~OBPN".contains(vehicleClassCategory) , (fuelType.equals("ELECTRIC") || fuelType.equals("BATERY") || fuelType.equals("CNG") || fuelType.equals("SOLAR ENERGY")) , tax == null)
+    then
+    	System.out.println("Inside MCRN JEPN OBPN Fuel Type Electric and owner type Individual");
+        t.setTax(9.5);
+        update( t );
+end
+
+
+rule "MCRN JEPN OBPN Fuel Type Electric and owner type Company"
+salience 1002    
+    when
+        t : TaxRuleModel(ownerType.equals("Company"), "MCRN~JEPN~OBPN".contains(vehicleClassCategory) , (fuelType.equals("ELECTRIC") || fuelType.equals("BATERY") || fuelType.equals("CNG") || fuelType.equals("SOLAR ENERGY")) , tax == null)
+    then
+    	System.out.println("Inside MCRN JEPN OBPN Fuel Type Electric and owner type Company");
+        t.setTax(11.5);
+        update( t );
+end
+
+rule "OBPN Tax type Quaterly and Seating Capacity greater than 10"
+salience 1001   
+    when
+        t : TaxRuleModel("OBPN".contains(vehicleClassCategory) , taxType.equals("Quarterly Tax"), seatingCapacity > 10 , tax == null)
+    then
+        System.out.println("OBPN Tax type Quaterly and Seating Capacity greater than 10");
+        t.setHsrpAmount(619);
+        int seat = t.getSeatingCapacity() -1 ;
+        t.setTaxAmount((((396.90*seat) /3)*t.getMonthType()));
+        double qt = 396.90*seat;
+        t.setQuarterAmt(qt);
+        update( t );
+end
+
+rule "Fuel Type Electric/BATERY/CNG/SOLAR ENRGY"
+    when
+        t : TaxRuleModel( (fuelType.equals("ELECTRIC") || fuelType.equals("BATERY") || fuelType.equals("CNG") || fuelType.equals("SOLAR ENERGY")) , tax == null)
+    then
+    	System.out.println("Inside Fuel Type BATERY/CNG/SOLAR ENRGY");
+        t.setTax(5.0);
+        update( t );
+end
+
+
+rule "Life Tax For Four Wheeler invoice amount less than 1000000 lacks"
+    when
+        t : TaxRuleModel(invoiceAmount <= 1000000,isFourWheeler, taxType.equals("Life Tax")  ,ownerType.equals("Individual") , tax == null )
+    then
+    	System.out.println("Inside Life Tax invoice amount less than or equal to 1000000 lacks");
+        t.setTax(12.0);
+        update( t );
+end
+
+rule "Life Tax For Four Wheeler invoice amount greater than 1000000 lacks"
+    when
+        t : TaxRuleModel(invoiceAmount > 1000000,isFourWheeler, taxType.equals("Life Tax")  ,ownerType.equals("Individual") , tax == null )
+    then
+    	System.out.println("Inside Life Tax invoice amount greater than 1000000 lacks");
+        t.setTax(14.0);
+        update( t );
+end
+   
+   
+ rule "Motor CEHHN~CRMN~CRNN~DEXN~DMPN~FRLN~MGRN~RRLN~SWPN~LODN~SLCM"
+ salience 101
+    when
+        t : TaxRuleModel("CEHHN~CRMN~CRNN~DEXN~DMPN~FRLN~MGRN~RRLN~SWPN~LODN~SLCM".contains(vehicleClassCategory)  , taxType.equals("Life Tax") , tax == null) 
+    then
+        System.out.println("Inside CEHHN~CRMN~CRNN~DEXN~DMPN~FRLN~MGRN~RRLN~SWPN~LODN~SLCM");
+        t.setTax(7.5);
+        t.setHsrpAmount(619);
+        update( t );
+end   
+    
+rule "Motor TRCN~TWVN~BRVN~TOWN~REVN~TMVN~TTVN~TOTN~CHSN~CVPN~CMPN~EXCN~GEMN~PWTN~RIGN~ATCHN~SPHN~MSVN less 762"
+    when
+        t : TaxRuleModel("TRCN~TWVN~BRVN~TOWN~REVN~TMVN~TTVN~TOTN~CHSN~CVPN~CMPN~EXCN~GEMN~PWTN~RIGN~ATCHN~SPHN~MSVN".contains(vehicleClassCategory)  , taxType.equals("Quarterly Tax") , ulw < 762 ,  taxAmount == 0) 
+    then
+        System.out.println("Inside TRCN~TWVN~BRVN~TOWN~REVN~TMVN~TTVN~TOTN~CHSN~CVPN~CMPN~EXCN~GEMN~PWTN~RIGN~ATCHN~SPHN~MSVN less 762");
+        t.setTaxAmount((241.50/3)*t.getMonthType());
+        t.setHsrpAmount(619);
+        t.setQuarterAmt(241.50);
+        update( t );
+end 
+ 
+
+rule "Motor TRCN~TWVN~BRVN~TOWN~REVN~TMVN~TTVN~TOTN~CHSN~CVPN~CMPN~EXCN~GEMN~PWTN~RIGN~ATCHN~SPHN~MSVN 763 to 1524"
+    when
+        t : TaxRuleModel("TRCN~TWVN~BRVN~TOWN~REVN~TMVN~TTVN~TOTN~CHSN~CVPN~CMPN~EXCN~GEMN~PWTN~RIGN~ATCHN~SPHN~MSVN".contains(vehicleClassCategory)  , taxType.equals("Quarterly Tax") , ulw > 762 , ulw < 1524 ,  taxAmount == 0) 
+    then
+        System.out.println("Inside TRCN~TWVN~BRVN~TOWN~REVN~TMVN~TTVN~TOTN~CHSN~CVPN~CMPN~EXCN~GEMN~PWTN~RIGN~ATCHN~SPHN~MSVN 763 to 1524");
+        t.setTaxAmount((360/3)*t.getMonthType());
+        t.setHsrpAmount(619);
+        t.setQuarterAmt(360.0);
+        update( t );
+end 
+    
+
+rule "Motor TRCN~TWVN~BRVN~TOWN~REVN~TMVN~TTVN~TOTN~CHSN~CVPN~CMPN~EXCN~GEMN~PWTN~RIGN~ATCHN~SPHN~MSVN 1525 to 2286"
+    when
+        t : TaxRuleModel("TRCN~TWVN~BRVN~TOWN~REVN~TMVN~TTVN~TOTN~CHSN~CVPN~CMPN~EXCN~GEMN~PWTN~RIGN~ATCHN~SPHN~MSVN".contains(vehicleClassCategory)  , taxType.equals("Quarterly Tax") , ulw > 1525 , ulw < 2286 ,  taxAmount == 0) 
+    then
+        System.out.println("Inside TRCN~TWVN~BRVN~TOWN~REVN~TMVN~TTVN~TOTN~CHSN~CVPN~CMPN~EXCN~GEMN~PWTN~RIGN~ATCHN~SPHN~MSVN 1525 to 2286");
+        t.setTaxAmount((436.80/3)*t.getMonthType());
+        t.setHsrpAmount(619);
+        t.setQuarterAmt(436.80);
+        update( t );
+end 
+    
+rule "Motor TRCN~TWVN~BRVN~TOWN~REVN~TMVN~TTVN~TOTN~CHSN~CVPN~CMPN~EXCN~GEMN~PWTN~RIGN~ATCHN~SPHN~MSVN 2287 to 3048"
+    when
+        t : TaxRuleModel("TRCN~TWVN~BRVN~TOWN~REVN~TMVN~TTVN~TOTN~CHSN~CVPN~CMPN~EXCN~GEMN~PWTN~RIGN~ATCHN~SPHN~MSVN".contains(vehicleClassCategory)  , taxType.equals("Quarterly Tax") , ulw > 2287 , ulw < 3048 ,  taxAmount == 0) 
+    then
+        System.out.println("Inside TRCN~TWVN~BRVN~TOWN~REVN~TMVN~TTVN~TOTN~CHSN~CVPN~CMPN~EXCN~GEMN~PWTN~RIGN~ATCHN~SPHN~MSVN 2287 to 3048");
+        t.setTaxAmount((520.80/3)*t.getMonthType());
+        t.setHsrpAmount(619);
+        t.setQuarterAmt(520.80);
+        update( t );
+end 
+
+
+rule "Motor TRCN~TWVN~BRVN~TOWN~REVN~TMVN~TTVN~TOTN~CHSN~CVPN~CMPN~EXCN~GEMN~PWTN~RIGN~ATCHN~SPHN 3049 to 4000"
+    when
+        t : TaxRuleModel("TRCN~TWVN~BRVN~TOWN~REVN~TMVN~TTVN~TOTN~CHSN~CVPN~CMPN~EXCN~GEMN~PWTN~RIGN~ATCHN~SPHN".contains(vehicleClassCategory)  , taxType.equals("Quarterly Tax") , ulw > 3049 , ulw < 4000 ,  taxAmount == 0) 
+    then
+        System.out.println("Inside TRCN~TWVN~BRVN~TOWN~REVN~TMVN~TTVN~TOTN~CHSN~CVPN~CMPN~EXCN~GEMN~PWTN~RIGN~ATCHN~SPHN 3049 to 4000");
+        t.setTaxAmount((720.80/3)*t.getMonthType());
+        t.setHsrpAmount(619);
+        t.setQuarterAmt(720.80);
+        update( t );
+end 
+
+rule "Motor TRCN~TWVN~BRVN~TOWN~REVN~TMVN~TTVN~TOTN~CHSN~CVPN~CMPN~EXCN~GEMN~PWTN~RIGN~ATCHN~SPHN above 4000"
+    when
+        t : TaxRuleModel("TRCN~TWVN~BRVN~TOWN~REVN~TMVN~TTVN~TOTN~CHSN~CVPN~CMPN~EXCN~GEMN~PWTN~RIGN~ATCHN~SPHN".contains(vehicleClassCategory)  , taxType.equals("Quarterly Tax") ,  ulw > 4000 ,  taxAmount == 0) 
+    then
+        System.out.println("Inside TRCN~TWVN~BRVN~TOWN~REVN~TMVN~TTVN~TOTN~CHSN~CVPN~CMPN~EXCN~GEMN~PWTN~RIGN~ATCHN~SPHN above 4000");
+        double ex = ( t.getUlw() - 4000 );
+        double ex1 =  (double)(ex / 250);
+        double extraAmount = ex1 * 80 ;
+        
+        int roundAmount = (int)Math.round(extraAmount);
+        double qt = roundAmount + 720;
+        t.setTaxAmount(((roundAmount + 720) /3)*t.getMonthType());
+        t.setHsrpAmount(619);
+        t.setQuarterAmt(qt);
+        update( t );
+end 
+
+rule "Motor TTRN~TCPN"
+    when
+        t : TaxRuleModel("TTRN~TCPN".contains(vehicleClassCategory)  , taxType.equals("Quarterly Tax") ,  ulw < 1016 ,  taxAmount == 0) 
+    then
+        System.out.println("Inside TTRN~TCPN");
+        t.setTaxAmount((300/3)*t.getMonthType());
+        t.setHsrpAmount(619);
+        t.setQuarterAmt(300.0);
+        update( t );
+end 
+
+
+rule "Motor TATN~CTPN less 1016"
+    when
+        t : TaxRuleModel("TATN~CTPN".contains(vehicleClassCategory)  , taxType.equals("Quarterly Tax") ,  ulw < 1016 ,  taxAmount == 0) 
+    then
+        System.out.println("Inside TATN~CTPN");
+        t.setTaxAmount((160/3)*t.getMonthType());
+        t.setHsrpAmount(619);
+        t.setQuarterAmt(160.0);
+        update( t );
+end 
+
+
+rule "Motor TATN~CTPN above 1016"
+    when
+        t : TaxRuleModel("TATN~CTPN".contains(vehicleClassCategory)  , taxType.equals("Quarterly Tax") ,  ulw > 1016 ,  taxAmount == 0) 
+    then
+        System.out.println("Inside TATN~CTPN");
+        t.setTaxAmount((300/3)*t.getMonthType());
+        t.setHsrpAmount(619);
+        t.setQuarterAmt(300.0);
+        update( t );
+end 
+
+
+
+rule "Motor MSVN above 3048"
+    when
+        t : TaxRuleModel("MSVN".contains(vehicleClassCategory)  , taxType.equals("Quarterly Tax") , ulw > 3049 ,  taxAmount == 0) 
+    then
+        System.out.println("Inside MSVN 4000");
+        t.setTaxAmount((720.80/3)*t.getMonthType());
+        t.setHsrpAmount(619);
+        t.setQuarterAmt(720.80);
+        update( t );
+end 
+
+
+    
+//end quartely tax
+
+rule "Tax Amount"
+    when
+        t : TaxRuleModel(taxType.equals("Life Tax"),  taxAmount == 0 , tax > 0 , !isPHCertificate , !isPHDriverLicense , !ownerType.equals("Police") )
+    then
+    	System.out.println("Inside Tax Amount");
+    	System.out.println("Invoice amount " + t.getInvoiceAmount() +" tax "+ t.getTax());
+        t.setTaxAmount((t.getInvoiceAmount()*t.getTax())/100);
+        System.out.println("Tax Amount " + t.getTaxAmount());
+        update( t );
+end
+
+
+
+rule "Physically Handicapped"
+salience 500    
+    when
+        t : TaxRuleModel( isPHCertificate , isPHDriverLicense , tax == null)
+    then
+    	System.out.println("Inside Physically Handicapped");
+        t.setTax(0.0);
+        t.setTaxAmount(0.0);
+        update( t );
+end
+
+
+rule "Physically Handicapped and have not driver license"
+salience 400
+    when
+        t : TaxRuleModel( isPHCertificate , tax == null , taxAmount == 0)
+    then
+    	System.out.println("Physically Handicapped and have not driver license");
+        t.setTax(0.0);
+        t.setTaxAmount(901);
+        update( t );
+end
+
+
+rule "Two Wheeler HSRP Amount"
+    when
+        t : TaxRuleModel(isTwoWheeler , hsrpAmount == 0)
+    then
+    	System.out.println("Inside TWO Wheeler HSRP Amount");
+        t.setHsrpAmount(245);
+        update( t );
+end
+
+rule "Four Wheeler HSRP Amount"
+    when
+        t : TaxRuleModel(isFourWheeler , hsrpAmount == 0)
+    then
+    	System.out.println("Inside Four Wheeler HSRP Amount");
+        t.setHsrpAmount(619);
+        update( t );
+end
+
+rule "isDisabled and isInvalidCarriage HSRP Amount"
+    when
+        t : TaxRuleModel(isDisabled , isInvalidCarriage , hsrpAmount == 0)
+    then
+    	System.out.println("isDisabled and isInvalidCarriage HSRP Amount");
+        t.setHsrpAmount(282);
+        update( t );
+end

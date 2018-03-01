@@ -1,0 +1,1169 @@
+package org.rta.rules.docs.citizen
+ 
+
+import org.rta.rules.enums.DocTypes;
+import org.rta.rules.enums.ServiceType;
+import org.rta.rules.enums.AlterationCategory;
+import org.rta.rules.model.DocTypesRuleModel;
+import org.rta.rules.model.CitizenRequest;
+import java.util.ArrayList;  
+import java.util.List;  
+	 
+	 global List<DocTypesRuleModel> citDocTypeList;
+	
+
+	rule "Transfer of Ownership for common"
+	    when
+	       $citizenRequest : CitizenRequest(servicesType == ServiceType.OWNERSHIP_TRANSFER_SALE 
+	       || servicesType == ServiceType.OWNERSHIP_TRANSFER_DEATH
+	       || servicesType == ServiceType.OWNERSHIP_TRANSFER_AUCTION)
+	    then
+	       DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+	   	   docTypesModel.setId(DocTypes.DOC_USER_SIGNATURE.getValue());
+	       docTypesModel.setName(DocTypes.DOC_USER_SIGNATURE.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       citDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_OWNER_PHOTO.getValue());
+           docTypesModel.setName(DocTypes.DOC_OWNER_PHOTO.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel(); 
+           docTypesModel.setId(DocTypes.DOC_PRESENT_ADDRESS_PROOF.getValue());
+           docTypesModel.setName(DocTypes.DOC_PRESENT_ADDRESS_PROOF.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_PRESENT_ADDRESS_PROOF_BACKVIEW.getValue());
+           docTypesModel.setName(DocTypes.DOC_PRESENT_ADDRESS_PROOF_BACKVIEW.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+	end
+	
+	rule "Transfer of Ownership for Sale"
+        when
+           $citizenRequest : CitizenRequest(servicesType == ServiceType.OWNERSHIP_TRANSFER_SALE )
+        then
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_ROC.getValue());
+           docTypesModel.setName(DocTypes.DOC_ROC.getLabel());
+           docTypesModel.setIsMandatory(false);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_LETTER_OF_AUTHORIZATION.getValue());
+           docTypesModel.setName(DocTypes.DOC_LETTER_OF_AUTHORIZATION.getLabel());
+           docTypesModel.setIsMandatory(false);
+           citDocTypeList.add(docTypesModel);
+    end
+	
+	rule "Transfer of Ownership for Dead"
+        when
+           $citizenRequest : CitizenRequest(servicesType == ServiceType.OWNERSHIP_TRANSFER_DEATH )
+        then
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_LEGAL_HEIR_CERTIFICATE.getValue());
+           docTypesModel.setName(DocTypes.DOC_LEGAL_HEIR_CERTIFICATE.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_CONSENT_LATTER_FAMILY_MEMBERS.getValue());
+           docTypesModel.setName(DocTypes.DOC_CONSENT_LATTER_FAMILY_MEMBERS.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel(); 
+           docTypesModel.setId(DocTypes.DOC_AFFIDAVIT.getValue());
+           docTypesModel.setName(DocTypes.DOC_AFFIDAVIT.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_DEATH_CERTIFICATE.getValue());
+           docTypesModel.setName(DocTypes.DOC_DEATH_CERTIFICATE.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_LEGAL_HEIR_VEHICLE_PHOTO.getValue());
+           docTypesModel.setName(DocTypes.DOC_LEGAL_HEIR_VEHICLE_PHOTO.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+    end
+    
+    rule "Transfer of Ownership for Auction"
+        when
+           $citizenRequest : CitizenRequest(servicesType == ServiceType.OWNERSHIP_TRANSFER_AUCTION )
+        then
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_AUCTION_PROCEEDINGS.getValue());
+           docTypesModel.setName(DocTypes.DOC_AUCTION_PROCEEDINGS.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_AUCTION_WINNER_LETTER.getValue());
+           docTypesModel.setName(DocTypes.DOC_AUCTION_WINNER_LETTER.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel(); 
+           docTypesModel.setId(DocTypes.DOC_SHOW_CAUSE_NOTICE.getValue());
+           docTypesModel.setName(DocTypes.DOC_SHOW_CAUSE_NOTICE.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_AUCTION_CERTIFICATE.getValue());
+           docTypesModel.setName(DocTypes.DOC_AUCTION_CERTIFICATE.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+    end
+	
+	rule "Cancellation of Registration"
+        when
+           $citizenRequest : CitizenRequest(servicesType == ServiceType.REGISTRATION_CANCELLATION)
+        then
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_VEHICLE_RIGHT.getValue());
+           docTypesModel.setName(DocTypes.DOC_VEHICLE_RIGHT.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+          
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_VEHICLE_FRONT.getValue());
+           docTypesModel.setName(DocTypes.DOC_VEHICLE_FRONT.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel); 
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_VEHICLE_REAR.getValue());
+           docTypesModel.setName(DocTypes.DOC_VEHICLE_REAR.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_VEHICLE_LEFT.getValue());
+           docTypesModel.setName(DocTypes.DOC_VEHICLE_LEFT.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_SCRAPE_CERTIFICATE.getValue());
+           docTypesModel.setName(DocTypes.DOC_SCRAPE_CERTIFICATE.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_USER_SIGNATURE.getValue());
+           docTypesModel.setName(DocTypes.DOC_USER_SIGNATURE.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+    end 
+	
+	rule "Issue of NOC, Cancellation of NOC, Renewal of Registration and Fresh RC for Financier"
+        when
+           $citizenRequest : CitizenRequest(servicesType == ServiceType.NOC_ISSUE
+           || servicesType == ServiceType.NOC_CANCELLATION 
+           || servicesType == ServiceType.REGISTRATION_RENEWAL )
+        then
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_VEHICLE_FRONT.getValue());
+           docTypesModel.setName(DocTypes.DOC_VEHICLE_FRONT.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel); 
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_VEHICLE_RIGHT.getValue());
+           docTypesModel.setName(DocTypes.DOC_VEHICLE_RIGHT.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_ENGINE_NO.getValue());
+           docTypesModel.setName(DocTypes.DOC_ENGINE_NO.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel); 
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_CHASSIS_NO.getValue());
+           docTypesModel.setName(DocTypes.DOC_CHASSIS_NO.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+    end 
+       
+    rule "Revocation of Suspension"
+        when
+           $citizenRequest : CitizenRequest(servicesType == ServiceType.SUSPENSION_REVOCATION, status != 54)
+        then
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_LETTER_FOR_APPEALING_FOR_REVOCATION.getValue());
+           docTypesModel.setName(DocTypes.DOC_LETTER_FOR_APPEALING_FOR_REVOCATION.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+          
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_COURT_ORDER_FOR_REDUCTION_SUSPENSION_PERIOD.getValue());
+           docTypesModel.setName(DocTypes.DOC_COURT_ORDER_FOR_REDUCTION_SUSPENSION_PERIOD.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel); 
+    end 
+    
+    rule "Revocation of Suspension for Objection cases"
+        when
+           $citizenRequest : CitizenRequest(servicesType == ServiceType.SUSPENSION_REVOCATION, status == 54)
+        then
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_SUPPORTING_PROOF.getValue());
+           docTypesModel.setName(DocTypes.DOC_SUPPORTING_PROOF.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel); 
+    end 
+    
+	rule "Suspension-Cancellation of Registration"
+        when
+           $citizenRequest : CitizenRequest(servicesType == ServiceType.REGISTRATION_SUS_CANCELLATION)
+        then
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_COURT_ORDER_RC_SUSPENSION.getValue());
+           docTypesModel.setName(DocTypes.DOC_COURT_ORDER_RC_SUSPENSION.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_COURT_ORDER_RC_CANCELLATION.getValue());
+           docTypesModel.setName(DocTypes.DOC_COURT_ORDER_RC_CANCELLATION.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_SUPPORTING_PROOF.getValue());
+           docTypesModel.setName(DocTypes.DOC_SUPPORTING_PROOF.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+    end	
+    
+    rule "Learning License Fresh"
+        when
+           $citizenRequest : CitizenRequest( servicesType == ServiceType.LL_FRESH )
+        then
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_OWNER_PHOTO.getValue());
+           docTypesModel.setName(DocTypes.DOC_OWNER_PHOTO.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_USER_SIGNATURE.getValue());
+           docTypesModel.setName(DocTypes.DOC_USER_SIGNATURE.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);           
+    end 
+    
+    rule "Reassignment of Vehicle"
+        when
+           $citizenRequest : CitizenRequest( servicesType == ServiceType.VEHICLE_REASSIGNMENT)
+        then
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_COMMERCIAL_TAX_CERTIFICATE_RECEIPT.getValue());
+           docTypesModel.setName(DocTypes.DOC_COMMERCIAL_TAX_CERTIFICATE_RECEIPT.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);           
+    end 
+    
+    rule "Change of Address and DATA ENTRY NOC"
+        when
+          $citizenRequest : CitizenRequest(servicesType == ServiceType.ADDRESS_CHANGE
+          		|| servicesType == ServiceType.DE_NOC_CHANGE_OF_ADDRESS
+	         	|| servicesType == ServiceType.DE_NOC_TRANSFER_OF_OWNERSHIP
+	         	|| servicesType == ServiceType.DE_TRAILER)
+        then
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel(); 
+           docTypesModel.setId(DocTypes.DOC_RC_COPY.getValue());
+           docTypesModel.setName(DocTypes.DOC_RC_COPY.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+    end
+    
+    rule "Alteration of Vehicle"
+        when
+          $citizenRequest : CitizenRequest(servicesType == ServiceType.VEHICLE_ATLERATION && userType != UserType.ROLE_MVI )//, alterationCategory == AlterationCategory.FUEL_TYPE)
+        then
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel(); 
+           docTypesModel.setId(DocTypes.DOC_RC_COPY.getValue());
+           docTypesModel.setName(DocTypes.DOC_RC_COPY.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+    end
+    
+    rule "Alteration of Vehicle documents for ENGINE_ALTERATION "
+        when
+          $citizenRequest : CitizenRequest(servicesType == ServiceType.VEHICLE_ATLERATION, !(alterationCategory.contains(AlterationCategory.ENGINE_ALTERATION)), userType==UserType.ROLE_MVI )
+        then
+           
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel(); 
+           docTypesModel.setId(DocTypes.DOC_VEHICLE_FRONT_WITH_NUMBER_PLATE.getValue());
+           docTypesModel.setName(DocTypes.DOC_VEHICLE_FRONT_WITH_NUMBER_PLATE.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel(); 
+           docTypesModel.setId(DocTypes.DOC_CHASSIS_NO.getValue());
+           docTypesModel.setName(DocTypes.DOC_CHASSIS_NO.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+    end
+    
+    rule "Alteration of Vehicle for Body Type"
+        when
+          $citizenRequest : CitizenRequest(servicesType == ServiceType.VEHICLE_ATLERATION && alterationCategory.contains(AlterationCategory.BODY_TYPE) && userType==UserType.ROLE_MVI)
+        then
+         
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel(); 
+           docTypesModel.setId(DocTypes.DOC_VEHICLE_SIDE_VIEW_WITH_OVERHANGING_MEASUREMENT.getValue());
+           docTypesModel.setName(DocTypes.DOC_VEHICLE_SIDE_VIEW_WITH_OVERHANGING_MEASUREMENT.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel(); 
+           docTypesModel.setId(DocTypes.DOC_WEIGHT_BRIDGE_SLIP_AFTER_MODIFICATION.getValue());
+           docTypesModel.setName(DocTypes.DOC_WEIGHT_BRIDGE_SLIP_AFTER_MODIFICATION.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+    end
+     rule "Alteration of Vehicle for seating capacity"
+        when
+          $citizenRequest : CitizenRequest(servicesType == ServiceType.VEHICLE_ATLERATION && alterationCategory.contains(AlterationCategory.SEATING_CAPACITY) && userType==UserType.ROLE_MVI)
+        then
+          
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel(); 
+           docTypesModel.setId(DocTypes.DOC_SEATING_PHOTOS_AFTER_MODIFICATION.getValue());
+           docTypesModel.setName(DocTypes.DOC_SEATING_PHOTOS_AFTER_MODIFICATION.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+    end
+    rule "Alteration of Vehicle for Fuel Type"
+        when
+          $citizenRequest : CitizenRequest(servicesType == ServiceType.VEHICLE_ATLERATION && alterationCategory.contains(AlterationCategory.FUEL_TYPE) && userType==UserType.ROLE_MVI)
+        then
+           
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel(); 
+           docTypesModel.setId(DocTypes.DOC_BOOT_SPACE_PHOTO.getValue());
+           docTypesModel.setName(DocTypes.DOC_BOOT_SPACE_PHOTO.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel(); 
+           docTypesModel.setId(DocTypes.DOC_BOOT_SPACE_PHOTO_AFTER_INSTALLATION_OF_GAS_KIT.getValue());
+           docTypesModel.setName(DocTypes.DOC_BOOT_SPACE_PHOTO_AFTER_INSTALLATION_OF_GAS_KIT.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel(); 
+           docTypesModel.setId(DocTypes.DOC_VAPORIZER_INSTALLED_TO_ENGINE_PHOTO.getValue());
+           docTypesModel.setName(DocTypes.DOC_VAPORIZER_INSTALLED_TO_ENGINE_PHOTO.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel(); 
+           docTypesModel.setId(DocTypes.DOC_SWITCH_INSTALLED_AT_STEERING_PHOTO.getValue());
+           docTypesModel.setName(DocTypes.DOC_SWITCH_INSTALLED_AT_STEERING_PHOTO.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+    end
+    
+    rule "Alteration of Vehicle for Engine Alteration"
+        when
+          $citizenRequest : CitizenRequest(servicesType == ServiceType.VEHICLE_ATLERATION && alterationCategory.contains(AlterationCategory.ENGINE_ALTERATION) && userType==UserType.ROLE_MVI)
+        then
+           
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel(); 
+           docTypesModel.setId(DocTypes.DOC_NEW_ENGINE_NUMBER_PHOTO.getValue());
+           docTypesModel.setName(DocTypes.DOC_NEW_ENGINE_NUMBER_PHOTO.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel(); 
+           docTypesModel.setId(DocTypes.DOC_ENGINE_WITH_MAKER_NAME.getValue());
+           docTypesModel.setName(DocTypes.DOC_ENGINE_WITH_MAKER_NAME.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+    end
+   
+   rule "Stoppage Tax and Stoppage Tax Revocation"
+        when
+           $citizenRequest : CitizenRequest((servicesType == ServiceType.STOPPAGE_TAX || servicesType == ServiceType.STOPPAGE_TAX_REVOCATION), userType == UserType.ROLE_MVI)
+        then
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel(); 
+           docTypesModel.setId(DocTypes.DOC_CHASSIS_NO.getValue());
+           docTypesModel.setName(DocTypes.DOC_CHASSIS_NO.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_VEHICLE_RIGHT.getValue());
+           docTypesModel.setName(DocTypes.DOC_VEHICLE_RIGHT.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+          
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_VEHICLE_FRONT.getValue());
+           docTypesModel.setName(DocTypes.DOC_VEHICLE_FRONT.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel); 
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_VEHICLE_REAR.getValue());
+           docTypesModel.setName(DocTypes.DOC_VEHICLE_REAR.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_VEHICLE_LEFT.getValue());
+           docTypesModel.setName(DocTypes.DOC_VEHICLE_LEFT.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+    end 
+   
+	rule "Present Address Proof of Owner"
+        when
+          $citizenRequest : CitizenRequest(servicesType == ServiceType.LL_FRESH 
+            || servicesType == ServiceType.ADDRESS_CHANGE 
+            || isAadhar == false)
+        then
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel(); 
+           docTypesModel.setId(DocTypes.DOC_PRESENT_ADDRESS_PROOF.getValue());
+           docTypesModel.setName(DocTypes.DOC_PRESENT_ADDRESS_PROOF.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_PRESENT_ADDRESS_PROOF_BACKVIEW.getValue());
+           docTypesModel.setName(DocTypes.DOC_PRESENT_ADDRESS_PROOF_BACKVIEW.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+    end
+    
+    rule "Theft Intimation"
+        when
+          $citizenRequest : CitizenRequest(servicesType == ServiceType.THEFT_INTIMATION )
+        then
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel(); 
+           docTypesModel.setId(DocTypes.DOC_FIR_COPY.getValue());
+           docTypesModel.setName(DocTypes.DOC_FIR_COPY.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+    end
+    
+    rule "Insurance Policy Copy"
+        when
+           $citizenRequest : CitizenRequest(isInsuraceDocs == true )
+        then
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_INSURANCE_POLICY_COPY.getValue());
+           docTypesModel.setName(DocTypes.DOC_INSURANCE_POLICY_COPY.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);           
+    end 
+    
+    rule "User Registration Services"
+        when
+          $citizenRequest : CitizenRequest(servicesType == ServiceType.FINANCIER_SIGNUP 
+          || servicesType == ServiceType.BODYBUILDER_SIGNUP
+          || servicesType == ServiceType.DEALER_SIGNUP
+          || servicesType == ServiceType.PUC_USER_SIGNUP
+          || servicesType == ServiceType.ALTERATION_AGENCY_SIGNUP)
+        then
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_REPRESENTATIVE_AADHAAR_PROOF.getValue());
+           docTypesModel.setName(DocTypes.DOC_REPRESENTATIVE_AADHAAR_PROOF.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+                      
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_REPRESENTATIVE_PHOTO_PROOF.getValue());
+           docTypesModel.setName(DocTypes.DOC_REPRESENTATIVE_PHOTO_PROOF.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_ROC.getValue());
+           docTypesModel.setName(DocTypes.DOC_ROC.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_PREMISES_PHOTO_1.getValue());
+           docTypesModel.setName(DocTypes.DOC_PREMISES_PHOTO_1.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_PREMISES_PHOTO_2.getValue());
+           docTypesModel.setName(DocTypes.DOC_PREMISES_PHOTO_2.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_PAN_CARD.getValue());
+           docTypesModel.setName(DocTypes.DOC_PAN_CARD.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+    end
+    
+    rule "Financer Registration Services"
+        when
+          $citizenRequest : CitizenRequest(servicesType == ServiceType.FINANCIER_SIGNUP)
+        then
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_PROOF_COMPANY_REPRESENTATIVE.getValue());
+           docTypesModel.setName(DocTypes.DOC_PROOF_COMPANY_REPRESENTATIVE.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_VEHICLE_LOAN_AGREEMENT.getValue());
+           docTypesModel.setName(DocTypes.DOC_VEHICLE_LOAN_AGREEMENT.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+    end
+    
+    rule "Dealer Registration Services"
+        when
+          $citizenRequest : CitizenRequest(servicesType == ServiceType.DEALER_SIGNUP)
+        then
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_MANUFACTURER_LATTER.getValue());
+           docTypesModel.setName(DocTypes.DOC_MANUFACTURER_LATTER.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+                      
+    end
+    
+     rule "Hazardous and DRIVING_INSTITUTE Vehicle Training Institute Registration Services"
+        when
+          $citizenRequest : CitizenRequest(servicesType == ServiceType.HAZARDOUS_VEH_TRAIN_INST || servicesType == ServiceType.DRIVING_INSTITUTE)
+        then
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_ROC.getValue());
+           docTypesModel.setName(DocTypes.DOC_ROC.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_PREMISES_PHOTO_1.getValue());
+           docTypesModel.setName(DocTypes.DOC_PREMISES_PHOTO_1.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_PREMISES_PHOTO_2.getValue());
+           docTypesModel.setName(DocTypes.DOC_PREMISES_PHOTO_2.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+                      
+    end
+    
+	rule "Compulsory documents upload by online financer"
+	    when
+	         $citizenRequest : CitizenRequest(servicesType == ServiceType.FRESH_RC_FINANCIER && userType != UserType.ROLE_CITIZEN )
+	    then
+	       DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_CHASSIS_NO_CCO.getValue());
+	       docTypesModel.setName(DocTypes.DOC_CHASSIS_NO_CCO.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       citDocTypeList.add(docTypesModel);
+	       	              
+	       docTypesModel = new DocTypesRuleModel();
+	   	   docTypesModel.setId(DocTypes.DOC_VEHICLE_SIDE_CCO.getValue());
+	       docTypesModel.setName(DocTypes.DOC_VEHICLE_SIDE_CCO.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       citDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel(); 
+	       docTypesModel.setId(DocTypes.DOC_VEHICLE_FRONT_CCO.getValue());
+	       docTypesModel.setName(DocTypes.DOC_VEHICLE_FRONT_CCO.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       citDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel(); 
+	       docTypesModel.setId(DocTypes.DOC_NON_PAYMENT_PROOF_1.getValue());
+	       docTypesModel.setName(DocTypes.DOC_NON_PAYMENT_PROOF_1.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       citDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_NON_PAYMENT_PROOF_2.getValue());
+	       docTypesModel.setName(DocTypes.DOC_NON_PAYMENT_PROOF_2.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       citDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_NON_PAYMENT_PROOF_3.getValue());
+	       docTypesModel.setName(DocTypes.DOC_NON_PAYMENT_PROOF_3.getLabel());
+	       docTypesModel.setIsMandatory(false);
+	       citDocTypeList.add(docTypesModel);
+	       
+	end
+	
+		rule "Fresh RC Financer for Citizen"
+	    when
+	         $citizenRequest : CitizenRequest(servicesType == ServiceType.FRESH_RC_FINANCIER , userType == UserType.ROLE_CITIZEN )
+	    then
+	       DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_SUPPORT_DOCUMENT_1.getValue());
+	       docTypesModel.setName(DocTypes.DOC_SUPPORT_DOCUMENT_1.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       citDocTypeList.add(docTypesModel);
+	       	
+	       docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_SUPPORT_DOCUMENT_2.getValue());
+	       docTypesModel.setName(DocTypes.DOC_SUPPORT_DOCUMENT_2.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       citDocTypeList.add(docTypesModel); 
+	                           
+	end
+	
+	rule "Data Entry service for common"
+	    when
+	         $citizenRequest : CitizenRequest(servicesType == ServiceType.DE_NOC_CHANGE_OF_ADDRESS
+	         	|| servicesType == ServiceType.DE_NOC_TRANSFER_OF_OWNERSHIP
+	         	|| servicesType == ServiceType.DE_IMPORTED_VEHICLE
+	         	|| servicesType == ServiceType.DE_OTHER_STATE_NEW_VEHICLE_TR_GENERATED
+	         	|| servicesType == ServiceType.DE_TRAILER)
+	    then
+	       DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_OWNER_PHOTO.getValue());
+	       docTypesModel.setName(DocTypes.DOC_OWNER_PHOTO.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       citDocTypeList.add(docTypesModel);
+	              
+	       docTypesModel = new DocTypesRuleModel();
+	   	   docTypesModel.setId(DocTypes.DOC_USER_SIGNATURE.getValue());
+	       docTypesModel.setName(DocTypes.DOC_USER_SIGNATURE.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       citDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel(); 
+	       docTypesModel.setId(DocTypes.DOC_VEHICLE_RIGHT.getValue());
+	       docTypesModel.setName(DocTypes.DOC_VEHICLE_RIGHT.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       citDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel(); 
+	       docTypesModel.setId(DocTypes.DOC_VEHICLE_FRONT.getValue());
+	       docTypesModel.setName(DocTypes.DOC_VEHICLE_FRONT.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       citDocTypeList.add(docTypesModel);
+	       
+	end
+	
+	
+	
+	
+	rule "Data Entry service for Imported Vehicle and Other State-New Vehicle"
+	    when
+	         $citizenRequest : CitizenRequest(servicesType == ServiceType.DE_IMPORTED_VEHICLE
+	         	|| servicesType == ServiceType.DE_OTHER_STATE_NEW_VEHICLE_TR_GENERATED)
+	    then
+	       DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+	       docTypesModel.setId(DocTypes.DOC_VEHICLE_LEFT.getValue());
+	       docTypesModel.setName(DocTypes.DOC_VEHICLE_LEFT.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       citDocTypeList.add(docTypesModel);
+	              
+	       docTypesModel = new DocTypesRuleModel();
+	   	   docTypesModel.setId(DocTypes.DOC_VEHICLE_LEFT.getValue());
+	       docTypesModel.setName(DocTypes.DOC_VEHICLE_LEFT.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       citDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel();
+	   	   docTypesModel.setId(DocTypes.DOC_PAN_CARD.getValue());
+	       docTypesModel.setName(DocTypes.DOC_PAN_CARD.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       citDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel();
+	   	   docTypesModel.setId(DocTypes.DOC_PRESENT_ADDRESS_PROOF.getValue());
+	       docTypesModel.setName(DocTypes.DOC_PRESENT_ADDRESS_PROOF.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       citDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel();
+	   	   docTypesModel.setId(DocTypes.DOC_PRESENT_ADDRESS_PROOF_BACKVIEW.getValue());
+	       docTypesModel.setName(DocTypes.DOC_PRESENT_ADDRESS_PROOF_BACKVIEW.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       citDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel();
+	   	   docTypesModel.setId(DocTypes.DOC_PHOTO_ID_PROOF.getValue());
+	       docTypesModel.setName(DocTypes.DOC_PHOTO_ID_PROOF.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       citDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel();
+	   	   docTypesModel.setId(DocTypes.DOC_INDIVIDUAL_INVOICE.getValue());
+	       docTypesModel.setName(DocTypes.DOC_INDIVIDUAL_INVOICE.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       citDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel();
+	   	   docTypesModel.setId(DocTypes.DOC_INSURANCE_POLICY_COPY.getValue());
+	       docTypesModel.setName(DocTypes.DOC_INSURANCE_POLICY_COPY.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       citDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel();
+	   	   docTypesModel.setId(DocTypes.DOC_ENGINE_NO.getValue());
+	       docTypesModel.setName(DocTypes.DOC_ENGINE_NO.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       citDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel();
+	   	   docTypesModel.setId(DocTypes.DOC_FORM20DO.getValue());
+	       docTypesModel.setName(DocTypes.DOC_FORM20DO.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       citDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel();
+	   	   docTypesModel.setId(DocTypes.DOC_FORM22.getValue());
+	       docTypesModel.setName(DocTypes.DOC_FORM22.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       citDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel();
+	   	   docTypesModel.setId(DocTypes.DOC_ROC.getValue());
+	       docTypesModel.setName(DocTypes.DOC_ROC.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       citDocTypeList.add(docTypesModel);
+	       
+	end
+	
+	//############### LL/DL SERVICES  ####################
+	
+	rule "DLB Service"
+        when
+           $citizenRequest : CitizenRequest(servicesType == ServiceType.DL_BADGE )
+        then
+           
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel(); 
+           docTypesModel.setId(DocTypes.DOC_COURSE_CERTIFICATE.getValue());
+           docTypesModel.setName(DocTypes.DOC_COURSE_CERTIFICATE.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+    end
+    
+    rule "medical certificate"
+        when
+           $citizenRequest : CitizenRequest( (servicesType == ServiceType.LL_FRESH 
+           || servicesType == ServiceType.DL_MILITRY
+           || servicesType == ServiceType.DL_EXPIRED) && age >= 50)
+        then
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_MEDICAL_CERTIFICATE.getValue());
+           docTypesModel.setName(DocTypes.DOC_MEDICAL_CERTIFICATE.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);           
+    end
+    
+    rule "medical certificate for LL Endorsement"
+        when
+           $citizenRequest : CitizenRequest((servicesType == ServiceType.LL_ENDORSEMENT && registrationCategoryType == 1) || (servicesType == ServiceType.LL_ENDORSEMENT && age >= 50 ))
+        then
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_MEDICAL_CERTIFICATE.getValue());
+           docTypesModel.setName(DocTypes.DOC_MEDICAL_CERTIFICATE.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);           
+    end 
+    
+    rule "qualification certificate for LL Endorsement"
+        when
+           $citizenRequest : CitizenRequest(servicesType == ServiceType.LL_ENDORSEMENT && registrationCategoryType == 1)
+        then
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_QUALIFICATION_PROOF.getValue());
+           docTypesModel.setName(DocTypes.DOC_QUALIFICATION_PROOF.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);           
+    end  
+    
+    rule "DL Change of Address"
+	    when
+	         $citizenRequest : CitizenRequest(servicesType == ServiceType.DL_CHANGE_ADDRESS)
+	    then
+	       DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+	   	   docTypesModel.setId(DocTypes.DOC_PRESENT_ADDRESS_PROOF.getValue());
+	       docTypesModel.setName(DocTypes.DOC_PRESENT_ADDRESS_PROOF.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       citDocTypeList.add(docTypesModel);
+	       
+	       docTypesModel = new DocTypesRuleModel();
+	   	   docTypesModel.setId(DocTypes.DOC_PRESENT_ADDRESS_PROOF_BACKVIEW.getValue());
+	       docTypesModel.setName(DocTypes.DOC_PRESENT_ADDRESS_PROOF_BACKVIEW.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       citDocTypeList.add(docTypesModel);
+	       
+	end
+	
+	rule "DL Renewal"
+	    when
+	         $citizenRequest : CitizenRequest(servicesType == ServiceType.DL_RENEWAL)
+	    then
+	       DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+	   	   docTypesModel.setId(DocTypes.DOC_OWNER_PHOTO.getValue());
+	       docTypesModel.setName(DocTypes.DOC_OWNER_PHOTO.getLabel());
+	       docTypesModel.setIsMandatory(true);
+	       citDocTypeList.add(docTypesModel);
+	       
+	end 
+	
+	rule "medical certificate for DL Renewal"
+        when
+           $citizenRequest : CitizenRequest((servicesType == ServiceType.DL_RENEWAL && registrationCategoryType == 1) || (servicesType == ServiceType.DL_RENEWAL && age >= 50 ))
+        then
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_MEDICAL_CERTIFICATE.getValue());
+           docTypesModel.setName(DocTypes.DOC_MEDICAL_CERTIFICATE.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);           
+    end 
+	
+	rule "Course certificate for DL Fresh"
+        when
+           $citizenRequest : CitizenRequest(servicesType == ServiceType.DL_FRESH && isBadge == true )
+        then
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_COURSE_CERTIFICATE.getValue());
+           docTypesModel.setName(DocTypes.DOC_COURSE_CERTIFICATE.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);           
+    end 
+	
+	rule "Course certificate for DL Endorsement"
+        when
+           $citizenRequest : CitizenRequest(servicesType == ServiceType.DL_ENDORSMENT && registrationCategoryType == 1 )
+        then
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_COURSE_CERTIFICATE.getValue());
+           docTypesModel.setName(DocTypes.DOC_COURSE_CERTIFICATE.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);           
+    end 
+    
+    rule "DL Internation Permit Service"
+        when
+           $citizenRequest : CitizenRequest(servicesType == ServiceType.DL_INT_PERMIT )
+        then
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_PASSPORT.getValue());
+           docTypesModel.setName(DocTypes.DOC_PASSPORT.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);     
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_VISA_COPY.getValue());
+           docTypesModel.setName(DocTypes.DOC_VISA_COPY.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);           
+    end 
+    
+     rule "DL Militry"
+        when
+           $citizenRequest : CitizenRequest(servicesType == ServiceType.DL_MILITRY )
+        then
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_OWNER_PHOTO.getValue());
+           docTypesModel.setName(DocTypes.DOC_OWNER_PHOTO.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);     
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_USER_SIGNATURE.getValue());
+           docTypesModel.setName(DocTypes.DOC_USER_SIGNATURE.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);  
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_RESIDENTIAL_PROOF_ESTATE_OFFICER.getValue());
+           docTypesModel.setName(DocTypes.DOC_RESIDENTIAL_PROOF_ESTATE_OFFICER.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);         
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_MILITARY_DL.getValue());
+           docTypesModel.setName(DocTypes.DOC_MILITARY_DL.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);  
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_PERMISSION_LETTER_EX_MILITARY_OFFICERS.getValue());
+           docTypesModel.setName(DocTypes.DOC_PERMISSION_LETTER_EX_MILITARY_OFFICERS.getLabel());
+           docTypesModel.setIsMandatory(false);
+           citDocTypeList.add(docTypesModel);                         
+    end 
+    
+    rule "DL Foreign Citizen"
+        when
+           $citizenRequest : CitizenRequest(servicesType == ServiceType.DL_FOREIGN_CITIZEN )
+        then
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_OWNER_PHOTO.getValue());
+           docTypesModel.setName(DocTypes.DOC_OWNER_PHOTO.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);     
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_USER_SIGNATURE.getValue());
+           docTypesModel.setName(DocTypes.DOC_USER_SIGNATURE.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);  
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_PRESENT_ADDRESS_PROOF.getValue());
+           docTypesModel.setName(DocTypes.DOC_PRESENT_ADDRESS_PROOF.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);         
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_PRESENT_ADDRESS_PROOF_BACKVIEW.getValue());
+           docTypesModel.setName(DocTypes.DOC_PRESENT_ADDRESS_PROOF_BACKVIEW.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);  
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_PASSPORT.getValue());
+           docTypesModel.setName(DocTypes.DOC_PASSPORT.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);   
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_VISA_COPY.getValue());
+           docTypesModel.setName(DocTypes.DOC_VISA_COPY.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);              
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_WORK_PLACE_OR_STUDY_PROOF.getValue());
+           docTypesModel.setName(DocTypes.DOC_WORK_PLACE_OR_STUDY_PROOF.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);              
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_FOREIGN_DL_COPY.getValue());
+           docTypesModel.setName(DocTypes.DOC_FOREIGN_DL_COPY.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel); 
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_MEDICAL_CERTIFICATE.getValue());
+           docTypesModel.setName(DocTypes.DOC_MEDICAL_CERTIFICATE.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);                  
+           
+    end 
+        
+    rule "DL Other State change of address"
+        when
+           $citizenRequest : CitizenRequest(servicesType == ServiceType.DL_CHANGEADDRS_OS )
+        then
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_OWNER_PHOTO.getValue());
+           docTypesModel.setName(DocTypes.DOC_OWNER_PHOTO.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);     
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_USER_SIGNATURE.getValue());
+           docTypesModel.setName(DocTypes.DOC_USER_SIGNATURE.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);  
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_PRESENT_ADDRESS_PROOF.getValue());
+           docTypesModel.setName(DocTypes.DOC_PRESENT_ADDRESS_PROOF.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);         
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_PRESENT_ADDRESS_PROOF_BACKVIEW.getValue());
+           docTypesModel.setName(DocTypes.DOC_PRESENT_ADDRESS_PROOF_BACKVIEW.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);  
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_PERMISSION_LETTER_ISSUING_AUTHORITY.getValue());
+           docTypesModel.setName(DocTypes.DOC_PERMISSION_LETTER_ISSUING_AUTHORITY.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);              
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_DL.getValue());
+           docTypesModel.setName(DocTypes.DOC_DL.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);              
+    end 
+
+    rule "DL Suspension and Cancellation Service"
+        when
+           $citizenRequest : CitizenRequest(servicesType == ServiceType.DL_SUSU_CANC)
+        then
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_SUPPORT_DOCUMENT_1.getValue());
+           docTypesModel.setName(DocTypes.DOC_SUPPORT_DOCUMENT_1.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);     
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_SUPPORT_DOCUMENT_2.getValue());
+           docTypesModel.setName(DocTypes.DOC_SUPPORT_DOCUMENT_2.getLabel());
+           docTypesModel.setIsMandatory(false);
+           citDocTypeList.add(docTypesModel);           
+    end 
+    
+    rule "Driving License Revocation of Suspension"
+        when
+           $citizenRequest : CitizenRequest(servicesType == ServiceType.DL_REVO_SUS)
+        then
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_SUPPORT_DOCUMENT_1.getValue());
+           docTypesModel.setName(DocTypes.DOC_SUPPORT_DOCUMENT_1.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);     
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_SUPPORT_DOCUMENT_2.getValue());
+           docTypesModel.setName(DocTypes.DOC_SUPPORT_DOCUMENT_2.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);           
+    end 
+	
+	//############### PERMIT SERVICES  ####################
+	
+	rule "Permit Certificate Surrender"
+        when
+           $citizenRequest : CitizenRequest(servicesType == ServiceType.PERMIT_SURRENDER )
+        then
+           
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel(); 
+           docTypesModel.setId(DocTypes.DOC_AFFIDAVIT.getValue());
+           docTypesModel.setName(DocTypes.DOC_AFFIDAVIT.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+    end
+    
+    //############### FITNESS SERVICES  ####################
+	
+	rule "Fitness Certificate Fresh or renweal"
+        when
+           $citizenRequest : CitizenRequest(servicesType == ServiceType.FC_FRESH 
+           	|| servicesType == ServiceType.FC_RENEWAL
+           	|| servicesType == ServiceType.FC_OTHER_STATION
+           	|| servicesType == ServiceType.FC_REVOCATION_CFX 
+           	|| servicesType == ServiceType.FC_RE_INSPECTION_SB)
+        then
+           
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel(); 
+           docTypesModel.setId(DocTypes.DOC_VEHICLE_FRONT.getValue());
+           docTypesModel.setName(DocTypes.DOC_VEHICLE_FRONT.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel(); 
+           docTypesModel.setId(DocTypes.DOC_VEHICLE_RIGHT.getValue());
+           docTypesModel.setName(DocTypes.DOC_VEHICLE_RIGHT.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel(); 
+           docTypesModel.setId(DocTypes.DOC_VEHICLE_LEFT.getValue());
+           docTypesModel.setName(DocTypes.DOC_VEHICLE_LEFT.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel(); 
+           docTypesModel.setId(DocTypes.DOC_VEHICLE_STEERING.getValue());
+           docTypesModel.setName(DocTypes.DOC_VEHICLE_STEERING.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel(); 
+           docTypesModel.setId(DocTypes.DOC_CHASSIS_NO.getValue());
+           docTypesModel.setName(DocTypes.DOC_CHASSIS_NO.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+    end
+    
+     //############### AADHAR SEED SERVICES  ####################
+	
+	rule "RC Aadhaar Seeding"
+        when
+           $citizenRequest : CitizenRequest(servicesType == ServiceType.AADHAR_SEED_RC )
+        then
+           
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel(); 
+           docTypesModel.setId(DocTypes.DOC_RC_COPY.getValue());
+           docTypesModel.setName(DocTypes.DOC_RC_COPY.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel(); 
+           docTypesModel.setId(DocTypes.DOC_VEHICLE_FRONT_VIEW_WITH_OWNER.getValue());
+           docTypesModel.setName(DocTypes.DOC_VEHICLE_FRONT_VIEW_WITH_OWNER.getLabel());
+           docTypesModel.setIsMandatory(false);
+           citDocTypeList.add(docTypesModel);
+           
+    end
+    
+    rule "DL Aadhaar Seeding"
+        when
+           $citizenRequest : CitizenRequest(servicesType == ServiceType.AADHAR_SEED_DL )
+        then
+           
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel(); 
+           docTypesModel.setId(DocTypes.DOC_DL_CARD_COPY.getValue());
+           docTypesModel.setName(DocTypes.DOC_DL_CARD_COPY.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel(); 
+           docTypesModel.setId(DocTypes.DOC_OWNER_PHOTO.getValue());
+           docTypesModel.setName(DocTypes.DOC_OWNER_PHOTO.getLabel());
+           docTypesModel.setIsMandatory(true);
+           citDocTypeList.add(docTypesModel);
+           
+    end
+	
+	rule "Extra1 and Extra2 Images"
+        when
+         $citizenRequest : CitizenRequest(!((servicesType == ServiceType.FRESH_RC_FINANCIER && userType == UserType.ROLE_CITIZEN)
+         || (servicesType == ServiceType.VEHICLE_ATLERATION && userType == UserType.ROLE_MVI) || (servicesType == ServiceType.DL_EXPIRED)))
+        then
+           DocTypesRuleModel docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_EXTRA_1.getValue());
+           docTypesModel.setName(DocTypes.DOC_EXTRA_1.getLabel());
+           docTypesModel.setIsMandatory(false);
+           citDocTypeList.add(docTypesModel);
+           
+           docTypesModel = new DocTypesRuleModel();
+           docTypesModel.setId(DocTypes.DOC_EXTRA_2.getValue());
+           docTypesModel.setName(DocTypes.DOC_EXTRA_2.getLabel());
+           docTypesModel.setIsMandatory(false);
+           citDocTypeList.add(docTypesModel);
+    end

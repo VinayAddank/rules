@@ -1,0 +1,43 @@
+package org.rta.rules.fee.stoppagetax 
+import org.rta.rules.model.FeeRuleModel;
+
+
+
+
+rule "Postal Stoppage Tax Fee"
+salience 90
+    when
+        t : FeeRuleModel(postalFee == 0 ) 
+    then
+        System.out.println("Postal Fee Stoppage Tax");
+        t.setPostalFee(35);
+        update( t );
+end
+
+rule "Service fee for stoppage tax"
+salience 80    
+    when
+        t : FeeRuleModel(prService == 0 ) 
+    then
+        System.out.println("Inside PR 300 rs service charge Renewal  transport");
+        t.setPrService(300);
+        update( t );
+end
+
+rule "Application fee for stoppage tax "
+    when
+        t : FeeRuleModel( prFee == 0 )
+    then
+        System.out.println("Inside Application fee for stoppage tax");
+        t.setPrFee(500);
+        update( t );
+end
+
+rule "Total Stoppage Fee"
+    when
+        t : FeeRuleModel(totalPrFee == 0 )
+    then
+        System.out.println("Inside Total Stoppage Tax Fee ");
+        t.setTotalPrFee(t.getPrFee() + t.getPrService() + t.getPostalFee());
+        update( t );
+end

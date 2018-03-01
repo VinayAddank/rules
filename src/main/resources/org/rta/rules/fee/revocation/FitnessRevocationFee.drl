@@ -1,0 +1,52 @@
+package org.rta.rules.fee.revocation 
+import org.rta.rules.model.FeeRuleModel;
+
+
+rule "MCPT~ARKT Fee Service charge 100 rs"
+salience 95
+    when
+        t : FeeRuleModel("MCPT~ARKT".contains(vehicleClassCategory) , fitnessService == 0) 
+    then
+        System.out.println("MCPT~ARKT Fitness Revocation Fee 60 rs");
+        t.setFitnessService(60);
+        update( t );
+end
+
+rule "Fee Service charge 120 rs"
+salience 94
+    when
+        t : FeeRuleModel(fitnessService == 0) 
+    then
+        System.out.println("Fitness Revocation Fee 120 rs");
+        t.setFitnessService(120);
+        update( t );
+end
+
+
+rule "MCPT Fee Service Fee 100 rs"
+salience 93
+    when
+        t : FeeRuleModel("MCPT".contains(vehicleClassCategory) , fitnessFee == 0) 
+    then
+        System.out.println("MCPT Fitness Revocation Fee 200 rs");
+        t.setFitnessFee(200);      
+        update( t );
+end
+
+rule "LMV Fitness Revoction Fee rs 400"
+    when
+        t : FeeRuleModel(gvw < 7500  , fitnessFee == 0)
+    then
+        System.out.println("Fitness Revoction Fee rs 400 for LMV");
+        t.setFitnessFee(400);
+        update( t );
+end
+
+rule "MMV~HMV Fitness Revoction Fee rs 600"
+    when
+        t : FeeRuleModel(gvw >= 7500 , fitnessFee == 0)
+    then
+        System.out.println("Fitness Revoction Fee rs 600 for MMV~HMV");
+        t.setFitnessFee(600);
+        update( t );
+end

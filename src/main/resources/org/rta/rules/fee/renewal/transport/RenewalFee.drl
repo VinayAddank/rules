@@ -1,0 +1,167 @@
+package org.rta.rules.fee.renewal.transport
+ 
+import org.rta.rules.model.FeeRuleModel;
+ 
+
+
+rule "PR Service charge Renewal  transport Fee ARKT"
+salience 82    
+    when
+        t : FeeRuleModel("ARKT".contains(vehicleClassCategory) , prService == 0 ) 
+    then
+        System.out.println("Inside PR service charge Renewal  transport ARKT");
+        t.setPrService(150);
+        update( t );
+end
+
+
+rule "PR 300 rs Service charge Renewal  transport"
+salience 80    
+    when
+        t : FeeRuleModel(prService == 0 ) 
+    then
+        System.out.println("Inside PR 300 rs service charge Renewal  transport");
+        t.setPrService(300);
+        update( t );
+end
+
+
+
+rule "LMV and MMV Renewal  transport Fee"
+    when
+        t : FeeRuleModel( prFee == 0 , gvw < 12000 , "CHST" not contains vehicleClassCategory)
+    then
+        System.out.println("Inside LMV and MMV Renewal  transport");
+        t.setPrFee(1000);
+        update( t );
+end
+
+rule "HMV Renewal  transport Fee"
+    when
+        t : FeeRuleModel( prFee == 0 , gvw > 12000 , "CHST" not contains vehicleClassCategory)
+    then
+        System.out.println("Inside LMV and MMV Renewal  transport");
+        t.setPrFee(1500);
+        update( t );
+end
+
+rule "Penalty Renewal transport two wheller old vehicle 0 to 3"
+    when
+        t : FeeRuleModel( oldVehicle , penalty == 0 , expiryMonthCount > 0 , expiryMonthCount < 4  ,"MCPT~MCGT~MCTT" contains vehicleClassCategory)
+    then
+        System.out.println("Penalty Renewal transport Fee  old vehicle 0 to 3 Two wheller");
+        int oldAmt = 25;
+        int newAmt = 300*t.getMonthCount();
+        t.setPenalty(oldAmt + newAmt);
+        update( t );
+end
+
+rule "Penalty Renewal transport other wheller old vehicle 0 to 3"
+    when
+        t : FeeRuleModel( oldVehicle , penalty == 0 , expiryMonthCount > 0 , expiryMonthCount < 4  ,"MCPT~MCGT~MCTT" not contains vehicleClassCategory)
+    then
+        System.out.println("Penalty Renewal transport Fee  old vehicle 0 to 3");
+        int oldAmt = 25;
+        int newAmt = 500*t.getMonthCount();
+        t.setPenalty(oldAmt + newAmt);
+        update( t );
+end
+
+
+rule "Penalty Renewal transport two wheller old vehicle 4 to 6"
+    when
+        t : FeeRuleModel( oldVehicle , penalty == 0 , expiryMonthCount > 3 , expiryMonthCount < 7  ,"MCPT~MCGT~MCTT" contains vehicleClassCategory)
+    then
+        System.out.println("Penalty Renewal transport Fee  old vehicle 4 to 6");
+        int oldAmt = 50;
+        int newAmt = 300*t.getMonthCount();
+        t.setPenalty(oldAmt + newAmt);
+        update( t );
+end
+
+rule "Penalty Renewal  transport other wheller old vehicle 4 to 6"
+    when
+        t : FeeRuleModel( oldVehicle , penalty == 0 , expiryMonthCount > 3 , expiryMonthCount < 7  ,"MCPT~MCGT~MCTT" not contains vehicleClassCategory)
+    then
+        System.out.println("Penalty Renewal transport Fee  old vehicle 4 to 6 other wheeler");
+        int oldAmt = 50;
+        int newAmt = 500*t.getMonthCount();
+        t.setPenalty(oldAmt + newAmt);
+        update( t );
+end
+
+rule "Penalty Renewal transport two wheller old vehicle 7 to 9 "
+    when
+        t : FeeRuleModel( oldVehicle , penalty == 0 , expiryMonthCount > 6 , expiryMonthCount < 10 , "MCPT~MCGT~MCTT" contains vehicleClassCategory)
+    then
+        System.out.println("Penalty Renewal transport Fee  old vehicle 7 to 9 two wheeler");
+        int oldAmt = 75;
+        int newAmt = 300*t.getMonthCount();
+        t.setPenalty(oldAmt + newAmt);
+        update( t );
+end
+
+rule "Penalty Renewal transport other wheller old vehicle 7 to 9 "
+    when
+        t : FeeRuleModel( oldVehicle , penalty == 0 , expiryMonthCount > 6 , expiryMonthCount < 10 , "MCPT~MCGT~MCTT" not contains vehicleClassCategory)
+    then
+        System.out.println("Penalty Renewal  transport Fee  old vehicle 7 to 9 other wheeler");
+        int oldAmt = 75;
+        int newAmt = 500*t.getMonthCount();
+        t.setPenalty(oldAmt + newAmt);
+        update( t );
+end
+
+
+rule "Penalty Renewal  transport two wheller old vehicle greater than 10"
+    when
+        t : FeeRuleModel( oldVehicle , penalty == 0 , expiryMonthCount > 9 ,"MCPT~MCGT~MCTT" contains vehicleClassCategory)
+    then
+        System.out.println("Penalty Renewal  transport Fee  old vehicle greater than 10");
+        int oldAmt = 100;
+        int newAmt = 300*t.getMonthCount();
+        t.setPenalty(oldAmt + newAmt);
+        update( t );
+end
+
+rule "Penalty Renewal  transport other wheller old vehicle greater than 10"
+    when
+        t : FeeRuleModel( oldVehicle , penalty == 0 , expiryMonthCount > 9 ,"MCPT~MCGT~MCTT" not contains vehicleClassCategory)
+    then
+        System.out.println("Penalty Renewal  transport Fee  old vehicle greater than 10");
+        int oldAmt = 100;
+        int newAmt = 500*t.getMonthCount();
+        t.setPenalty(oldAmt + newAmt);
+        update( t );
+end
+
+
+rule "Penalty Renewal  transport two wheller new vehicle "
+    when
+        t : FeeRuleModel( !oldVehicle , penalty == 0 , monthCount >0 ,"MCPT~MCGT~MCTT" contains vehicleClassCategory)
+    then
+        System.out.println("Penalty Renewal  transport Fee two wheller  vehicle ");
+        t.setPenalty(300*t.getMonthCount());
+        update( t );
+end
+
+
+rule "Penalty Renewal  transport other wheller new vehicle "
+    when
+        t : FeeRuleModel( !oldVehicle , penalty == 0 , monthCount >0 ,"MCPT~MCGT~MCTT" not contains vehicleClassCategory)
+    then
+        System.out.println("Penalty Renewal  transport Fee other wheller  vehicle ");
+        t.setPenalty(500*t.getMonthCount());
+        update( t );
+end
+
+
+
+rule "Total PR Fee Renewal  transport Fee"
+    when
+        t : FeeRuleModel(totalPrFee == 0 )
+    then
+        System.out.println("Inside Total PR Fee Renewal  transport "+ t.getVehicleClassCategory());
+        t.setTotalPrFee(t.getPrFee() + t.getPrService() + t.getPostalFee() + t.getCardFee() + t.getPenalty());
+        update( t );
+end

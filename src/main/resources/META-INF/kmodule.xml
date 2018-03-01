@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kmodule xmlns="http://jboss.org/kie/6.0.0/kmodule">
+    
+    <kbase name="registration" packages="org.rta.rules.docs.registration">
+        <ksession name="registration-attachment-rules"/>
+    </kbase>
+    
+    <kbase name="citizen" packages="org.rta.rules.docs.citizen">
+        <ksession name="citizen-attachment-rules"/>
+    </kbase>
+    
+    <kbase name="nttax" packages="org.rta.rules.tax.freshregistration.nontransport">
+        <ksession name="nontransport-tax-rules"/>
+    </kbase>
+    
+    <kbase name="ttax" packages="org.rta.rules.tax.freshregistration.transport">
+        <ksession name="transport-tax-rules"/>
+    </kbase>
+    
+    <kbase name="freshregistrations" packages="org.rta.rules.fee.freshregistration.nontransport">
+        <ksession name="nontransport-fresh-reg-fee-rules"/>
+    </kbase>
+    <kbase name="fresh-reg" packages="org.rta.rules.fee.freshregistration.transport">
+        <ksession name="transport-fresh-reg-fee-rules"/>
+    </kbase>
+    
+    <kbase name="non-refresh-rc" packages="org.rta.rules.fee.refreshrc.nontransport">
+        <ksession name="nontransport-refresh-rc-fee-rules"/>
+    </kbase>
+    <kbase name="trans-refresh-rc" packages="org.rta.rules.fee.refreshrc.transport">
+        <ksession name="transport-refresh-rc-fee-rules"/>
+    </kbase>
+    
+    <kbase name="non-hpa" packages="org.rta.rules.fee.hpa.nontransport">
+        <ksession name="nontransport-hpa-fee-rules"/>
+    </kbase>
+    <kbase name="trans-hpa" packages="org.rta.rules.fee.hpa.transport">
+        <ksession name="transport-hpa-fee-rules"/>
+    </kbase>
+    
+    <kbase name="non-hpt" packages="org.rta.rules.fee.hpt.nontransport">
+        <ksession name="nontransport-hpt-fee-rules"/>
+    </kbase>
+    <kbase name="trans-hpt" packages="org.rta.rules.fee.hpt.transport">
+        <ksession name="transport-hpt-fee-rules"/>
+    </kbase>
+    
+    <kbase name="non-issuenoc" packages="org.rta.rules.fee.issuenoc.nontransport">
+        <ksession name="nontransport-issuenoc-fee-rules"/>
+    </kbase>
+    <kbase name="trans-issuenoc" packages="org.rta.rules.fee.issuenoc.transport">
+        <ksession name="transport-issuenoc-fee-rules"/>
+    </kbase>
+    
+    <kbase name="non-cancelnoc" packages="org.rta.rules.fee.cancelnoc.nontransport">
+        <ksession name="nontransport-cancelnoc-fee-rules"/>
+    </kbase>
+    <kbase name="trans-cancelnoc" packages="org.rta.rules.fee.cancelnoc.transport">
+        <ksession name="transport-cancelnoc-fee-rules"/>
+    </kbase>
+    
+    <kbase name="nontrans-address-change" packages="org.rta.rules.fee.changeaddress.nontransport">
+        <ksession name="nontransport-changeaddress-fee-rules"/>
+    </kbase>
+    <kbase name="trans-address-change" packages="org.rta.rules.fee.changeaddress.transport">
+        <ksession name="transport-changeaddress-fee-rules"/>
+    </kbase>
+    
+    <kbase name="vehicle-reassign" packages="org.rta.rules.fee.reassignvehicle.nontransport">
+        <ksession name="nontransport-vehiclreassign-fee-rules"/>
+    </kbase>
+    
+    <kbase name="vehicle-reassign-trans" packages="org.rta.rules.fee.reassignvehicle.transport">
+        <ksession name="transport-vehiclreassign-fee-rules"/>
+    </kbase>
+    
+     <kbase name="suspension-revocation" packages="org.rta.rules.fee.suspensionrevocation.nontransport">
+        <ksession name="nontransport-suspensionrevocation-fee-rules"/>
+    </kbase>
+    
+    <kbase name="theft-intimation" packages="org.rta.rules.fee.theftintimation.nontransport">
+        <ksession name="nontransport-theftintimation-fee-rules"/>
+    </kbase>
+    
+    <kbase name="nontrans-vehiclal-alteration" packages="org.rta.rules.fee.alterationvehicle.nontransport">
+        <ksession name="nontransport-vehiclalalteration-fee-rules"/>
+    </kbase>
+    <kbase name="trans-vehiclal-alteration" packages="org.rta.rules.fee.alterationvehicle.transport">
+        <ksession name="transport-vehiclalalteration-fee-rules"/>
+    </kbase>
+    
+    <kbase name="renewal-regist" packages="org.rta.rules.fee.renewalregist.nontransport">
+        <ksession name="nontransport-renewal-regist-fee-rules"/>
+    </kbase>
+    
+    <kbase name="nontrans-duplicate-regist" packages="org.rta.rules.fee.duplicateregist.nontransport">
+        <ksession name="nontransport-duplicateregist-fee-rules"/>
+    </kbase>
+    <kbase name="trans-duplicate-regist" packages="org.rta.rules.fee.duplicateregist.transport">
+        <ksession name="transport-duplicateregist-fee-rules"/>
+    </kbase>
+    
+    <kbase name="nontrans-tow-regist" packages="org.rta.rules.fee.transferofownership.nontransport">
+        <ksession name="nontransport-tow-fee-rules"/>
+    </kbase>
+    <kbase name="trans-tow-regist" packages="org.rta.rules.fee.transferofownership.transport">
+        <ksession name="transport-tow-fee-rules"/>
+    </kbase>
+    
+    <kbase name="nontrans-renewal-regist" packages="org.rta.rules.fee.renewal.nontransport">
+        <ksession name="nontransport-renewal-fee-rules"/>
+    </kbase>
+    <kbase name="trans-renewal-regist" packages="org.rta.rules.fee.renewal.transport">
+        <ksession name="transport-renewal-fee-rules"/>
+    </kbase>
+    
+    <kbase name="stoppage-tax-regist" packages="org.rta.rules.fee.stoppagetax">
+        <ksession name="stoppage-tax-fee-rules"/>
+    </kbase>
+  <!-- License start -->  
+    <kbase name="license" packages="org.rta.rules.fee.license">
+        <ksession name="license-fee-rules"/>
+    </kbase>
+  <!-- License end -->
+  
+  <!-- Fitness start -->
+    <kbase name="fitness-fresh-regist" packages="org.rta.rules.fee.fitness.fresh">
+        <ksession name="fitness-fresh-fee-rules"/>
+    </kbase>
+   <kbase name="fitness-renewal-regist" packages="org.rta.rules.fee.fitness.renewal">
+        <ksession name="fitness-renewal-fee-rules"/>
+    </kbase>
+    <kbase name="fitness-otherstation-regist" packages="org.rta.rules.fee.fitness.otherstation">
+        <ksession name="fitness-otherstation-fee-rules"/>
+    </kbase>
+       <kbase name="fitness-reinspection" packages="org.rta.rules.fee.fitness.reinspection">
+        <ksession name="fitness-reinspection-fee-rules"/>
+    </kbase> 
+  <!-- Fitness end -->
+  
+  <!-- Fitness Revocation -->
+   <kbase name="fitness-revocation" packages="org.rta.rules.fee.revocation">
+        <ksession name="fitness-revocation-fee-rules"/>
+    </kbase>
+   <!-- Fitness Revocation End-->
+   
+  <!-- Permit start -->
+    <kbase name="permit-regist" packages="org.rta.rules.fee.permit.fresh">
+        <ksession name="permit-fresh-fee-rules"/>
+    </kbase>
+   <kbase name="permit-renewal-regist" packages="org.rta.rules.fee.permit.renewal">
+        <ksession name="permit-renewal-fee-rules"/>
+    </kbase>
+    <kbase name="permit-renewalauth-regist" packages="org.rta.rules.fee.permit.renewalauth">
+        <ksession name="permit-renewalauth-fee-rules"/>
+    </kbase>
+    <kbase name="permit-replacevehicle-regist" packages="org.rta.rules.fee.permit.replacevehicle">
+        <ksession name="permit-replacevehicle-fee-rules"/>
+    </kbase> 
+    <kbase name="permit-surrender-regist" packages="org.rta.rules.fee.permit.surrender">
+        <ksession name="permit-surrender-fee-rules"/>
+    </kbase>
+       <kbase name="permit-transfer-regist" packages="org.rta.rules.fee.permit.transfer">
+        <ksession name="permit-transfer-fee-rules"/>
+    </kbase>
+    <kbase name="permit-variations-regist" packages="org.rta.rules.fee.permit.variations">
+        <ksession name="permit-variations-fee-rules"/>
+    </kbase>
+  <!-- Permit end -->
+  
+  <kbase name="greentax" packages="org.rta.rules.tax.greentax">
+        <ksession name="green-tax-rule"/>
+     </kbase>
+
+
+  <kbase name="vehicletax" packages="org.rta.rules.tax.vehicletax">
+        <ksession name="vehicle-tax-rules"/>
+  </kbase>
+
+<kbase name="exemptedtax" packages="org.rta.rules.tax.exemptedtax">
+        <ksession name="exempted-tax-rules"/>
+  </kbase>
+
+<kbase name="hsrp" packages="org.rta.rules.fee.hsrp">
+        <ksession name="hsrp-fee-rules"/>
+  </kbase>
+
+</kmodule>

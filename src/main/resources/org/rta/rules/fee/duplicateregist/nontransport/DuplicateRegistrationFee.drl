@@ -1,0 +1,111 @@
+package org.rta.rules.fee.duplicateregist.nontransport
+ 
+import org.rta.rules.model.FeeRuleModel;
+
+ 
+rule "PR Service charge Cancelltaion of NOC non transport Fee MMCN~MCYN"
+salience 82    
+    when
+        t : FeeRuleModel("MMCN~MCYN".contains(vehicleClassCategory) , prService == 0 ) 
+    then
+        System.out.println("Inside PR service charge Cancelltaion of NOC non transport MMCN~MCYN");
+        t.setPrService(150);
+        update( t );
+end
+
+
+rule "PR 300 rs Service charge Cancelltaion of NOC non transport"
+salience 80    
+    when
+        t : FeeRuleModel(prService == 0 ) 
+    then
+        System.out.println("Inside PR 300 rs service charge Cancelltaion of NOC non transport");
+        t.setPrService(300);
+        update( t );
+end
+ 
+rule "Postal 35 Duplicate registration non transport Fee"
+salience 100
+    when
+        t : FeeRuleModel(postalFee == 0 ) 
+    then
+        System.out.println("Postal Fee Duplicate registration non transport");
+        t.setPostalFee(35);
+        update( t );
+end
+
+
+rule "Card Fee 200 rs  Duplicate registration non transport Fee"
+salience 90
+    when
+        t : FeeRuleModel(cardFee == 0 , "TRCN~TRCN~TRCN~TTRN~TTRN~TTRN" not contains vehicleClassCategory) 
+    then
+        System.out.println("Card Fee 200 rs Duplicate registration non transport Fee");
+        t.setCardFee(200);
+        update( t );
+end
+
+
+rule "25 rs Duplicate registration non transport Fee"
+    when
+        t : FeeRuleModel("IVCN~MMCN".contains(vehicleClassCategory) , prFee == 0 ,gvw <= 7500) 
+    then
+        System.out.println("Inside 25 rs Duplicate registration non transport Fee ");
+        t.setPrFee(25);
+        update( t );
+end
+
+
+rule "MCYN LMV Duplicate registration non transport Fee"
+    when
+        t : FeeRuleModel("MCYN~MCWN~MCEN~MMCN"  contains vehicleClassCategory , prFee == 0 )
+    then
+        System.out.println("Inside  Duplicate registration non transport MCYN");
+        t.setPrFee(150);
+        update( t );
+end
+
+rule "300 rs LMV Duplicate registration non transport Fee"
+    when
+        t : FeeRuleModel(prFee == 0 ,gvw <= 7500 , "CHST" not contains vehicleClassCategory) 
+    then
+        System.out.println("Inside 300 rs LMV Duplicate registration non transport Fee ");
+        t.setPrFee(300);
+        update( t );
+end
+
+rule "SLCM MMV Duplicate registration non transport Fee"
+    when
+        t : FeeRuleModel(vehicleClassCategory.equals("SLCM") , prFee == 0 , gvw <= 12000)
+    then
+        System.out.println("Inside MMV and LMV Duplicate registration non transport SLCM");
+        t.setPrFee(500);
+        update( t );
+end
+
+rule "1500 rs MMV and HMV Duplicate registration non transport Fee"
+    when
+        t : FeeRuleModel(prFee == 0 ,gvw > 7500 , "CHST" not contains vehicleClassCategory) 
+    then
+        System.out.println("Inside 1500 rs MMV Duplicate registration non transport Fee ");
+        t.setPrFee(1500);
+        update( t );
+end
+
+rule "SLCM HMV Duplicate registration non transport Fee"
+    when
+        t : FeeRuleModel(vehicleClassCategory.equals("SLCM") , prFee == 0 , gvw > 12000)
+    then
+        System.out.println("Inside HMV Duplicate registration non transport SLCM");
+        t.setPrFee(750);
+        update( t );
+end
+
+rule "Total PR Fee Duplicate registration non transport Fee"
+    when
+        t : FeeRuleModel(totalPrFee == 0 )
+    then
+        System.out.println("Inside Total PR Fee Duplicate registration non transport "+ t.getVehicleClassCategory());
+        t.setTotalPrFee(t.getPrFee() + t.getPrService() + t.getPostalFee() + t.getCardFee());
+        update( t );
+end

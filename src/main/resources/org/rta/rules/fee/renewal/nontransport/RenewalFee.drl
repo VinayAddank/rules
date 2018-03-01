@@ -1,0 +1,246 @@
+package org.rta.rules.fee.renewal.nontransport
+ 
+import org.rta.rules.model.FeeRuleModel;
+
+ 
+rule "Card Fee 200 rs  Renewal non transport Fee"
+salience 100
+    when
+        t : FeeRuleModel(cardFee == 0 , "TRCN~TRCN~TRCN~TTRN~TTRN~TTRN" not contains vehicleClassCategory) 
+    then
+        System.out.println("Card Fee 200 rs Renewal non transport Fee");
+        t.setCardFee(200);
+        update( t );
+end
+
+
+rule "Postal 35 Renewal non transport Fee"
+salience 90
+    when
+        t : FeeRuleModel(postalFee == 0 ) 
+    then
+        System.out.println("Postal Fee Renewal non transport");
+        t.setPostalFee(35);
+        update( t );
+end
+
+
+rule "PR Service charge Renewal non transport Fee MMCN~MCYN"
+salience 82    
+    when
+        t : FeeRuleModel("MMCN~MCYN".contains(vehicleClassCategory) , prService == 0 ) 
+    then
+        System.out.println("Inside PR service charge Renewal non transport MMCN~MCYN");
+        t.setPrService(150);
+        update( t );
+end
+
+
+rule "PR 300 rs Service charge Renewal non transport"
+salience 80    
+    when
+        t : FeeRuleModel(prService == 0 ) 
+    then
+        System.out.println("Inside PR 300 rs service charge Renewal non transport");
+        t.setPrService(300);
+        update( t );
+end
+
+
+rule "IVCN LMV Renewal non transport Fee"
+    when
+        t : FeeRuleModel(vehicleClassCategory.equals("IVCN") , prFee == 0 , gvw <= 7500)
+    then
+        System.out.println("Inside LMV Renewal non transport IVCN");
+        t.setPrFee(50);
+        update( t );
+end
+
+
+rule "300 rs Renewal non transport Fee"
+    when
+        t : FeeRuleModel("ARPN~JEPN~MMCN~MCWN".contains(vehicleClassCategory) , prFee == 0 ,gvw <= 7500) 
+    then
+        System.out.println("Inside 300 rs Renewal non transport Fee ");
+        t.setPrFee(300);
+        update( t );
+end
+
+rule "600 rs Renewal non transport Fee"
+    when
+        t : FeeRuleModel("MCRN~OBPN".contains(vehicleClassCategory) , prFee == 0 ,gvw <= 7500) 
+    then
+        System.out.println("Inside 600 rs Renewal non transport Fee ");
+        t.setPrFee(600);
+        update( t );
+end
+
+rule "MCYN LMV Renewal non transport Fee"
+    when
+        t : FeeRuleModel(vehicleClassCategory.equals("MCYN") , prFee == 0 )
+    then
+        System.out.println("Inside  Renewal non transport MCYN");
+        t.setPrFee(300);
+        update( t );
+end
+
+
+rule "MMV 750 rs Renewal non transport Fee"
+    when
+        t : FeeRuleModel( prFee == 0 , gvw < 7500 , "CHSN~ARPN~JEPN~MMCN~MCWN" not contains vehicleClassCategory)
+    then
+        System.out.println("Inside MMV Renewal non transport");
+        t.setPrFee(200);
+        update( t );
+end
+
+
+rule "SLCM LMV Renewal non transport Fee"
+    when
+        t : FeeRuleModel(vehicleClassCategory.equals("SLCM") , prFee == 0 , gvw <= 12000)
+    then
+        System.out.println("Inside LMV Renewal non transport SLCM");
+        t.setPrFee(1000);
+        update( t );
+end
+
+rule "SLCM HMV Renewal non transport Fee"
+    when
+        t : FeeRuleModel(vehicleClassCategory.equals("SLCM") , prFee == 0 , gvw > 12000)
+    then
+        System.out.println("Inside HMV Renewal non transport SLCM");
+        t.setPrFee(1500);
+        update( t );
+end
+
+
+
+rule "MMV 3000 rs Renewal non transport Fee"
+    when
+        t : FeeRuleModel( prFee == 0 , gvw > 12000 , "CHSN" not contains vehicleClassCategory)
+    then
+        System.out.println("Inside MMV Renewal non transport");
+        t.setPrFee(3000);
+        update( t );
+end
+
+rule "Penalty Renewal non transport two wheller old vehicle 0 to 3"
+    when
+        t : FeeRuleModel( oldVehicle , penalty == 0 , expiryMonthCount > 0 , expiryMonthCount < 4  ,"MMCN~MCYN~MCWN" contains vehicleClassCategory)
+    then
+        System.out.println("Penalty Renewal non transport Fee  old vehicle 0 to 3 Two wheller");
+        int oldAmt = 25;
+        int newAmt = 300*t.getMonthCount();
+        t.setPenalty(oldAmt + newAmt);
+        update( t );
+end
+
+rule "Penalty Renewal non transport other wheller old vehicle 0 to 3"
+    when
+        t : FeeRuleModel( oldVehicle , penalty == 0 , expiryMonthCount > 0 , expiryMonthCount < 4  ,"MMCN~MCYN~MCWN" not contains vehicleClassCategory)
+    then
+        System.out.println("Penalty Renewal non transport Fee  old vehicle 0 to 3");
+        int oldAmt = 25;
+        int newAmt = 500*t.getMonthCount();
+        t.setPenalty(oldAmt + newAmt);
+        update( t );
+end
+
+
+rule "Penalty Renewal non transport two wheller old vehicle 4 to 6"
+    when
+        t : FeeRuleModel( oldVehicle , penalty == 0 , expiryMonthCount > 3 , expiryMonthCount < 7  ,"MMCN~MCYN~MCWN" contains vehicleClassCategory)
+    then
+        System.out.println("Penalty Renewal non transport Fee  old vehicle 4 to 6");
+        int oldAmt = 50;
+        int newAmt = 300*t.getMonthCount();
+        t.setPenalty(oldAmt + newAmt);
+        update( t );
+end
+
+rule "Penalty Renewal non transport other wheller old vehicle 4 to 6"
+    when
+        t : FeeRuleModel( oldVehicle , penalty == 0 , expiryMonthCount > 3 , expiryMonthCount < 7  ,"MMCN~MCYN~MCWN" not contains vehicleClassCategory)
+    then
+        System.out.println("Penalty Renewal non transport Fee  old vehicle 4 to 6 other wheeler");
+        int oldAmt = 50;
+        int newAmt = 500*t.getMonthCount();
+        t.setPenalty(oldAmt + newAmt);
+        update( t );
+end
+
+rule "Penalty Renewal non transport two wheller old vehicle 7 to 9 "
+    when
+        t : FeeRuleModel( oldVehicle , penalty == 0 , expiryMonthCount > 6 , expiryMonthCount < 10 , "MMCN~MCYN~MCWN" contains vehicleClassCategory)
+    then
+        System.out.println("Penalty Renewal non transport Fee  old vehicle 7 to 9 two wheeler");
+        int oldAmt = 75;
+        int newAmt = 300*t.getMonthCount();
+        t.setPenalty(oldAmt + newAmt);
+        update( t );
+end
+
+rule "Penalty Renewal non transport other wheller old vehicle 7 to 9 "
+    when
+        t : FeeRuleModel( oldVehicle , penalty == 0 , expiryMonthCount > 6 , expiryMonthCount < 10 , "MMCN~MCYN~MCWN" not contains vehicleClassCategory)
+    then
+        System.out.println("Penalty Renewal non transport Fee  old vehicle 7 to 9 other wheeler");
+        int oldAmt = 75;
+        int newAmt = 500*t.getMonthCount();
+        t.setPenalty(oldAmt + newAmt);
+        update( t );
+end
+
+
+rule "Penalty Renewal non transport two wheller old vehicle greater than 10"
+    when
+        t : FeeRuleModel( oldVehicle , penalty == 0 , expiryMonthCount > 9 ,"MMCN~MCYN~MCWN" contains vehicleClassCategory)
+    then
+        System.out.println("Penalty Renewal non transport Fee  old vehicle greater than 10");
+        int oldAmt = 100;
+        int newAmt = 300*t.getMonthCount();
+        t.setPenalty(oldAmt + newAmt);
+        update( t );
+end
+
+rule "Penalty Renewal non transport other wheller old vehicle greater than 10"
+    when
+        t : FeeRuleModel( oldVehicle , penalty == 0 , expiryMonthCount > 9 ,"MMCN~MCYN~MCWN" not contains vehicleClassCategory)
+    then
+        System.out.println("Penalty Renewal non transport Fee  old vehicle greater than 10");
+        int oldAmt = 100;
+        int newAmt = 500*t.getMonthCount();
+        t.setPenalty(oldAmt + newAmt);
+        update( t );
+end
+
+
+rule "Penalty Renewal non transport two wheller new vehicle "
+    when
+        t : FeeRuleModel( !oldVehicle , penalty == 0 , monthCount >0 ,"MMCN~MCYN~MCWN" contains vehicleClassCategory)
+    then
+        System.out.println("Penalty Renewal non transport Fee two wheller  vehicle ");
+        t.setPenalty(300*t.getMonthCount());
+        update( t );
+end
+
+
+rule "Penalty Renewal non transport other wheller new vehicle "
+    when
+        t : FeeRuleModel( !oldVehicle , penalty == 0 , monthCount >0 ,"MMCN~MCYN~MCWN" not contains vehicleClassCategory)
+    then
+        System.out.println("Penalty Renewal non transport Fee other wheller  vehicle ");
+        t.setPenalty(500*t.getMonthCount());
+        update( t );
+end
+
+
+
+rule "Total PR Fee Renewal non transport Fee"
+    when
+        t : FeeRuleModel(totalPrFee == 0 )
+    then
+        System.out.println("Inside Total PR Fee Renewal non transport "+ t.getVehicleClassCategory());
+        t.setTotalPrFee(t.getPrFee() + t.getPrService() + t.getPostalFee() + t.getCardFee() + t.getPenalty());
+        update( t );
+end

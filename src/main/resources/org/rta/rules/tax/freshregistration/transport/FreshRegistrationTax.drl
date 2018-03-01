@@ -1,0 +1,958 @@
+package org.rta.rules.tax.freshregistration.transport
+ 
+import org.rta.rules.model.TaxRuleModel;
+
+
+rule "GCRT HSRP Fee"
+    when
+        t : TaxRuleModel("GCRT".contains(vehicleClassCategory) , hsrpAmount == 0)
+    then
+        System.out.println("Inside GCRT HSRP Fee");
+        t.setHsrpAmount(649);
+        update( t );
+end
+ 
+
+rule "Corporate tax not contains MCPT"
+salience 1000
+    when
+        t : TaxRuleModel(ownerType.equals("Company")  , tax == null , "MCPT" not contains vehicleClassCategory , taxType.equals("Life Tax"))
+    then
+    	System.out.println("Inside Corporate tax not contains MCPT");
+        t.setTax(14.0);
+        t.setHsrpAmount(619);
+        update( t );
+end
+
+
+rule "Three Wheeler"
+salience 101
+    when
+        t : TaxRuleModel("L5N~L5M".contains(vehicleClass)  , hpaFee == 0)
+    then
+    	System.out.println("Inside Thre Wheeler");
+        t.setHpaFee(1500);
+        update( t );
+end
+
+ 
+rule "Two Wheeler"
+salience 100
+    when
+        t : TaxRuleModel(vehicleClass.contains("L") , hpaFee == 0)
+    then
+    	System.out.println("Inside TWO Wheeler");
+        t.setHpaFee(500);
+        update( t );
+end
+
+rule "Four Wheeler"
+salience 200
+    when
+        t : TaxRuleModel("M1~M2~M3~N1~N2~N3~M1G".contains(vehicleClass) , hpaFee == 0)
+    then
+    	System.out.println("Inside FOUR Wheeler");
+        t.setHpaFee(1500);
+        update( t );
+end 
+
+rule "EIBT~PSVT No permit or permit expired"
+salience 95
+    when
+        t : TaxRuleModel("EIBT~PSVT".contains(vehicleClassCategory) ,  seatingCapacity > 7  , taxType.equals("Quarterly Tax") , (permitType == null) || (!isPermitValid) , taxAmount == 0)
+    then 
+        System.out.println("EIBT~PSVT as OBT  When no permit or permit expired");
+        t.setHsrpAmount(619);
+        int seat = t.getSeatingCapacity() -1 ;
+        t.setTaxAmount((((396.90*seat) /3)*t.getMonthType()));
+        double qt = 396.90*seat;
+        t.setQuarterAmt(qt);
+        update( t );
+end
+
+
+rule "COCT~TOVT per seat calculation on permit based and permit subtype is ND"
+salience 87
+    when
+        t : TaxRuleModel("COCT~TOVT".contains(vehicleClassCategory) ,  seatingCapacity > 12  , taxType.equals("Quarterly Tax"), (homeTaxModel !=null && homeTaxModel.permitSubType.equals("ND")), taxAmount == 0)
+    then 
+        System.out.println("COCT~TOVT per seat calculation on permit based and permit subtype is ND");
+        int seat = t.getSeatingCapacity() -1 ;
+        if("TOVT".contains(t.getVehicleClassCategory()))
+         seat = t.getSeatingCapacity() -2 ;
+        t.setTaxAmount((((1250*seat) /3)*t.getMonthType()));
+        double qt = 1250*seat;
+        t.setQuarterAmt(qt);
+        update( t );
+end
+
+rule "COCT~TOVT per seat calculation on permit based and permit subtype is TS"
+salience 86
+    when
+        t : TaxRuleModel("COCT~TOVT".contains(vehicleClassCategory) ,  seatingCapacity > 12  , taxType.equals("Quarterly Tax"), (homeTaxModel !=null && homeTaxModel.permitSubType.equals("TS")), taxAmount == 0)
+    then 
+        System.out.println("COCT~TOVT per seat calculation on permit based and permit subtype is TH");
+        int seat = t.getSeatingCapacity() -1 ;
+        if("TOVT".contains(t.getVehicleClassCategory()))
+         seat = t.getSeatingCapacity() -2 ;
+        t.setTaxAmount((((3750*seat) /3)*t.getMonthType()));
+        double qt = 3750*seat;
+        t.setQuarterAmt(qt);
+        update( t );
+end
+
+rule "COCT per seat calculation"
+    when
+        t : TaxRuleModel("COCT".contains(vehicleClassCategory) ,  seatingCapacity > 12  , taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then 
+        System.out.println("COCT per seat calculation");
+        t.setHsrpAmount(619);
+        int seat = t.getSeatingCapacity() -1 ;
+        t.setTaxAmount((((1000*seat) /3)*t.getMonthType()));
+        double qt = 1000*seat;
+        t.setQuarterAmt(qt);
+        update( t );
+end
+
+rule "TOVT per seat calculation"
+    when
+        t : TaxRuleModel("TOVT".contains(vehicleClassCategory) ,  seatingCapacity > 12  , taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then 
+        System.out.println("TOVT per seat calculation");
+        t.setHsrpAmount(619);
+        int seat = t.getSeatingCapacity() -2 ;
+        t.setTaxAmount((((1000*seat) /3)*t.getMonthType()));
+        double qt = 1000*seat;
+        t.setQuarterAmt(qt);
+        update( t );
+end
+
+
+rule "MCPT moter cycle"
+    when
+        t : TaxRuleModel("MCPT".contains(vehicleClassCategory)  , taxType.equals("Life Tax") , tax == null) 
+    then
+        System.out.println("Inside MCPT");
+        t.setTax(9.0);
+        t.setHsrpAmount(245);
+        update( t );
+end
+ 
+ 
+rule "Motor cab/Luxry Tourist Cab/Semi-Luxory Tourist Cab greater than 100000 lacks"
+    when
+        t : TaxRuleModel(invoiceAmount > 1000000 , "MTLT~LTCT~STCT~MCGT".contains(vehicleClassCategory)  , taxType.equals("Life Tax") ,seatingCapacity >0 , seatingCapacity < 9 , tax == null) 
+    then
+        System.out.println("Inside MTLT-LTCT-STCT greater than 100000 lacks");
+        t.setTax(14.0);
+        t.setHsrpAmount(619);
+        update( t );
+end
+
+
+rule "Motor cab/Luxry Tourist Cab/Semi-Luxory Tourist Cab less than 100000 lacks"
+    when
+        t : TaxRuleModel(invoiceAmount <= 1000000 , "MTLT~LTCT~STCT~MCGT".contains(vehicleClassCategory)  , taxType.equals("Life Tax") ,seatingCapacity >0 , seatingCapacity < 9 , tax == null) 
+    then
+        System.out.println("Inside MTLT-LTCT-STCT less than OR equal to 100000 lacks");
+        t.setTax(12.0);
+        t.setHsrpAmount(619);
+        update( t );
+end
+
+
+rule "ARKT 0-4"
+    when
+        t : TaxRuleModel(vehicleClassCategory.equals("ARKT") , seatingCapacity >0 , seatingCapacity <= 4 ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside ARKT 0-4");
+        t.setTaxAmount((105/3)*t.getMonthType());
+        t.setHsrpAmount(282);
+        t.setQuarterAmt(105.0);
+        update( t );
+end
+
+rule "ARKT 5-6"
+    when
+        t : TaxRuleModel(vehicleClassCategory.equals("ARKT") , seatingCapacity >4 , seatingCapacity <= 6 ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside ARKT 5-6");
+        t.setHsrpAmount(282);
+        t.setTaxAmount((326.55/3)*t.getMonthType());
+        t.setQuarterAmt(326.55);
+        update( t );
+end
+
+rule "ARKT greater then 7"
+    when
+        t : TaxRuleModel(vehicleClassCategory.equals("ARKT") , seatingCapacity >6  ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside ARKT greater then 7");
+        t.setHsrpAmount(282);
+        t.setTaxAmount((1200/3)*t.getMonthType());
+        t.setQuarterAmt(1200.0);
+        update( t );
+end
+
+
+
+rule "TGVT 0-300"
+    when
+        t : TaxRuleModel(vehicleClassCategory.equals("TGVT") , gvw >0 , gvw <= 300 ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside TGVT 0-300");
+        t.setHsrpAmount(282);
+        t.setTaxAmount((424.20/3)*t.getMonthType());
+        t.setQuarterAmt(424.20);
+        update( t );
+end
+
+rule "TGVT 301-1000"
+    when
+        t : TaxRuleModel(vehicleClassCategory.equals("TGVT") , gvw >301 , gvw <= 1000 ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside TGVT 301-1000");
+        t.setHsrpAmount(282);
+        t.setTaxAmount((529.20/3)*t.getMonthType());
+        t.setQuarterAmt(529.20);
+        update( t );
+end
+
+rule "TGVT 1001-1500"
+    when
+        t : TaxRuleModel(vehicleClassCategory.equals("TGVT") , gvw > 1001 , gvw <= 1500 ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside TGVT 1001-1500");
+        t.setHsrpAmount(282);
+        t.setTaxAmount((741.30/3)*t.getMonthType());
+        t.setQuarterAmt(741.30);
+        update( t );
+end
+
+
+rule "TGVT 1501-3000"
+    when
+        t : TaxRuleModel(vehicleClassCategory.equals("TGVT") , gvw > 1501 , gvw <= 3000 ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside TGVT 1501-3000");
+        t.setHsrpAmount(282);
+        t.setTaxAmount((847.35/3)*t.getMonthType());
+        t.setQuarterAmt(847.35);
+        update( t );
+end
+
+
+
+
+rule "AABT~BULT~CAVT~CEHHT~CMVT~DEXT~DMPT~EXVT~HERT~LIBT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~XRYT 0-300"
+    when
+        t : TaxRuleModel("AABT~BULT~CAVT~CEHHT~CMVT~DEXT~DMPT~EXVT~HERT~LIBT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~XRYT".contains(vehicleClassCategory) , gvw >0 , gvw <= 300 ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside AABT~BULT~CAVT~CEHHT~CMVT~DEXT~DMPT~EXVT~HERT~LIBT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~XRYT 0-300");
+        t.setHsrpAmount(619);
+        t.setTaxAmount((424.20/3)*t.getMonthType());
+        t.setQuarterAmt(424.20);
+        update( t );
+end
+
+rule "GCRT 0-300"
+    when
+        t : TaxRuleModel("GCRT".contains(vehicleClassCategory) , gvw >0 , gvw <= 300 ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside GCRT 0-300");
+        t.setTaxAmount((424.20/3)*t.getMonthType());
+        t.setQuarterAmt(424.20);
+        update( t );
+end
+
+
+
+
+rule "AABT~BULT~CAVT~CEHHT~CMVT~DEXT~DMPT~EXVT~HERT~LIBT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~XRYT 301-1000"
+    when
+        t : TaxRuleModel("AABT~BULT~CAVT~CEHHT~CMVT~DEXT~DMPT~EXVT~HERT~LIBT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~XRYT".contains(vehicleClassCategory) , gvw >301 , gvw <= 1000 ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside AABT~BULT~CAVT~CEHHT~CMVT~DEXT~DMPT~EXVT~HERT~LIBT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~XRYT 301-1000");
+        t.setHsrpAmount(619);
+        t.setTaxAmount((529.20/3)*t.getMonthType());
+        t.setQuarterAmt(529.20);
+        update( t );
+end
+
+rule "GCRT 301-1000"
+    when
+        t : TaxRuleModel("GCRT".contains(vehicleClassCategory) , gvw >301 , gvw <= 1000 ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside GCRT 301-1000");
+        t.setTaxAmount((529.20/3)*t.getMonthType());
+        t.setQuarterAmt(529.20);
+        update( t );
+end
+
+
+rule "AABT~BULT~CAVT~CEHHT~CMVT~DEXT~DMPT~EXVT~HERT~LIBT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~XRYT 1001-1500"
+    when
+        t : TaxRuleModel("AABT~BULT~CAVT~CEHHT~CMVT~DEXT~DMPT~EXVT~HERT~LIBT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~XRYT".contains(vehicleClassCategory) , gvw > 1001 , gvw <= 1500 ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside AABT~BULT~CAVT~CEHHT~CMVT~DEXT~DMPT~EXVT~HERT~LIBT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~XRYT 1001-1500");
+        t.setHsrpAmount(619);
+        t.setTaxAmount((741.30/3)*t.getMonthType());
+        t.setQuarterAmt(741.30);
+        update( t );
+end
+
+
+rule "GCRT 1001-1500"
+    when
+        t : TaxRuleModel("GCRT".contains(vehicleClassCategory) , gvw > 1001 , gvw <= 1500 ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside GCRT 1001-1500");
+        t.setTaxAmount((741.30/3)*t.getMonthType());
+        t.setQuarterAmt(741.30);
+        update( t );
+end
+
+
+
+
+rule "AABT~BULT~CAVT~CEHHT~CMVT~DEXT~DMPT~EXVT~HERT~LIBT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~XRYT 1501-3000"
+    when
+        t : TaxRuleModel("AABT~BULT~CAVT~CEHHT~CMVT~DEXT~DMPT~EXVT~HERT~LIBT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~XRYT".contains(vehicleClassCategory) , gvw > 1501 , gvw <= 3000 ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside AABT~BULT~CAVT~CEHHT~CMVT~DEXT~DMPT~EXVT~HERT~LIBT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~XRYT 1501-3000 " + t.getMonthType());
+        t.setHsrpAmount(619);
+        t.setTaxAmount((847.35/3)*t.getMonthType());
+        t.setQuarterAmt(847.35);
+        update( t );
+end
+
+rule "GCRT 1501-3000"
+    when
+        t : TaxRuleModel("GCRT".contains(vehicleClassCategory) , gvw > 1501 , gvw <= 3000 ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside GCRT 1501-3000 " + t.getMonthType());
+        t.setTaxAmount((847.35/3)*t.getMonthType());
+        t.setQuarterAmt(847.35);
+        update( t );
+end
+
+
+
+rule "AABT~BULT~CAVT~CEHHT~CMVT~DEXT~DMPT~EXVT~HERT~LIBT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~XRYT 3001-4500"
+    when
+        t : TaxRuleModel("AABT~BULT~CAVT~CEHHT~CMVT~DEXT~DMPT~EXVT~HERT~LIBT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~XRYT".contains(vehicleClassCategory) , gvw > 3001 , gvw <= 4500 ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside AABT~BULT~CAVT~CEHHT~CMVT~DEXT~DMPT~EXVT~HERT~LIBT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~XRYT 3001-4500");
+        t.setHsrpAmount(619);
+        t.setTaxAmount((954.45/3)*t.getMonthType());
+        t.setQuarterAmt(954.45);
+        update( t );
+end
+
+rule "GCRT 3001-4500"
+    when
+        t : TaxRuleModel("GCRT".contains(vehicleClassCategory) , gvw > 3001 , gvw <= 4500 ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside GCRT 3001-4500");
+        t.setTaxAmount((954.45/3)*t.getMonthType());
+        t.setQuarterAmt(954.45);
+        update( t );
+end
+
+
+
+rule "AABT~BULT~CAVT~CEHHT~CMVT~DEXT~DMPT~EXVT~HERT~LIBT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~XRYT 4501-5500"
+    when
+        t : TaxRuleModel("AABT~BULT~CAVT~CEHHT~CMVT~DEXT~DMPT~EXVT~HERT~LIBT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~XRYT".contains(vehicleClassCategory) , gvw > 4501 , gvw <= 5500 ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside AABT~BULT~CAVT~CEHHT~CMVT~DEXT~DMPT~EXVT~HERT~LIBT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~XRYT 4501-5500");
+        t.setHsrpAmount(619);
+        t.setTaxAmount((1272.60/3)*t.getMonthType());
+        t.setQuarterAmt(1272.60);
+        update( t );
+end
+
+
+rule "GCRT 4501-5500"
+    when
+        t : TaxRuleModel("GCRT".contains(vehicleClassCategory) , gvw > 4501 , gvw <= 5500 ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside GCRT 4501-5500");
+        t.setTaxAmount((1272.60/3)*t.getMonthType());
+        t.setQuarterAmt(1272.60);
+        update( t );
+end
+
+
+rule "AABT~BULT~CAVT~CEHHT~CMVT~DEXT~DMPT~EXVT~HERT~LIBT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~XRYT 5501-9000"
+    when
+        t : TaxRuleModel("AABT~BULT~CAVT~CEHHT~CMVT~DEXT~DMPT~EXVT~HERT~LIBT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~XRYT".contains(vehicleClassCategory) , gvw > 5501 , gvw <= 9000 ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside AABT~BULT~CAVT~CEHHT~CMVT~DEXT~DMPT~EXVT~HERT~LIBT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~XRYT 5501-9000");
+        t.setHsrpAmount(619);
+        t.setTaxAmount((1946.70/3)*t.getMonthType());
+        t.setQuarterAmt(1946.70);
+        update( t );
+end
+
+rule "GCRT 5501-9000"
+    when
+        t : TaxRuleModel("GCRT".contains(vehicleClassCategory) , gvw > 5501 , gvw <= 9000 ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside GCRT 5501-9000");
+        t.setTaxAmount((1946.70/3)*t.getMonthType());
+        t.setQuarterAmt(1946.70);
+        update( t );
+end
+
+
+
+rule "AABT~BULT~CAVT~CEHHT~CMVT~DEXT~DMPT~EXVT~HERT~LIBT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~XRYT 9000-12000"
+    when
+        t : TaxRuleModel("AABT~BULT~CAVT~CEHHT~CMVT~DEXT~DMPT~EXVT~HERT~LIBT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~XRYT".contains(vehicleClassCategory) , gvw > 9001 , gvw <=12000 ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside AABT~BULT~CAVT~CEHHT~CMVT~DEXT~DMPT~EXVT~HERT~LIBT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~XRYT 9000-12000");
+        t.setHsrpAmount(619);
+        t.setTaxAmount((2437.50/3)*t.getMonthType());
+        t.setHpaFee(3000);
+        t.setQuarterAmt(2437.50);
+        update( t );
+end
+
+rule "GCRT 9000-12000"
+    when
+        t : TaxRuleModel("GCRT".contains(vehicleClassCategory) , gvw > 9001 , gvw <=12000 ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside GCRT 9000-12000");
+        t.setTaxAmount((2437.50/3)*t.getMonthType());
+        t.setHpaFee(3000);
+        t.setQuarterAmt(2437.50);
+        update( t );
+end
+
+
+
+rule "AABT~BULT~CAVT~CEHHT~CMVT~DEXT~DMPT~EXVT~HERT~LIBT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~XRYT 12000 to 15000"
+    when
+        t : TaxRuleModel("AABT~BULT~CAVT~CEHHT~CMVT~DEXT~DMPT~EXVT~HERT~LIBT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~XRYT".contains(vehicleClassCategory) , gvw > 12001 , gvw <=15000 ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside AABT~BULT~CAVT~CEHHT~CMVT~DEXT~DMPT~EXVT~HERT~LIBT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~XRYT 12000 to 15000");
+        t.setHsrpAmount(649);
+        t.setTaxAmount((2967.00/3)*t.getMonthType());
+        t.setHpaFee(3000);
+        t.setQuarterAmt(2967.00);
+        update( t );
+end
+
+
+rule "GCRT 12000 to 15000"
+    when
+        t : TaxRuleModel("GCRT".contains(vehicleClassCategory) , gvw > 12001 , gvw <=15000 ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside GCRT 12000 to 15000");
+        t.setTaxAmount((2967.00/3)*t.getMonthType());
+        t.setHpaFee(3000);
+        t.setQuarterAmt(2967.00);
+        update( t );
+end
+
+
+
+rule "AABT~BULT~CAVT~CEHHT~CMVT~DEXT~DMPT~EXVT~HERT~LIBT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~XRYT greater then 15000"
+    when
+        t : TaxRuleModel("AABT~BULT~CAVT~CEHHT~CMVT~DEXT~DMPT~EXVT~HERT~LIBT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~XRYT".contains(vehicleClassCategory) , gvw > 15001 ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside AABT~BULT~CAVT~CEHHT~CMVT~DEXT~DMPT~EXVT~HERT~LIBT~MACT~MBWT~MOCT~MVCT~PWTT~SNLT~STWT~XRYT greater then 15000");
+        t.setHsrpAmount(649);
+        double ex = ( t.getGvw() - 15000 );
+		double ex1 =  (double)(ex / 250);
+		double extraAmount = ex1 * 70 ;
+		
+		int roundExtraAmount=0;
+        if(extraAmount > (int)extraAmount)
+        roundExtraAmount = (int)Math.ceil(extraAmount);
+        else
+        roundExtraAmount = (int)extraAmount;
+		double qt = roundExtraAmount + 2970;
+		int taxAmount = roundExtraAmount + 2970 ;
+        t.setHpaFee(3000);
+        t.setTaxAmount((taxAmount /3)*t.getMonthType());
+        t.setQuarterAmt(qt);
+        update( t );
+end
+
+
+rule "GCRT greater then 15000"
+    when
+        t : TaxRuleModel("GCRT".contains(vehicleClassCategory) , gvw > 15001 ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside GCRT greater then 15000");
+        double ex = ( t.getGvw() - 15000 );
+		double ex1 =  (double)(ex / 250);
+		double extraAmount = ex1 * 70 ;
+		
+		int roundExtraAmount=0;
+        if(extraAmount > (int)extraAmount)
+        roundExtraAmount = (int)Math.ceil(extraAmount);
+        else
+        roundExtraAmount = (int)extraAmount;
+		double qt = roundExtraAmount + 2970;
+		int taxAmount = roundExtraAmount + 2970 ;
+        t.setHpaFee(3000);
+        t.setTaxAmount((taxAmount /3)*t.getMonthType());
+        t.setQuarterAmt(qt);
+        update( t );
+end
+
+
+
+rule "ARVT greater then 15000"
+    when
+        t : TaxRuleModel(vehicleClassCategory.equals("ARVT") , gvw > 15001 ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside ARVT greater then 15000");
+        t.setHsrpAmount(649);
+        double ex = ( t.getGvw() - 15000 );
+		double ex1 =  (double)(ex / 250);
+        double extraAmount = ex1 * 70 ;
+
+		int roundExtraAmount =0;
+		if(extraAmount > (int)extraAmount)
+		roundExtraAmount = (int)Math.ceil(extraAmount);
+		else
+		roundExtraAmount = (int)extraAmount;
+		double qt = roundExtraAmount + 2970;
+		int taxAmount = roundExtraAmount + 2970 ;
+		double per = ( taxAmount * 25 ) / 100;
+		double diff = qt-per;
+		int percentAmount = ( taxAmount * 25 ) / 100 ;
+        t.setTaxAmount(((taxAmount - percentAmount) /3)*t.getMonthType());
+        t.setHpaFee(3000);
+        t.setQuarterAmt(diff);
+        update( t );
+end
+
+
+rule "TTTT 0-10000"
+    when
+        t : TaxRuleModel(vehicleClassCategory.equals("TTTT") , gvw > 0 , gvw < 10000 ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside TTTT greater then 15000");
+        t.setHsrpAmount(619);
+        t.setTaxAmount((756 /3)*t.getMonthType());
+        t.setQuarterAmt(756.0);
+        update( t );
+end
+
+
+rule "TTTT greater then 10000"
+    when
+        t : TaxRuleModel(vehicleClassCategory.equals("TTTT") , gvw > 10000  ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside TTTT greater then 10000");
+        t.setHsrpAmount(649);
+        t.setTaxAmount((1207.50 /3)*t.getMonthType());
+        t.setHpaFee(3000);
+        t.setQuarterAmt(1207.50);
+        update( t );
+end
+
+
+rule "TRTT~CHST~AMBT 0-762"
+    when
+        t : TaxRuleModel("TRTT~CHST~AMBT".contains(vehicleClassCategory) , ulw <= 762  ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside TRTT~CHST~AMBT 0-762");
+        t.setHsrpAmount(619);
+        t.setTaxAmount((241.50 /3)*t.getMonthType());
+        t.setQuarterAmt(241.50);
+        update( t );
+end
+
+rule "TRTT~CHST~AMBT 763-1524"
+    when
+        t : TaxRuleModel("TRTT~CHST~AMBT".contains(vehicleClassCategory) , ulw > 762 , ulw <= 1524 ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside TRTT~CHST~AMBT 763-1524");
+        t.setHsrpAmount(619);
+        t.setTaxAmount((360 /3)*t.getMonthType());
+        t.setQuarterAmt(360.0);
+        update( t );
+end
+
+rule "TRTT~CHST~AMBT 1525-2286"
+    when
+        t : TaxRuleModel("TRTT~CHST~AMBT".contains(vehicleClassCategory) , ulw > 1524 , ulw <= 2286  ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside TRTT~CHST~AMBT 1525-2286");
+        t.setHsrpAmount(619);
+        t.setTaxAmount((436.80 /3)*t.getMonthType());
+        t.setQuarterAmt(436.80);
+        update( t );
+end
+
+
+rule "TRTT~CHST~AMBT 2287 to 3048 Kgs"
+    when
+        t : TaxRuleModel("TRTT~CHST~AMBT".contains(vehicleClassCategory) , ulw > 2286 , ulw <= 3048  ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside TRTT~CHST~AMBT 2287 to 3048 Kgs");
+        t.setHsrpAmount(619);
+        t.setTaxAmount((520.80 /3)*t.getMonthType());
+        t.setQuarterAmt(520.80);
+        update( t );
+end
+
+
+rule "TRTT~CHST~AMBT 3049 to 4000 Kgs"
+    when
+        t : TaxRuleModel("TRTT~CHST~AMBT".contains(vehicleClassCategory) , ulw > 3048 , ulw <= 4000  ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside TRTT~CHST~AMBT 3049 to 4000 Kgs");
+        t.setHsrpAmount(619);
+        t.setTaxAmount((720.80 /3)*t.getMonthType());
+        t.setQuarterAmt(720.80);
+        update( t );
+end
+
+rule "TRTT~CHST~AMBT Above 4000 Kgs"
+    when
+        t : TaxRuleModel("TRTT~CHST~AMBT".contains(vehicleClassCategory) , ulw > 4000   ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside TRTT~CHST~AMBT Above 4000 Kgs");
+        t.setHsrpAmount(649);
+        double ex = ( t.getUlw() - 4000 );
+        double ex1 =  (double)(ex / 250);
+        double extraAmount = ex1 * 80 ;
+                
+        int roundExtraAmount =0;
+        if(extraAmount > (int)extraAmount)
+        roundExtraAmount = (int)Math.ceil(extraAmount);
+        else
+        roundExtraAmount = (int)extraAmount;
+
+        int taxAmount = roundExtraAmount + 720 ;
+        double qt = roundExtraAmount + 720;
+        t.setTaxAmount((taxAmount /3)*t.getMonthType());
+        t.setHpaFee(3000);
+        t.setQuarterAmt(qt);
+        update( t );
+end
+
+
+rule "MAXT  Contarct carriage and Permit is AITP or AITC"
+salience 90
+    when
+        t : TaxRuleModel(vehicleClassCategory.equals("MAXT") , seatingCapacity > 6 , seatingCapacity < 15 ,taxType.equals("Quarterly Tax") , "AITP~AITC".contains(permitType), taxAmount == 0)
+    then
+        System.out.println("MAXT  Contarct carriage and Permit is AITP or AITC");
+        int seat = t.getSeatingCapacity() - 1 ;
+        int taxAmount = ((1350*seat) /3)*t.getMonthType();
+        t.setTaxAmount(taxAmount);
+        double qt = 1350*seat;
+        t.setQuarterAmt(qt);
+        update( t ); 
+end
+
+rule "MAXT  Contarct carriage"
+salience 89
+    when
+        t : TaxRuleModel(vehicleClassCategory.equals("MAXT") , seatingCapacity > 6 , seatingCapacity < 15 ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside MAXT  Contarct carriage");
+        t.setHsrpAmount(619);
+        int seat = t.getSeatingCapacity() - 1 ;
+        int taxAmount = ((650*seat) /3)*t.getMonthType();
+        t.setTaxAmount(taxAmount);
+        double qt = 650*seat;
+        t.setQuarterAmt(qt);
+        update( t ); 
+end
+
+
+
+rule "PSVT "
+    when
+        t : TaxRuleModel("PSVT".contains(vehicleClassCategory) ,  seatingCapacity > 7  ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside PSVT ");
+        t.setHsrpAmount(619);
+        t.setTaxAmount((((396.90*t.getSeatingCapacity()) /3)*t.getMonthType()));
+        double qt = 396.90*t.getSeatingCapacity();
+        t.setQuarterAmt(qt);
+        update( t );
+end
+
+
+rule "OBT"
+    when
+        t : TaxRuleModel("OBT".contains(vehicleClassCategory) ,  seatingCapacity > 7  ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside OBT");
+        t.setHsrpAmount(619);
+        int seat = t.getSeatingCapacity() -1 ;
+        t.setTaxAmount((((396.90*seat) /3)*t.getMonthType()));
+        double qt = 396.90*seat;
+        t.setQuarterAmt(qt);
+        update( t );
+end
+
+
+rule "EIBT up to 4000 Kgs"
+    when
+        t : TaxRuleModel(vehicleClassCategory.equals("EIBT") ,  ulw <= 4000  ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside EIBT up to 4000 Kgs");
+        t.setHsrpAmount(619);
+        t.setTaxAmount((724.50 /3)*t.getMonthType());
+        t.setQuarterAmt(724.50);
+        update( t );
+end
+
+
+rule "EIBT from 4001 to 6000 Kgs"
+    when
+        t : TaxRuleModel(vehicleClassCategory.equals("EIBT") ,  ulw > 4000 , ulw <= 6000  ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside EIBT from 4001 to 6000 Kgs");
+        t.setHsrpAmount(619);
+        t.setTaxAmount((1396.50 /3)*t.getMonthType());
+        t.setQuarterAmt(1396.50);
+        update( t );
+end
+
+
+rule "EIBT Above 6000 Kgs"
+    when
+        t : TaxRuleModel(vehicleClassCategory.equals("EIBT") ,  ulw > 6000  ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside EIBT Above 6000 Kgs");
+        t.setHsrpAmount(649);
+        double ex = ( t.getUlw() - 6000 );
+        double ex1 =  (double)(ex / 250);
+        double extraAmount = ex1 * 80 ;
+
+        int roundExtraAmount =0;
+        if(extraAmount > (int)extraAmount)
+        roundExtraAmount = (int)Math.ceil(extraAmount);
+        else
+        roundExtraAmount = (int)extraAmount;
+		double qt = roundExtraAmount + 1400 ;
+        int taxAmount = roundExtraAmount + 1400 ;
+        t.setTaxAmount((taxAmount /3)*t.getMonthType());
+        t.setQuarterAmt(qt);
+        update( t );
+end
+
+
+rule "AUTT~CTHT~TRLT Below 1000 Kgs"
+    when
+        t : TaxRuleModel("AUTT~CTHT~TRLT".contains(vehicleClassCategory) , gvw < 1000  , taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside AUTT~CTHT~TRLT Below 1000 Kgs");
+        t.setHsrpAmount(619);
+        t.setTaxAmount((529.20 /3)*t.getMonthType());
+        t.setQuarterAmt(529.20);
+        update( t );
+end
+
+
+rule "AUTT~CTHT~TRLT 1001 to 3000 Kgs"
+    when
+        t : TaxRuleModel("AUTT~CTHT~TRLT".contains(vehicleClassCategory) , gvw > 1000 , gvw <= 3000   ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside AUTT~CTHT~TRLT 1001 to 3000 Kgs");
+        t.setHsrpAmount(619);
+        t.setTaxAmount((794.85 /3)*t.getMonthType());
+        t.setQuarterAmt(794.85);
+        update( t );
+end
+
+
+rule "AUTT~CTHT~TRLT Above 3000 Kgs"
+    when
+        t : TaxRuleModel("AUTT~CTHT~TRLT".contains(vehicleClassCategory) , gvw > 3000  ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside AUTT~CTHT~TRLT Above 3000 Kgs");
+        t.setHsrpAmount(619);
+        t.setTaxAmount((1059.45 /3)*t.getMonthType());
+        t.setHpaFee(3000);
+        t.setQuarterAmt(1059.45);
+        update( t );
+end
+
+
+rule "FFVT~FTRT~TFTT"
+    when
+        t : TaxRuleModel("FFVT~FTRT~TFTT".contains(vehicleClassCategory) ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside FFVT~FTRT~TFTT ");
+        t.setHsrpAmount(619);
+        t.setTaxAmount((300.30 /3)*t.getMonthType());
+        t.setHpaFee(3000);
+        t.setQuarterAmt(300.30);
+        update( t );
+end
+
+
+rule "CVHT~FWGT~MCTT~EXCT~CRNT 0 to 300 Kgs"
+    when
+        t : TaxRuleModel("CVHT~FWGT~MCTT~EXCT~CRNT".contains(vehicleClassCategory) , gvw > 0 , gvw <= 300  ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside CVHT~MCTT~EXCT~CRNT 0 to 300 Kgs");
+        t.setHsrpAmount(619);
+        t.setTaxAmount((424.20 /3)*t.getMonthType());
+        t.setQuarterAmt(424.20);
+        update( t );
+end
+
+rule "CVHT~FWGT~MCTT~EXCT~CRNT 300 to 1000 Kgs"
+    when
+        t : TaxRuleModel("CVHT~FWGT~MCTT~EXCT~CRNT".contains(vehicleClassCategory) , gvw > 300 , gvw <=1000  ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside CVHT~FWGT~MCTT~EXCT~CRNT 300 to 1000 Kgs");
+        t.setHsrpAmount(619);
+        t.setTaxAmount((529.20 /3)*t.getMonthType());
+        t.setQuarterAmt(529.20);
+        update( t );
+end
+
+rule "CVHT~FWGT~MCTT~EXCT~CRNT 1001 to 1500 Kgs"
+    when
+        t : TaxRuleModel("CVHT~FWGT~MCTT~EXCT~CRNT".contains(vehicleClassCategory) , gvw > 1000 , gvw <= 1500  ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside CVHT~FWGT~MCTT~EXCT~CRNT 1000 to 1500 Kgs");
+        t.setHsrpAmount(619);
+        t.setTaxAmount((741.30 /3)*t.getMonthType());
+        t.setQuarterAmt(741.30);
+        update( t );
+end
+
+rule "CVHT~FWGT~MCTT~EXCT~CRNT 1500 to 3000 Kgs"
+    when
+        t : TaxRuleModel("CVHT~FWGT~MCTT~EXCT~CRNT".contains(vehicleClassCategory) , gvw > 1500 , gvw <= 3000  ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside CVHT~FWGT~MCTT~EXCT~CRNT 1500 to 3000 Kgs");
+        t.setHsrpAmount(619);
+        t.setTaxAmount((847.35 /3)*t.getMonthType());
+        t.setQuarterAmt(847.35);
+        update( t );
+end
+
+rule "CVHT~FWGT~MCTT~EXCT~CRNT 3000 to 4500 Kgs"
+    when
+        t : TaxRuleModel("CVHT~FWGT~MCTT~EXCT~CRNT".contains(vehicleClassCategory) , gvw > 3000 , gvw <= 4500  ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside CVHT~FWGT~MCTT~EXCT~CRNT 3000 to 4500 Kgs");
+        t.setHsrpAmount(619);
+        t.setTaxAmount((954.45 /3)*t.getMonthType());
+        t.setQuarterAmt(954.45);
+        update( t );
+end
+
+rule "CVHT~FWGT~MCTT~EXCT~CRNT 4500 to 5500 Kgs"
+    when
+        t : TaxRuleModel("CVHT~FWGT~MCTT~EXCT~CRNT".contains(vehicleClassCategory) , gvw > 4500 , gvw <= 5500  ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside CVHT~FWGT~MCTT~EXCT~CRNT 4500 to 5500 Kgs");
+        t.setHsrpAmount(619);
+        t.setTaxAmount((1272.60 /3)*t.getMonthType());
+        t.setQuarterAmt(1272.60);
+        update( t );
+end
+
+rule "CVHT~FWGT~MCTT~EXCT~CRNT 5500 to 9000 Kgs"
+    when
+        t : TaxRuleModel("CVHT~FWGT~MCTT~EXCT~CRNT".contains(vehicleClassCategory) , gvw > 5500 , gvw <= 9000  ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside CVHT~FWGT~MCTT~EXCT~CRNT 5500 to 9000 Kgs");
+        t.setHsrpAmount(619);
+        t.setTaxAmount((1946.70 /3)*t.getMonthType());
+        t.setQuarterAmt(1946.70);
+        update( t );
+end
+
+rule "CVHT~FWGT~MCTT~EXCT~CRNT 9000 to 12000 Kgs"
+    when
+        t : TaxRuleModel("CVHT~FWGT~MCTT~EXCT~CRNT".contains(vehicleClassCategory) , gvw > 9000 , gvw <= 12000  ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside CVHT~FWGT~MCTT~EXCT~CRNT 9000 to 12000 Kgs");
+        t.setHsrpAmount(619);
+        t.setTaxAmount((2437.50 /3)*t.getMonthType());
+        t.setQuarterAmt(2437.50);
+        update( t );
+end
+
+rule "CVHT~FWGT~MCTT~EXCT~CRNT 12000 to 15000 Kgs"
+    when
+        t : TaxRuleModel("CVHT~FWGT~MCTT~EXCT~CRNT".contains(vehicleClassCategory) , gvw > 12000 , gvw <= 15000  ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside CVHT~MCTT~EXCT~CRNT 12000 to 15000 Kgs");
+        t.setHsrpAmount(649);
+        t.setTaxAmount((2967.30 /3)*t.getMonthType());
+        t.setHpaFee(3000);
+        t.setQuarterAmt(2967.30);
+        update( t );
+end
+
+
+rule "SCRT"
+    when
+        t : TaxRuleModel("SCRT".contains(vehicleClassCategory)  ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside SCRT");
+        t.setHsrpAmount(649);
+        t.setTaxAmount((863.10 /3)*t.getMonthType());
+        t.setQuarterAmt(863.10);
+        update( t );
+end
+
+rule "CVHT~FWGT~MCTT~EXCT~CRNT Above 15000 Kgs"
+    when
+        t : TaxRuleModel("CVHT~FWGT~MCTT~EXCT~CRNT".contains(vehicleClassCategory) , gvw > 15000   ,taxType.equals("Quarterly Tax") , taxAmount == 0)
+    then
+        System.out.println("Inside CVHT~FWGT~MCTT~EXCT~CRNT Above 15000 Kgs");
+        t.setHsrpAmount(649);
+        double ex = ( t.getGvw() - 15000 );
+        double ex1 =  (double)(ex / 250);
+        double extraAmount = ex1 * 70 ;
+
+        int roundExtraAmount =0;
+        if(extraAmount > (int)extraAmount)
+        roundExtraAmount = (int)Math.ceil(extraAmount);
+        else
+        roundExtraAmount = (int)extraAmount;
+		double qt = roundExtraAmount + 2970 ;
+        int taxAmount = roundExtraAmount + 2970 ;
+        t.setTaxAmount((taxAmount /3)*t.getMonthType());
+        t.setHpaFee(3000);
+        t.setQuarterAmt(qt);
+        update( t );
+end
+
+rule "Cess Fee Quarterly tax"
+salience -5
+    when
+        t : TaxRuleModel(taxType.equals("Quarterly Tax"),  cessFee == 0 , taxAmount > 0, !isCessFeeValid )
+    then
+        System.out.println("Inside Cess Fee Quarterly Tax");
+        double taxAmt = (t.getTaxAmount()/t.getMonthType())*3;
+        int taxPerAnum = (int)taxAmt*4;
+        int cessFee = (taxPerAnum*10)/100;
+        if(cessFee >= 1500)
+        t.setCessFee(1500);
+        else
+        t.setCessFee(cessFee);
+        update( t );
+end
+
+
+rule "Tax Amount"
+    when
+        t : TaxRuleModel(taxType.equals("Life Tax"),  taxAmount == 0)
+    then
+        System.out.println("Inside Tax Amount calculation on tax " + t.getTax());
+        t.setTaxAmount((t.getInvoiceAmount()*t.getTax())/100);
+        update( t );
+end
+

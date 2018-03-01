@@ -1,0 +1,80 @@
+package org.rta.rules.fee.fitness.fresh
+ 
+import org.rta.rules.model.FeeRuleModel;
+ 
+rule "Fitness Fresh Service charge Fee 60 rs"
+    when
+        t : FeeRuleModel("ARKT".contains(vehicleClassCategory) , fitnessService == 0 , "TRTT" not contains vehicleClassCategory)
+    then
+        System.out.println("Inside Fitness Fresh Service charge Fee 60 rs");
+        t.setFitnessService(60);
+        update( t );
+end
+
+
+rule "Fitness Fresh Service charge  Fee 120 rs"
+    when
+        t : FeeRuleModel("CHST~TRTT" not contains vehicleClassCategory , fitnessService == 0 )
+    then
+        System.out.println("Inside Fitness Fresh Service charge Fee 120 rs");
+        t.setFitnessService(120);
+        update( t );
+end
+
+
+rule "Fitness Fresh Fee  Fee 400 rs"
+    when
+        t : FeeRuleModel("MCPT~MCGT~MCTT" contains vehicleClassCategory , fitnessFee == 0 )
+    then
+        System.out.println("Inside Fitness Fresh Fee  Fee 400 rs");
+        t.setFitnessFee(400);
+        update( t );
+end
+
+rule "Fitness Fee EIBT Transport Fee 800 rs"
+    when
+        t : FeeRuleModel( fitnessFee == 0 ,  gvw < 7500 , "EIBT" contains vehicleClassCategory)
+    then
+        System.out.println("Inside Fitness Fee EIBT Transport Fee 600 rs");
+        t.setFitnessFee(800);
+        update( t );
+end
+
+rule "Fitness Fresh Fee  Fee 600 rs"
+    when
+        t : FeeRuleModel( fitnessFee == 0 ,  gvw < 7500 , "CHST~TRTT" not contains vehicleClassCategory)
+    then
+        System.out.println("Inside Fitness Fresh Fee  Fee 600 rs");
+        t.setFitnessFee(600);
+        update( t );
+end
+
+
+
+rule "Fitness Fresh Fee MTLT  Fee 600 rs"
+    when
+        t : FeeRuleModel( fitnessFee == 0 ,  gvw > 7500 , gvw < 12000 , "MTLT" contains vehicleClassCategory)
+    then
+        System.out.println("Inside Fitness Fresh Fee  MTLT 600 rs");
+        t.setFitnessFee(600);
+        update( t );
+end
+
+rule "Fitness Fresh Fee  Fee 800 rs"
+    when
+        t : FeeRuleModel( fitnessFee == 0 ,  gvw > 7500 , "CHST~TRTT" not contains vehicleClassCategory)
+    then
+        System.out.println("Inside Fitness Fresh Fee  Fee 800 rs");
+        t.setFitnessFee(800);
+        update( t );
+end
+
+
+rule "Total TR and PR Fee Fresh Fitness  Fee"
+    when
+        t : FeeRuleModel(totalFitnessFee == 0)
+    then
+        System.out.println("Inside Total TR and PR Fee Fresh Fitness  Fee "+ t.getVehicleClassCategory());
+        t.setTotalFitnessFee(t.getFitnessFee() + t.getFitnessService());
+        update( t );
+end
